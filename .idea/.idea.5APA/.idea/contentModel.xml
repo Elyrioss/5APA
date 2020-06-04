@@ -11,6 +11,7 @@
         <e p="script" t="Include">
           <e p="Buildings.cs" t="Include" />
           <e p="City.cs" t="Include" />
+          <e p="CityMenu.cs" t="Include" />
           <e p="Editor" t="Include">
             <e p="LayoutHelpers.cs" t="Include" />
             <e p="RTS_CameraEditor.cs" t="Include" />
@@ -21,7 +22,6 @@
           <e p="Noise.cs" t="Include" />
           <e p="RTS_Camera.cs" t="Include" />
           <e p="tileMapManager.cs" t="Include" />
-          <e p="TileMapPos.cs" t="Include" />
           <e p="Unit.cs" t="Include" />
           <e p="Waypoint.cs" t="Include" />
         </e>
