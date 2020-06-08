@@ -7,7 +7,7 @@ public class MainMapControllerScript : MonoBehaviour
     Camera _camera = null;
     Waypoint selectedWaypoint = null;
     public GameObject cityPref;
-    private List<City> _cities = new List<City>();
+    public List<City> _cities = new List<City>();
 
 
     ///TESTSUI

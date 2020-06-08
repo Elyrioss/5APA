@@ -8,6 +8,19 @@
       <e p="Assembly-CSharp-Editor.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
+        <e p="AlignedGames" t="Include">
+          <e p="Polygonal Foliage Asset Package" t="Include">
+            <e p="Scripts" t="Include">
+              <e p="Utility" t="Include">
+                <e p="FlyCameraBehaviour.cs" t="Include" />
+              </e>
+            </e>
+            <e p="Shaders" t="Include">
+              <e p="Cloud.shader" t="Include" />
+              <e p="Diffuse.shader" t="Include" />
+            </e>
+          </e>
+        </e>
         <e p="script" t="Include">
           <e p="Buildings.cs" t="Include" />
           <e p="City.cs" t="Include" />
@@ -17,11 +30,11 @@
             <e p="RTS_CameraEditor.cs" t="Include" />
             <e p="tileEditor.cs" t="Include" />
           </e>
-          <e p="FallOffGenerator.cs" t="Include" />
           <e p="MainMapControllerScript.cs" t="Include" />
           <e p="Noise.cs" t="Include" />
           <e p="RTS_Camera.cs" t="Include" />
           <e p="tileMapManager.cs" t="Include" />
+          <e p="TileMapPos.cs" t="Include" />
           <e p="Unit.cs" t="Include" />
           <e p="Waypoint.cs" t="Include" />
         </e>

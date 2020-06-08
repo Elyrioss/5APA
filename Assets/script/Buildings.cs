@@ -2,8 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Buildings
+public class Construction
+{
+    public float Cost;
+}
+public class Buildings : Construction
 {
     public Waypoint Position;
-    public Sprite Image;
+    public GameObject Pref;
+    
+
+    public enum BuildingType
+    {
+        Ressource,
+        Unit,
+        Wonder
+    }
+}
+
+public class Barracks : Buildings
+{
+    public Unit Swordman;
 }

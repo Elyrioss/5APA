@@ -1,33 +1,40 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public class City
 {
-    public int Population;
-    public Waypoint Position;
-    public int TurnUntilGrowth;
     
-    public List<Waypoint> ControlArea=new List<Waypoint>();
+    public int population;
+    public Waypoint position;
+    
+    public List<Waypoint> controlArea=new List<Waypoint>();
 
-    public float Food;
-    public float Production;
-    public float Science;
-    public float Culture;
-    public float Faith;
-    public float Gold;
-
+    public float food = 0;
+    public float production = 0;
+    public float gold = 0;
+    
+    public Construction construction;
+       
     public City(Waypoint position)
     {
-        Position = position;
-        Position.EnableWaypoint();
-        foreach (GameObject w in Position.Neighbors)
+        position = position;
+        position.EnableWaypoint();
+        food += position.Food;
+        production += position.Production;
+        gold += position.Gold;
+        foreach (GameObject w in position.Neighbors)
         {
-            ControlArea.Add(w.GetComponent<Waypoint>());
-            Debug.Log(w);
-            w.GetComponent<Waypoint>().EnableWaypoint();
+            Waypoint W = w.GetComponent<Waypoint>();
+            controlArea.Add(W);
+            W.EnableWaypoint();
+            food += W.Food;
+            production += W.Production;
+            gold += W.Gold;
         }
-        Population = 1;
+        population = 1;
         
     }
     

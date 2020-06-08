@@ -59,6 +59,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\AlignedGames\Polygonal Foliage Asset Package\Scripts\Utility\FlyCameraBehaviour.cs" />
     <Compile Include="Assets\script\Buildings.cs" />
     <Compile Include="Assets\script\City.cs" />
     <Compile Include="Assets\script\CityMenu.cs" />
@@ -69,6 +70,8 @@
     <Compile Include="Assets\script\Unit.cs" />
     <Compile Include="Assets\script\Waypoint.cs" />
     <Compile Include="Assets\script\tileMapManager.cs" />
+    <None Include="Assets\AlignedGames\Polygonal Foliage Asset Package\Shaders\Cloud.shader" />
+    <None Include="Assets\AlignedGames\Polygonal Foliage Asset Package\Shaders\Diffuse.shader" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>C:/Users/Esteban/Desktop/PA/5APA/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>

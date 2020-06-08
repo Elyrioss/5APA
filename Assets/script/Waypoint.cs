@@ -21,11 +21,10 @@ public struct ActionChoice
 [RequireComponent(typeof(BoxCollider))]
 public class Waypoint : MonoBehaviour
 {
-    [SerializeField]
-    List<GameObject> neighbors = new List<GameObject>();
+    public List<GameObject> Neighbors = new List<GameObject>();
     [HideInInspector]
     public bool coastal= false;
-    [HideInInspector]
+   
     public bool visited = false;
     [SerializeField]
     public SpriteRenderer spriteRenderer = null;
@@ -42,21 +41,19 @@ public class Waypoint : MonoBehaviour
     public Tilemap tilemap;
     [HideInInspector]
     public bool odd;
-    
+
+    public float noiseValue;
     public float elevation=0;
-    public tileType.type type;
+    public type type;
+    
+    public float Food;
+    public float Production;
+    public float Gold;
     
     [SerializeField]
     Color CivColor = Color.blue;
     [SerializeField]
     Color Deactivated = Color.clear;
-
-    public List<GameObject> Neighbors
-    {
-        get {
-            return neighbors;
-        }
-    }
 
 
     void Awake()

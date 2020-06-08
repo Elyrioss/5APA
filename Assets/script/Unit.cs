@@ -2,17 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Unit : MonoBehaviour
+public class Unit : Construction
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public float Attack;
+    public float Defense;
+}
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+public class Melee : Unit
+{
+    
+}
+
+public class Range : Unit
+{
+    
+}
+
+public class Spear : Unit
+{
+    
 }
