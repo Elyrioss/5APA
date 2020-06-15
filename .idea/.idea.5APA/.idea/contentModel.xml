@@ -10,14 +10,18 @@
       <e p="Assets" t="Include">
         <e p="AlignedGames" t="Include">
           <e p="Polygonal Foliage Asset Package" t="Include">
+            <e p="Art" t="Include">
+              <e p="Models" t="Include">
+                <e p="Shaders" t="Include">
+                  <e p="Cloud.shader" t="Include" />
+                  <e p="Diffuse.shader" t="Include" />
+                </e>
+              </e>
+            </e>
             <e p="Scripts" t="Include">
               <e p="Utility" t="Include">
                 <e p="FlyCameraBehaviour.cs" t="Include" />
               </e>
-            </e>
-            <e p="Shaders" t="Include">
-              <e p="Cloud.shader" t="Include" />
-              <e p="Diffuse.shader" t="Include" />
             </e>
           </e>
         </e>

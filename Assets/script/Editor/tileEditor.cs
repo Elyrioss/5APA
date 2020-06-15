@@ -27,7 +27,12 @@ public class tileEditor : Editor
         if (GUILayout.Button("Clear")) // BOUTON GENERATE MAP
         {
             map.Clear();
-        }     
+        } 
+        
+        if (GUILayout.Button("Region")) // BOUTON GENERATE MAP
+        {
+            map.DisplayRegion(map.RegionToDisplay);
+        } 
         
     }
 }

@@ -21,14 +21,20 @@ public struct ActionChoice
 [RequireComponent(typeof(BoxCollider))]
 public class Waypoint : MonoBehaviour
 {
-    public List<GameObject> Neighbors = new List<GameObject>();
     [HideInInspector]
-    public bool coastal= false;
-   
+    public List<GameObject> Neighbors = new List<GameObject>(6){null,null,null,null,null,null};
+
+    public GameObject left = null;
+    public GameObject right = null;
+    public GameObject leftBot = null;
+    public GameObject rightBot = null;
+    public GameObject leftTop = null;
+    public GameObject rightTop = null;
+    
+    public GameObject spriteContainer;
     public bool visited = false;
     [SerializeField]
-    public SpriteRenderer spriteRenderer = null;
-    BoxCollider boxCollider = null;
+    public SpriteRenderer[] spriteRenderer;// left , leftbot , lefttop, right , rightbot, rightop
     [HideInInspector]
     public int X;
     [HideInInspector]
@@ -37,9 +43,7 @@ public class Waypoint : MonoBehaviour
     public int i;
     [HideInInspector]
     public int j;
-    [HideInInspector]
-    public Tilemap tilemap;
-    [HideInInspector]
+
     public bool odd;
 
     public float noiseValue;
@@ -55,29 +59,28 @@ public class Waypoint : MonoBehaviour
     [SerializeField]
     Color Deactivated = Color.clear;
 
+    public Region region;
+    
 
     void Awake()
     {
-        boxCollider = GetComponent<BoxCollider>();
         DisableWaypoint();
     }
 
     public void DisableWaypoint() // make Waypoint unreachable
     {
-        /*BoxCollider bc = GetComponent<BoxCollider>();
-        if (bc)
-            bc.enabled = false;
-        */
-        spriteRenderer.color = Deactivated;
+        foreach (SpriteRenderer sprite in spriteRenderer)
+        {
+            sprite.color = Deactivated;
+        }
     }
 
     public void EnableWaypoint() // make Waypoint reachable
     {
-        BoxCollider bc = GetComponent<BoxCollider>();
-        if (bc)
-            bc.enabled = true;
-
-        spriteRenderer.color = CivColor;
+        foreach (SpriteRenderer sprite in spriteRenderer)
+        {
+            sprite.color = CivColor;
+        }
     }
 
     [HideInInspector]
@@ -95,7 +98,6 @@ public class Waypoint : MonoBehaviour
         Y = w.Y;
         i = w.i;
         j = w.j;
-        tilemapname = w.tileMap;
         tileid = w.tileid;
     }
     public void Clicked()
