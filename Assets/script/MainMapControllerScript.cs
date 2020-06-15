@@ -33,7 +33,7 @@ public class MainMapControllerScript : MonoBehaviour
             {
                 if (!StartingCity)
                 {
-                    selectedWaypoint = hit.transform.gameObject.GetComponent<Waypoint>();
+                    selectedWaypoint = hit.transform.parent.gameObject.GetComponent<Waypoint>();
                     _cities.Add(new City(selectedWaypoint));
                     Instantiate(cityPref, new Vector3(hit.transform.position.x, hit.transform.position.y, hit.transform.position.z), Quaternion.identity);
                     StartingCity = true;

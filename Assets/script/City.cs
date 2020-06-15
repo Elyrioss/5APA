@@ -22,6 +22,7 @@ public class City
     {
         position = position;
         position.EnableWaypoint();
+        controlArea.Add(position);
         food += position.Food;
         production += position.Production;
         gold += position.Gold;
@@ -34,6 +35,7 @@ public class City
             production += W.Production;
             gold += W.Gold;
         }
+        ClearFrontiers();
         population = 1;
         
     }
@@ -51,6 +53,8 @@ public class City
         return false;
     }
 
+    // left , leftbot , lefttop, right , rightbot, rightop
+    
     public void ClearFrontiers()
     {
         foreach (Waypoint waypoint in controlArea)
@@ -59,42 +63,42 @@ public class City
             {
                 if (controlArea.Contains(waypoint.left.GetComponent<Waypoint>()))
                 {
-                    waypoint.left.SetActive(false);
+                    waypoint.spriteRenderer[0].gameObject.SetActive(false);
                 }
             }
             if (waypoint.right)
             {
                 if (controlArea.Contains(waypoint.right.GetComponent<Waypoint>()))
                 {
-                    waypoint.right.SetActive(false);
+                    waypoint.spriteRenderer[3].gameObject.SetActive(false);
                 }
             }
             if (waypoint.leftTop)
             {
                 if (controlArea.Contains(waypoint.leftTop.GetComponent<Waypoint>()))
                 {
-                    waypoint.leftTop.SetActive(false);
+                    waypoint.spriteRenderer[2].gameObject.SetActive(false);
                 }
             }
             if (waypoint.rightTop)
             {
                 if (controlArea.Contains(waypoint.rightTop.GetComponent<Waypoint>()))
                 {
-                    waypoint.rightTop.SetActive(false);
+                    waypoint.spriteRenderer[5].gameObject.SetActive(false);
                 }
             }
             if (waypoint.leftBot)
             {
                 if (controlArea.Contains(waypoint.leftBot.GetComponent<Waypoint>()))
                 {
-                    waypoint.leftBot.SetActive(false);
+                    waypoint.spriteRenderer[1].gameObject.SetActive(false);
                 }
             }
             if (waypoint.rightBot)
             {
                 if (controlArea.Contains(waypoint.rightBot.GetComponent<Waypoint>()))
                 {
-                    waypoint.rightBot.SetActive(false);
+                    waypoint.spriteRenderer[4].gameObject.SetActive(false);
                 }
             }
             
@@ -107,42 +111,42 @@ public class City
         {
             if (controlArea.Contains(waypoint.left.GetComponent<Waypoint>()))
             {
-                waypoint.left.SetActive(false);
+                waypoint.spriteRenderer[0].gameObject.SetActive(false);
             }
         }
         if (waypoint.right)
         {
             if (controlArea.Contains(waypoint.right.GetComponent<Waypoint>()))
             {
-                waypoint.right.SetActive(false);
+                waypoint.spriteRenderer[3].gameObject.SetActive(false);
             }
         }
         if (waypoint.leftTop)
         {
             if (controlArea.Contains(waypoint.leftTop.GetComponent<Waypoint>()))
             {
-                waypoint.leftTop.SetActive(false);
+                waypoint.spriteRenderer[2].gameObject.SetActive(false);
             }
         }
         if (waypoint.rightTop)
         {
             if (controlArea.Contains(waypoint.rightTop.GetComponent<Waypoint>()))
             {
-                waypoint.rightTop.SetActive(false);
+                waypoint.spriteRenderer[5].gameObject.SetActive(false);
             }
         }
         if (waypoint.leftBot)
         {
             if (controlArea.Contains(waypoint.leftBot.GetComponent<Waypoint>()))
             {
-                waypoint.leftBot.SetActive(false);
+                waypoint.spriteRenderer[1].gameObject.SetActive(false);
             }
         }
         if (waypoint.rightBot)
         {
             if (controlArea.Contains(waypoint.rightBot.GetComponent<Waypoint>()))
             {
-                waypoint.rightBot.SetActive(false);
+                waypoint.spriteRenderer[4].gameObject.SetActive(false);
             }
         }
     }
