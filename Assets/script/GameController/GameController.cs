@@ -9,7 +9,9 @@ public enum TurnState { START, ENDTURN } // On verra si on gère certains evenem
 public class GameController : MonoBehaviour
 {
 
-
+    public AnimationCurve foodUpgradeCurve;
+    public AnimationCurve foodCostCurve;
+    
     public TurnState state;
     [SerializeField] private Text TurnTxt;
 

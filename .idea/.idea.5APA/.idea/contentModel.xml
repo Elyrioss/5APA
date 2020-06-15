@@ -34,6 +34,9 @@
             <e p="RTS_CameraEditor.cs" t="Include" />
             <e p="tileEditor.cs" t="Include" />
           </e>
+          <e p="GameController" t="Include">
+            <e p="GameController.cs" t="Include" />
+          </e>
           <e p="MainMapControllerScript.cs" t="Include" />
           <e p="Noise.cs" t="Include" />
           <e p="RTS_Camera.cs" t="Include" />

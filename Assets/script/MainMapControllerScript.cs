@@ -17,6 +17,8 @@ public class MainMapControllerScript : MonoBehaviour
 
     public bool CanRaycast = true;
 
+    
+    
     void Awake()
     {
         _camera = GetComponent<Camera>();
