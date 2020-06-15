@@ -15,6 +15,8 @@ public class MainMapControllerScript : MonoBehaviour
     public GameObject FileUI;
     private Animator Anim;
 
+    public bool CanRaycast = true;
+
     void Awake()
     {
         _camera = GetComponent<Camera>();
@@ -29,19 +31,19 @@ public class MainMapControllerScript : MonoBehaviour
         {
             Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
+            if (Physics.Raycast(ray, out hit)) // Ici on va gérer toutes les possibilités de click d'éléments
             {
-                if (!StartingCity)
+                if (!StartingCity) // Création de la ville du début. 
                 {
                     selectedWaypoint = hit.transform.parent.gameObject.GetComponent<Waypoint>();
                     _cities.Add(new City(selectedWaypoint));
                     Instantiate(cityPref, new Vector3(hit.transform.position.x, hit.transform.position.y, hit.transform.position.z), Quaternion.identity);
                     StartingCity = true;
-                    Debug.Log("aaaaaaaaaa");
+                    CanRaycast = false;
                 }
-                else if (hit.transform.gameObject.tag == "City")
+                else if (hit.transform.gameObject.tag == "City") // Si c'est à son tour et qu'il click sur une de ses city
                 {
-                    Debug.Log("Create UI!!!!");
+                    Debug.Log("On doit créer l'UI de la bonne ville");
                     FileUI.SetActive(true);
                     //Anim.SetBool("OUT", true);
                 }
