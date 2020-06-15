@@ -54,8 +54,7 @@ public class Waypoint : MonoBehaviour
     public float Production;
     public float Gold;
     
-    [SerializeField]
-    Color CivColor = Color.blue;
+    [SerializeField] public Color CivColor = Color.blue;
     [SerializeField]
     Color Deactivated = Color.clear;
 

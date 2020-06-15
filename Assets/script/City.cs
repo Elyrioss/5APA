@@ -9,7 +9,7 @@ public class City
     
     public int population;
     public Waypoint position;
-    
+    public Color civColor;
     public List<Waypoint> controlArea=new List<Waypoint>();
 
     public float food = 0;
@@ -18,18 +18,24 @@ public class City
     
     public Construction construction;
        
-    public City(Waypoint position)
+    public City(Waypoint position,Color color)
     {
+
+        civColor = color;
         position = position;
+        position.CivColor = civColor;
         position.EnableWaypoint();
         controlArea.Add(position);
+        
         food += position.Food;
         production += position.Production;
         gold += position.Gold;
+        
         foreach (GameObject w in position.Neighbors)
         {
             Waypoint W = w.GetComponent<Waypoint>();
             controlArea.Add(W);
+            W.CivColor = civColor;
             W.EnableWaypoint();
             food += W.Food;
             production += W.Production;
@@ -45,6 +51,11 @@ public class City
         if (!controlArea.Contains(w))
         {
             controlArea.Add(w);
+            w.CivColor = civColor;
+            w.EnableWaypoint();
+            food += w.Food;
+            production += w.Production;
+            gold += w.Gold;
             ClearFrontiers(w);
             w.EnableWaypoint();
             return true;
