@@ -59,7 +59,6 @@ public class Waypoint : MonoBehaviour
     [SerializeField]
     Color Deactivated = Color.clear;
 
-    public Region region;
     
 
     void Awake()

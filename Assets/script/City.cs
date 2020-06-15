@@ -37,5 +37,114 @@ public class City
         population = 1;
         
     }
+
+    public bool ExtendTown(Waypoint w)
+    {
+        if (!controlArea.Contains(w))
+        {
+            controlArea.Add(w);
+            ClearFrontiers(w);
+            w.EnableWaypoint();
+            return true;
+        }
+
+        return false;
+    }
+
+    public void ClearFrontiers()
+    {
+        foreach (Waypoint waypoint in controlArea)
+        {
+            if (waypoint.left)
+            {
+                if (controlArea.Contains(waypoint.left.GetComponent<Waypoint>()))
+                {
+                    waypoint.left.SetActive(false);
+                }
+            }
+            if (waypoint.right)
+            {
+                if (controlArea.Contains(waypoint.right.GetComponent<Waypoint>()))
+                {
+                    waypoint.right.SetActive(false);
+                }
+            }
+            if (waypoint.leftTop)
+            {
+                if (controlArea.Contains(waypoint.leftTop.GetComponent<Waypoint>()))
+                {
+                    waypoint.leftTop.SetActive(false);
+                }
+            }
+            if (waypoint.rightTop)
+            {
+                if (controlArea.Contains(waypoint.rightTop.GetComponent<Waypoint>()))
+                {
+                    waypoint.rightTop.SetActive(false);
+                }
+            }
+            if (waypoint.leftBot)
+            {
+                if (controlArea.Contains(waypoint.leftBot.GetComponent<Waypoint>()))
+                {
+                    waypoint.leftBot.SetActive(false);
+                }
+            }
+            if (waypoint.rightBot)
+            {
+                if (controlArea.Contains(waypoint.rightBot.GetComponent<Waypoint>()))
+                {
+                    waypoint.rightBot.SetActive(false);
+                }
+            }
+            
+        }
+    }
+
+    public void ClearFrontiers(Waypoint waypoint)
+    {
+        if (waypoint.left)
+        {
+            if (controlArea.Contains(waypoint.left.GetComponent<Waypoint>()))
+            {
+                waypoint.left.SetActive(false);
+            }
+        }
+        if (waypoint.right)
+        {
+            if (controlArea.Contains(waypoint.right.GetComponent<Waypoint>()))
+            {
+                waypoint.right.SetActive(false);
+            }
+        }
+        if (waypoint.leftTop)
+        {
+            if (controlArea.Contains(waypoint.leftTop.GetComponent<Waypoint>()))
+            {
+                waypoint.leftTop.SetActive(false);
+            }
+        }
+        if (waypoint.rightTop)
+        {
+            if (controlArea.Contains(waypoint.rightTop.GetComponent<Waypoint>()))
+            {
+                waypoint.rightTop.SetActive(false);
+            }
+        }
+        if (waypoint.leftBot)
+        {
+            if (controlArea.Contains(waypoint.leftBot.GetComponent<Waypoint>()))
+            {
+                waypoint.leftBot.SetActive(false);
+            }
+        }
+        if (waypoint.rightBot)
+        {
+            if (controlArea.Contains(waypoint.rightBot.GetComponent<Waypoint>()))
+            {
+                waypoint.rightBot.SetActive(false);
+            }
+        }
+    }
     
 }

@@ -28,8 +28,6 @@ public class tileMapManager : MonoBehaviour
     public List<type> cold;//Listes des tuiles de type froide
     public List<type> hot;//Listes des tuiles de type chaude
     public List<type> temperate;//Listes des tuiles de type temperé
-
-    private List<Region> Regions=new List<Region>();
     
     
     //* TAILLE DE LA CARTE *// 
@@ -66,7 +64,6 @@ public class tileMapManager : MonoBehaviour
     private Waypoint start;
     private bool loaded=false;
     private float[,] noise;
-    public int RegionToDisplay = 0;
     
     private void Start()
     {        
@@ -415,10 +412,6 @@ public class tileMapManager : MonoBehaviour
         frontier.Enqueue(start);
         start.visited = true;
         start.type = cold[0];
-        
-        Region currentRegion = new Region();
-        Regions.Add(currentRegion);
-        
         int index=0;
         
         /*
@@ -434,17 +427,11 @@ public class tileMapManager : MonoBehaviour
         */
         while (frontier.Count > 0)
         {
-            if (currentRegion.Count > 200)
-            {
-                currentRegion = new Region();
-                Regions.Add(currentRegion);
-            }
             
             type currentType;
             index++;
             Waypoint current = frontier.Dequeue();
-            
-            currentRegion.Add(current);            
+                   
             int c = UnityEngine.Random.Range(0, 1000);
             List<GameObject> tempNeighbors = current.Neighbors;
             Shuffle(tempNeighbors);
@@ -536,8 +523,6 @@ public class tileMapManager : MonoBehaviour
                     temp.Remove(start2);
                     start2.visited = true;
                     frontier.Enqueue(start2);
-                    currentRegion = new Region();
-                    Regions.Add(currentRegion);
                 }
                 else
                 {
@@ -547,8 +532,6 @@ public class tileMapManager : MonoBehaviour
                         if (!start2.visited)
                         {
                             temp.Remove(start2);   
-                            currentRegion = new Region();
-                            Regions.Add(currentRegion);
                             frontier.Enqueue(start2);
                         } 
                     }
@@ -572,26 +555,11 @@ public class tileMapManager : MonoBehaviour
                 {
                     int rand = UnityEngine.Random.Range(0, Tile.Neighbors.Count);
                     Tile.type = Tile.Neighbors[rand].GetComponent<Waypoint>().type; 
-                    Tile.Neighbors[rand].GetComponent<Waypoint>().region.Swap(Tile);
                     
                 }
                 
             }
-            Waypoint current = Tile.GetComponent<Waypoint>();
-            if (current.region.Count < 400)
-            {               
-                foreach (GameObject g in current.Neighbors)
-                {
-                    if(current.region.Count > 400)
-                        break;
-                    if (g.GetComponent<Waypoint>().region != current.region)
-                    {
-                        current.region.Merge(g.GetComponent<Waypoint>().region);
-                        Regions.Remove(g.GetComponent<Waypoint>().region);
-                        Regions.TrimExcess();
-                    }
-                }
-            }
+            
             
             if (!Tile.visited)
             {
@@ -676,21 +644,6 @@ public class tileMapManager : MonoBehaviour
         return copy;
     }
 
-    public void DisplayRegion(int i)
-    {
-        Debug.Log(Regions.Count);
-        foreach (Waypoint w in ChunkOrder)
-        {
-            if (!Regions[i].Contains(w))
-            {
-                w.gameObject.SetActive(false);
-            }
-            else
-            {
-                w.gameObject.SetActive(true);
-            }
-        }
-    }
     
     #endregion
     
@@ -810,59 +763,6 @@ public class SavedWaypoint
         j = w.j;
         id = _i;
         tileid = w.tileid;
-    }
-    
-    
-}
-
-public class Region
-{
-    private List<Waypoint> tiles;
-    public int Count;
-    
-    public Region()
-    {
-        tiles = new List<Waypoint>();
-        Count=0;
-    }
-
-    public bool Contains(Waypoint w)
-    {
-        if (tiles.Contains(w))
-        {
-            return true;
-        }
-
-        return false;
-    }
-    public void Add(Waypoint w)
-    {
-        if (!tiles.Contains(w))
-        {
-            tiles.Add(w);
-            w.region = this;
-            Count=tiles.Count;
-        }     
-    }
-
-    public void Remove(Waypoint w)
-    {
-        tiles.Remove(w);
-    }
-
-    public void Swap(Waypoint w)
-    {
-        w.region.Remove(w);
-        Add(w);
-    }
-
-    public void Merge(Region r)
-    {
-        foreach (Waypoint w in r.tiles)
-        {
-            Add(w);
-        }
-        
     }
     
     
