@@ -36,7 +36,7 @@ public class MainMapControllerScript : MonoBehaviour
                 if (!StartingCity) // Création de la ville du début. 
                 {
                     selectedWaypoint = hit.transform.parent.gameObject.GetComponent<Waypoint>();
-                    _cities.Add(new City(selectedWaypoint));
+                    _cities.Add(new City(selectedWaypoint,Color.yellow));
                     Instantiate(cityPref, new Vector3(hit.transform.position.x, hit.transform.position.y, hit.transform.position.z), Quaternion.identity);
                     StartingCity = true;
                     CanRaycast = false;
