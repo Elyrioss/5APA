@@ -15,7 +15,7 @@ public class GameController : MonoBehaviour
     public TurnState state;
     [SerializeField] private Text TurnTxt;
 
-    private int NumberOfTurn = 1;
+    public int NumberOfTurn = 1;
 
     // Start is called before the first frame update
     void Start()
@@ -28,6 +28,7 @@ public class GameController : MonoBehaviour
     void Update()
     {
         
+       
     }
 
 

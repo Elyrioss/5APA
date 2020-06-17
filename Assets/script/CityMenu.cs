@@ -5,7 +5,7 @@ using UnityEngine;
 public class CityMenu : MonoBehaviour
 {
     Animator Anim;
-
+    public GameObject FileUI;
     private List<Unit> Units = new List<Unit>();
     // Start is called before the first frame update
     void Start()
@@ -19,6 +19,14 @@ public class CityMenu : MonoBehaviour
         
     }
 
+
+
+    public void DeselectCity()
+    {
+        Anim.SetBool("OUT", false);
+        Anim.SetBool("IN", true);
+        FileUI.SetActive(false);
+    }
     public void Construct()
     {
         Anim.SetBool("IN", false);

@@ -16,7 +16,7 @@ public class MainMapControllerScript : MonoBehaviour
     private Animator Anim;
 
     public bool CanRaycast = true;
-    
+
     
     
     void Awake()
@@ -37,24 +37,29 @@ public class MainMapControllerScript : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
+            if (!CanRaycast)
+            {
+                return;
+            }
             Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit)) // Ici on va gérer toutes les possibilités de click d'éléments
             {
-                if (!StartingCity) // Création de la ville du début. 
+                if (!StartingCity) // Création de la ville du début ( et des autres villes après ?)
                 {
                     selectedWaypoint = hit.transform.parent.gameObject.GetComponent<Waypoint>();
-                    _cities.Add(new City(selectedWaypoint,Color.yellow));
-                    Instantiate(cityPref, new Vector3(hit.transform.position.x, hit.transform.position.y, hit.transform.position.z), Quaternion.identity);
+                    _cities.Add(new City(selectedWaypoint,Color.red));
+                    var CityObj = Instantiate(cityPref, new Vector3(hit.transform.position.x, hit.transform.position.y, hit.transform.position.z), Quaternion.identity);
+                    CityObj.GetComponent<ManageCity>().ThisCity = new City(selectedWaypoint, Color.red);
+                    _cities.Add(cityPref.GetComponent<ManageCity>().ThisCity);
                     StartingCity = true;
                     CanRaycast = false;
                 }
-                else if (hit.transform.gameObject.tag == "City") // Si c'est à son tour et qu'il click sur une de ses city
+                /*else if (hit.transform.gameObject.tag == "City") // Si c'est à son tour et qu'il click sur une de ses city
                 {
-                    Debug.Log("On doit créer l'UI de la bonne ville");
                     FileUI.SetActive(true);
                     //Anim.SetBool("OUT", true);
-                }
+                }*/
             }
         }
     }
