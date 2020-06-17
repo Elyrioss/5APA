@@ -6,5 +6,7 @@ public class TileMapPos : MonoBehaviour
 {
     public int X;
     public int Y;
-
+    
+    public List<TileMapPos> neighBours = new List<TileMapPos>();
+    
 }

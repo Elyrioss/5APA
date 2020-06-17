@@ -44,6 +44,8 @@ public class Waypoint : MonoBehaviour
 
     public bool odd;
 
+    public TileMapPos Chunk;
+    
     public float noiseValue;
     public float elevation=0;
     public type type;

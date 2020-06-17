@@ -20,6 +20,7 @@ public class tileMapManager : MonoBehaviour
 
     public List<Material> Materials;
     public GameObject ice;
+    public GameObject border;
     public TileMapPos map;//Reference pour le contenant pour les tuiles (voir le fonctionnement des tilemap unity)
     public List<TileMapPos> Chunks = new List<TileMapPos>(); 
     public List<_3DtileType> _3DTiles;
@@ -93,6 +94,7 @@ public class tileMapManager : MonoBehaviour
                 t.GetComponent<TileMapPos>().X = n;
                 t.GetComponent<TileMapPos>().Y = N;
                 t.transform.SetParent(grid.transform);
+                t.name = "" + n + "" + N;
                 Chunks.Add(t.GetComponent<TileMapPos>());
                 
                 for (int i = sizeChunkX * (n - 1); i < sizeChunkX * n; i++) // Create Waypoint in (i;j)
@@ -121,13 +123,43 @@ public class tileMapManager : MonoBehaviour
                         w.name = "" + (w.X) + (w.Y);   
                         w.i = i;
                         w.j = j;
+                        w.Chunk = t.GetComponent<TileMapPos>();
                         
-                        
+
                     }
                 }
-                Debug.Log(t.transform.GetChild(0).transform.localPosition.x);
             }
         }
+
+        foreach (TileMapPos chunk in Chunks)
+        {
+            foreach (TileMapPos chunk2 in Chunks)
+            {
+                if (chunk != chunk2)
+                {
+                    if(chunk2.X == chunk.X+1 && chunk2.Y == chunk.Y)
+                        chunk.neighBours.Add(chunk2);
+
+                    if (chunk2.X == chunkX && chunk.X == 1 && chunk2.Y == chunk.Y)
+                    {
+                        chunk.neighBours.Add(chunk2);
+                        chunk2.neighBours.Add(chunk);
+                    }
+                        
+                
+                    if(chunk2.X == chunk.X-1 && chunk2.Y == chunk.Y)
+                        chunk.neighBours.Add(chunk2);
+                
+                    if(chunk2.Y == chunk.Y+1 && chunk2.X == chunk.X)
+                        chunk.neighBours.Add(chunk2);
+                
+                    if(chunk2.Y == chunk.Y-1 && chunk2.X == chunk.X)
+                        chunk.neighBours.Add(chunk2);
+                }
+                
+            }
+        }
+        
     }
 
     
@@ -391,7 +423,30 @@ public class tileMapManager : MonoBehaviour
             }
             w.spriteContainer.transform.Translate(new Vector3(0,w.elevation+0.05f,0));
             w.DisableWaypoint();
+            if (w.Y == 0)
+            {
+                GameObject Border = Instantiate(border,w.transform);                
+                Border.transform.localPosition = new Vector3(0,Mathf.Lerp(w.elevation,Border.transform.localPosition.y,0.5f),0);
+                Border.transform.localEulerAngles = new Vector3(0,-120,0);
+                if (w.type==type.ocean)
+                {
+                    GameObject Ice = Instantiate(ice,w.transform);                
+                    Ice.transform.localPosition = new Vector3(0,w.elevation,0);
+                }
+            }
+            if (w.Y == chunkY*sizeChunkY - 1)
+            {
+                GameObject Border = Instantiate(border,w.transform);                
+                Border.transform.localPosition = new Vector3(0,Mathf.Lerp(w.elevation,Border.transform.localPosition.y,0.5f),0);
+                Border.transform.localEulerAngles = new Vector3(0,0,0);
+                if (w.type==type.ocean)
+                {
+                    GameObject Ice = Instantiate(ice,w.transform);                
+                    Ice.transform.localPosition = new Vector3(0,w.elevation,0);
+                }
+            }
         }
+        
         return result;
     }
 
