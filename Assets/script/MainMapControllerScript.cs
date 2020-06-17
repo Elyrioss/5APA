@@ -8,7 +8,7 @@ public class MainMapControllerScript : MonoBehaviour
     Waypoint selectedWaypoint = null;
     public GameObject cityPref;
     public List<City> _cities = new List<City>();
-
+    public tileMapManager Map;
 
     ///TESTSUI
     private bool StartingCity;
@@ -16,7 +16,7 @@ public class MainMapControllerScript : MonoBehaviour
     private Animator Anim;
 
     public bool CanRaycast = true;
-
+    
     
     
     void Awake()
@@ -24,6 +24,12 @@ public class MainMapControllerScript : MonoBehaviour
         _camera = GetComponent<Camera>();
 
         Anim = FileUI.GetComponent<Animator>();
+        int j = 1;
+        for (int i = Map.Chunks.Count-Map.chunkY; i < Map.chunkX*Map.chunkY; i++)
+        {
+            Map.Chunks[i].transform.position = new Vector3(-Map.Chunks[i].transform.GetChild(0).localPosition.x-Map.Chunks[Map.chunkY+j].transform.GetChild(0).localPosition.x-1,Map.Chunks[i].transform.localPosition.y,0);
+            j=(j+1)%2;
+        }
     }
 
     // Update is called once per frame

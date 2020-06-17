@@ -35,9 +35,7 @@ public class Waypoint : MonoBehaviour
     public bool visited = false;
     [SerializeField]
     public SpriteRenderer[] spriteRenderer;// left , leftbot , lefttop, right , rightbot, rightop
-    [HideInInspector]
     public int X;
-    [HideInInspector]
     public int Y;
     [HideInInspector]
     public int i;

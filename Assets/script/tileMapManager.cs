@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
@@ -19,7 +20,8 @@ public class tileMapManager : MonoBehaviour
 
     public List<Material> Materials;
     public GameObject ice;
-    public Tilemap map;//Reference pour le contenant pour les tuiles (voir le fonctionnement des tilemap unity)
+    public TileMapPos map;//Reference pour le contenant pour les tuiles (voir le fonctionnement des tilemap unity)
+    public List<TileMapPos> Chunks = new List<TileMapPos>(); 
     public List<_3DtileType> _3DTiles;
     public List<tileType> tiles;//Liste de tout les types de tuiles possibles
     public Grid grid; //Contenant pour les contenant des tuile (voir le fonctionnement des tilemap unity)
@@ -68,6 +70,7 @@ public class tileMapManager : MonoBehaviour
     private void Start()
     {        
         camOn = true;
+        
     }
 
     //Create the waypoints gameobjects
@@ -86,6 +89,12 @@ public class tileMapManager : MonoBehaviour
             for (int N = 1; N <= chunkY; N++) // chunk en (n;N)
             {
                 idtile++;
+                GameObject t = Instantiate(map.gameObject, new Vector3(n, N), Quaternion.identity);
+                t.GetComponent<TileMapPos>().X = n;
+                t.GetComponent<TileMapPos>().Y = N;
+                t.transform.SetParent(grid.transform);
+                Chunks.Add(t.GetComponent<TileMapPos>());
+                
                 for (int i = sizeChunkX * (n - 1); i < sizeChunkX * n; i++) // Create Waypoint in (i;j)
                 {
                     for (int j = sizeChunkY * (N - 1); j < sizeChunkY * N; j++)
@@ -107,7 +116,7 @@ public class tileMapManager : MonoBehaviour
                         var position = w.transform.position;
                         w.X = i;
                         w.Y = j;
-                        w.transform.SetParent(grid.transform);
+                        w.transform.SetParent(t.transform);
                         ChunkOrder.Add(w);
                         w.name = "" + (w.X) + (w.Y);   
                         w.i = i;
@@ -116,6 +125,7 @@ public class tileMapManager : MonoBehaviour
                         
                     }
                 }
+                Debug.Log(t.transform.GetChild(0).transform.localPosition.x);
             }
         }
     }
@@ -160,35 +170,9 @@ public class tileMapManager : MonoBehaviour
     //Passez l'ordre des liste de chunk a la liste en ligne 
     public void Order()
     {
-        List<Waypoint> temp = new List<Waypoint>();
-        foreach (Waypoint w in ChunkOrder)
-        {
-            temp.Add(w);
-        }
-
-        int breaker = 0;
-        int limit = ChunkOrder.Count;
-        while (LineOrder.Count != limit)
-        {
-            foreach (Waypoint w in temp)
-            {
-                if (w.X == breaker)
-                {
-                    LineOrder.Add(w);
-                }
-            }
-
-            foreach (Waypoint w in LineOrder)
-            {
-                temp.Remove(w);
-            }
-
-            breaker++;
-            if (breaker > 2000)
-            {
-                break;
-            }
-        }
+        List<Waypoint> temp = ChunkOrder;
+        temp = temp.OrderBy(w1 => w1.X).ToList();
+        LineOrder = temp;
         
         // En utilisant la liste en Ligne on ajoutes les voisins de chaque tuiles 
         
@@ -269,6 +253,38 @@ public class tileMapManager : MonoBehaviour
                 LineOrder[i + chunkY * sizeChunkX].left = w.gameObject;
             }
 
+            if (w.X == 0)
+            {
+                w.Neighbors.Add(LineOrder[(chunkX * sizeChunkX * sizeChunkY * chunkY)-(sizeChunkY * chunkY)+w.Y].gameObject); // TUILE D'APRES HORIZONTALEMENT => Right    
+                w.left = LineOrder[(chunkX * sizeChunkX * sizeChunkY * chunkY)-(sizeChunkY * chunkY)+w.Y].gameObject;
+                LineOrder[(chunkX * sizeChunkX * sizeChunkY * chunkY)-(sizeChunkY * chunkY)+w.Y].Neighbors.Add(w.gameObject); // TUILE D'AVANT HORIZONTALEMENT => Left
+                LineOrder[(chunkX * sizeChunkX * sizeChunkY * chunkY)-(sizeChunkY * chunkY)+w.Y].right = w.gameObject;
+              
+            }
+
+        }
+
+        foreach (Waypoint w in LineOrder)
+        {
+            if (w.X == 0)
+            {
+                if (w.left.GetComponent<Waypoint>().rightTop)
+                {
+                    Waypoint W = w.left.GetComponent<Waypoint>().rightTop.GetComponent<Waypoint>();
+                    w.leftTop = W.gameObject;
+                    W.rightBot = w.gameObject;
+                }
+                if (w.left.GetComponent<Waypoint>().rightBot)
+                {
+                    Waypoint W = w.left.GetComponent<Waypoint>().rightBot.GetComponent<Waypoint>();
+                    w.leftBot = W.gameObject;
+                    W.rightTop = w.gameObject;
+                }
+            }
+            else
+            {
+                break;
+            }
         }
     }
     
@@ -492,11 +508,10 @@ public class tileMapManager : MonoBehaviour
                 
                 currentType = cold[COLD];                
             }
-                 
+
             
             current.type = currentType;
-            current.elevation = SmoothCurve.Evaluate(noise[(int)current.X, (int)current.Y]);
-            current.noiseValue = noise[(int)current.X,(int) current.Y];
+
                   
             for (int i = 0; i < current.Neighbors.Count; i++)
             {
@@ -543,10 +558,31 @@ public class tileMapManager : MonoBehaviour
 
         
         //Mélange les tuiles en copiant le type d'une tuile voisine pour rendre les limite entre les climat et biome moins homogène
-        foreach (Waypoint Tile in ChunkOrder)
+        foreach (Waypoint Tile in LineOrder)
         {
             float change = UnityEngine.Random.Range(0, 1);
-           
+            
+            if (Tile.X < 5)
+            {
+                float lerper = UnityEngine.Random.Range(0.3f, 0.6f);
+                float val = Mathf.Lerp(noise[Tile.X, Tile.Y], noise[sizeChunkX * chunkX - Tile.X, Tile.Y],lerper);
+                noise[Tile.X, Tile.Y] = val;
+                noise[sizeChunkX * chunkX - Tile.X, Tile.Y] = val;
+                if (Tile.X == 4)
+                {
+                    float lerper2 = UnityEngine.Random.Range(0.3f, 0.6f);
+                    val = Mathf.Lerp(noise[Tile.X +1, Tile.Y], noise[Tile.X , Tile.Y],lerper);
+                    float val2 = Mathf.Lerp(noise[sizeChunkX * chunkX - Tile.X - 1, Tile.Y], noise[sizeChunkX * chunkX - Tile.X, Tile.Y],lerper);
+                    
+                    
+                    noise[Tile.X+1, Tile.Y] = val;
+                    noise[sizeChunkX * chunkX - Tile.X - 1, Tile.Y] = val2;
+                }
+                
+            }
+            
+            Tile.elevation = SmoothCurve.Evaluate(noise[(int)Tile.X, (int)Tile.Y]);
+            Tile.noiseValue = noise[(int)Tile.X,(int) Tile.Y];
             if (change < 0.2)
             {
                 int k = UnityEngine.Random.Range(0, Tile.Neighbors.Count);
@@ -607,10 +643,11 @@ public class tileMapManager : MonoBehaviour
     //Clean map
     public void Clear()
     {
-        foreach (Waypoint w in ChunkOrder)
+        foreach (TileMapPos c in Chunks)
         {
-            DestroyImmediate(w.gameObject);
+            DestroyImmediate(c.gameObject);
         }
+        Chunks.Clear();
         ChunkOrder.Clear();
         LineOrder.Clear();
     }
