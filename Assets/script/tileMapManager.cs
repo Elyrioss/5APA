@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
 using System.Linq;
+using AccidentalNoise;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
@@ -51,7 +52,7 @@ public class tileMapManager : MonoBehaviour
     public float noiseScale;//Facteur qui accentue la variation de la carte
     
     public int octaves;// Nombre de cartes à différente fréquence qui s'additionne pour rendre la carte moins lisse
-    
+    public float frequency;
     [Range(0, 1)] public float persistence;// proportion a laquel les octaves successives contribue a la carte
     
     public float lacunarity;//Similaire a la persistance, la lacunarity détermine le niveau de détail des octave successible (=> - de détail, - de variation)
@@ -67,6 +68,8 @@ public class tileMapManager : MonoBehaviour
     private Waypoint start;
     private bool loaded=false;
     private float[,] noise;
+    public Generator Generator;
+    Tile[,] Tiles;
     
     private void Start()
     {        
@@ -159,6 +162,7 @@ public class tileMapManager : MonoBehaviour
                 
             }
         }
+        
         
     }
 
@@ -293,6 +297,7 @@ public class tileMapManager : MonoBehaviour
                 LineOrder[(chunkX * sizeChunkX * sizeChunkY * chunkY)-(sizeChunkY * chunkY)+w.Y].right = w.gameObject;
               
             }
+            
 
         }
 
@@ -318,6 +323,8 @@ public class tileMapManager : MonoBehaviour
                 break;
             }
         }
+        
+        Tiles = Generator.Generate((chunkX*sizeChunkX),(chunkY*sizeChunkY),LineOrder,lacunarity);
     }
     
     //Dessiné la carte 
@@ -329,19 +336,20 @@ public class tileMapManager : MonoBehaviour
         foreach (Waypoint w in ChunkOrder)
         {
             Material mat = Materials[0];    
-            if (w.elevation < 0)//Si l'altitude est inférieur a 0, la case est un océan
+            
+            if (w.elevation < 0.2f)//Si l'altitude est inférieur a 0, la case est un océan
             {
                 selection = ClimateDiagram(type.ocean);
                 selection3D = _3DClimateDiagram(type.ocean);// prend une case de type océan
                 w.type = type.ocean;
-                w.elevation += 0.25f;
+                //w.elevation += 0.25f;
                            
-                if (w.elevation < -0.25f)
+                if (w.elevation < 0f)
                 {
                     mat = Materials[2];
                 }
                 
-                if (w.elevation < -0.35f)
+                if (w.elevation < -0.1f)
                 {
                     mat = Materials[3];
                 }                
@@ -396,7 +404,7 @@ public class tileMapManager : MonoBehaviour
                     if (neighbor.GetComponent<Waypoint>().type != type.ocean)
                     {
                         Waypoint W = neighbor.GetComponent<Waypoint>();
-                        if ((W.type == type.artic || W.type == type.tundra)&& W.elevation>0f)
+                        if ((W.type == type.artic || W.type == type.tundra)&& W.elevation>0.4f)
                         {
                             GameObject Ice = Instantiate(ice,w.transform);                
                             Ice.transform.localPosition = new Vector3(0,w.elevation,0);
@@ -426,7 +434,7 @@ public class tileMapManager : MonoBehaviour
             if (w.Y == 0)
             {
                 GameObject Border = Instantiate(border,w.transform);                
-                Border.transform.localPosition = new Vector3(0,Mathf.Lerp(w.elevation,Border.transform.localPosition.y,0.5f),0);
+                Border.transform.localPosition = new Vector3(0,w.elevation,0);
                 Border.transform.localEulerAngles = new Vector3(0,-120,0);
                 if (w.type==type.ocean)
                 {
@@ -437,7 +445,7 @@ public class tileMapManager : MonoBehaviour
             if (w.Y == chunkY*sizeChunkY - 1)
             {
                 GameObject Border = Instantiate(border,w.transform);                
-                Border.transform.localPosition = new Vector3(0,Mathf.Lerp(w.elevation,Border.transform.localPosition.y,0.5f),0);
+                Border.transform.localPosition = new Vector3(0,w.elevation,0);
                 Border.transform.localEulerAngles = new Vector3(0,0,0);
                 if (w.type==type.ocean)
                 {
@@ -474,10 +482,8 @@ public class tileMapManager : MonoBehaviour
         int COLD = 0;
         int TEMP = 0;
 
-        noise = Noise.GenerateNoiseMap(sizeChunkX * chunkX * 2, sizeChunkY * chunkY * 2, this.seed, noiseScale, octaves,
-            persistence, lacunarity, offset);
-
-        
+        //noise = Noise.GenerateNoiseMap(sizeChunkX * chunkX * 2, sizeChunkY * chunkY * 2, this.seed, noiseScale, octaves,persistence, lacunarity, offset);
+           
         Queue<Waypoint> frontier = new Queue<Waypoint>();
         Waypoint start = ChunkOrder[UnityEngine.Random.Range(0, ChunkOrder.Count)];
         frontier.Enqueue(start);
@@ -615,29 +621,12 @@ public class tileMapManager : MonoBehaviour
         //Mélange les tuiles en copiant le type d'une tuile voisine pour rendre les limite entre les climat et biome moins homogène
         foreach (Waypoint Tile in LineOrder)
         {
-            float change = UnityEngine.Random.Range(0, 1);
+            float change = UnityEngine.Random.Range(0, 1);          
+            Tile.elevation = SmoothCurve.Evaluate(Tiles[Tile.X, Tile.Y].HeightValue);
+            Tile.noiseValue = Tiles[Tile.X,Tile.Y].HeightValue;
             
-            if (Tile.X < 5)
-            {
-                float lerper = UnityEngine.Random.Range(0.3f, 0.6f);
-                float val = Mathf.Lerp(noise[Tile.X, Tile.Y], noise[sizeChunkX * chunkX - Tile.X, Tile.Y],lerper);
-                noise[Tile.X, Tile.Y] = val;
-                noise[sizeChunkX * chunkX - Tile.X, Tile.Y] = val;
-                if (Tile.X == 4)
-                {
-                    float lerper2 = UnityEngine.Random.Range(0.3f, 0.6f);
-                    val = Mathf.Lerp(noise[Tile.X +1, Tile.Y], noise[Tile.X , Tile.Y],lerper);
-                    float val2 = Mathf.Lerp(noise[sizeChunkX * chunkX - Tile.X - 1, Tile.Y], noise[sizeChunkX * chunkX - Tile.X, Tile.Y],lerper);
-                    
-                    
-                    noise[Tile.X+1, Tile.Y] = val;
-                    noise[sizeChunkX * chunkX - Tile.X - 1, Tile.Y] = val2;
-                }
-                
-            }
             
-            Tile.elevation = SmoothCurve.Evaluate(noise[(int)Tile.X, (int)Tile.Y]);
-            Tile.noiseValue = noise[(int)Tile.X,(int) Tile.Y];
+            
             if (change < 0.2)
             {
                 int k = UnityEngine.Random.Range(0, Tile.Neighbors.Count);
@@ -645,8 +634,7 @@ public class tileMapManager : MonoBehaviour
                 if ( Tile.type != type.ocean)
                 {
                     int rand = UnityEngine.Random.Range(0, Tile.Neighbors.Count);
-                    Tile.type = Tile.Neighbors[rand].GetComponent<Waypoint>().type; 
-                    
+                    Tile.type = Tile.Neighbors[rand].GetComponent<Waypoint>().type;                    
                 }
                 
             }

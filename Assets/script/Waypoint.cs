@@ -3,13 +3,9 @@
  * Représente les lieux sur la carte.
  */
 
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
-using UnityEngine.Tilemaps;
 
 [System.Serializable]
 public struct ActionChoice

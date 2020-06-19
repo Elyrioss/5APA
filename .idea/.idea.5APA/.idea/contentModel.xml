@@ -8,24 +8,54 @@
       <e p="Assembly-CSharp-Editor.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
-        <e p="AlignedGames" t="Include">
-          <e p="Polygonal Foliage Asset Package" t="Include">
-            <e p="Art" t="Include">
-              <e p="Models" t="Include">
-                <e p="Shaders" t="Include">
-                  <e p="Cloud.shader" t="Include" />
-                  <e p="Diffuse.shader" t="Include" />
-                </e>
-              </e>
-            </e>
-            <e p="Scripts" t="Include">
-              <e p="Utility" t="Include">
-                <e p="FlyCameraBehaviour.cs" t="Include" />
-              </e>
-            </e>
-          </e>
-        </e>
         <e p="script" t="Include">
+          <e p="AccidentalNoise" t="Include">
+            <e p="Cache.cs" t="Include" />
+            <e p="CellularCache.cs" t="Include" />
+            <e p="CellularGenerator.cs" t="Include" />
+            <e p="Enums" t="Include">
+              <e p="BasisType.cs" t="Include" />
+              <e p="CombinerType.cs" t="Include" />
+              <e p="FractalType.cs" t="Include" />
+              <e p="InterpolationType.cs" t="Include" />
+              <e p="MappingMode.cs" t="Include" />
+            </e>
+            <e p="Implicit" t="Include">
+              <e p="ImplicitAutoCorrect.cs" t="Include" />
+              <e p="ImplicitBasisFunction.cs" t="Include" />
+              <e p="ImplicitBias.cs" t="Include" />
+              <e p="ImplicitBlend.cs" t="Include" />
+              <e p="ImplicitBrightContrast.cs" t="Include" />
+              <e p="ImplicitCache.cs" t="Include" />
+              <e p="ImplicitCeiling.cs" t="Include" />
+              <e p="ImplicitCellular.cs" t="Include" />
+              <e p="ImplicitClamp.cs" t="Include" />
+              <e p="ImplicitCombiner.cs" t="Include" />
+              <e p="ImplicitConstant.cs" t="Include" />
+              <e p="ImplicitCos.cs" t="Include" />
+              <e p="ImplicitFloor.cs" t="Include" />
+              <e p="ImplicitFractal.cs" t="Include" />
+              <e p="ImplicitGain.cs" t="Include" />
+              <e p="ImplicitGradient.cs" t="Include" />
+              <e p="ImplicitInvert.cs" t="Include" />
+              <e p="ImplicitLog.cs" t="Include" />
+              <e p="ImplicitModuleBase.cs" t="Include" />
+              <e p="ImplicitPow.cs" t="Include" />
+              <e p="ImplicitRotateDomain.cs" t="Include" />
+              <e p="ImplicitScaleDomain.cs" t="Include" />
+              <e p="ImplicitScaleOffset.cs" t="Include" />
+              <e p="ImplicitSelect.cs" t="Include" />
+              <e p="ImplicitSin.cs" t="Include" />
+              <e p="ImplicitSphere.cs" t="Include" />
+              <e p="ImplicitTan.cs" t="Include" />
+              <e p="ImplicitTiers.cs" t="Include" />
+              <e p="ImplicitTranslatedDomain.cs" t="Include" />
+            </e>
+            <e p="Mapping.cs" t="Include" />
+            <e p="MappingRanges.cs" t="Include" />
+            <e p="Noise.cs" t="Include" />
+            <e p="NoiseLookupTable.cs" t="Include" />
+          </e>
           <e p="Buildings.cs" t="Include" />
           <e p="City.cs" t="Include" />
           <e p="CityMenu.cs" t="Include" />
@@ -34,10 +64,14 @@
             <e p="RTS_CameraEditor.cs" t="Include" />
             <e p="tileEditor.cs" t="Include" />
           </e>
+          <e p="FallOffMap.cs" t="Include" />
           <e p="GameController" t="Include">
             <e p="GameController.cs" t="Include" />
           </e>
+          <e p="Generator.cs" t="Include" />
           <e p="MainMapControllerScript.cs" t="Include" />
+          <e p="ManageCity.cs" t="Include" />
+          <e p="MathHelper.cs" t="Include" />
           <e p="Noise.cs" t="Include" />
           <e p="RTS_Camera.cs" t="Include" />
           <e p="tileMapManager.cs" t="Include" />
