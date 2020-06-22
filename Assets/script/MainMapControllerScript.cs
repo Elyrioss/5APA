@@ -96,19 +96,14 @@ public class MainMapControllerScript : MonoBehaviour
                 if (!StartingCity) // Création de la ville du début ( et des autres villes après ?)
                 {
                     selectedWaypoint = hit.transform.parent.gameObject.GetComponent<Waypoint>();
-                    _cities.Add(new City(selectedWaypoint,Color.red));
                     var CityObj = Instantiate(cityPref, hit.transform);
                     CityObj.transform.localPosition = new Vector3(0,0, 0);
-                    CityObj.GetComponent<ManageCity>().ThisCity = new City(selectedWaypoint, Color.red);
-                    _cities.Add(cityPref.GetComponent<ManageCity>().ThisCity);
+                    
+                    _cities.Add(new City(selectedWaypoint, Color.red));
+                    CityObj.GetComponent<ManageCity>().ThisCity = _cities.Count - 1;
                     StartingCity = true;
                     CanRaycast = false;
                 }
-                /*else if (hit.transform.gameObject.tag == "City") // Si c'est à son tour et qu'il click sur une de ses city
-                {
-                    FileUI.SetActive(true);
-                    //Anim.SetBool("OUT", true);
-                }*/
             }
         }
     }
