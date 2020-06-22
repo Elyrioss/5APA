@@ -139,11 +139,16 @@ public class MainMapControllerScript : MonoBehaviour
         List<TileMapPos> result = new List<TileMapPos>();
         if (X <= 1)
             return result;
-        
+
+        if (Chunk.Bot)
+        {
+            result.Add(Chunk.Bot);
+        }
+                    
         TileMapPos Left = Chunk, Right = Chunk;      
         for (int i = 0; i < X; i++)
         {
-            for (int j = 0; j < X-1; j++)
+            for (int j = 0; j < i+(X-1); j++)
             {
                 Left = Left.Left;
                 result.Add(Left);
