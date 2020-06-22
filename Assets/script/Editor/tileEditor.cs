@@ -29,5 +29,10 @@ public class tileEditor : Editor
             map.Clear();
         } 
         
+        if (GUILayout.Button("Path")) // BOUTON GENERATE MAP
+        {
+            map.ShowDijtra();
+        } 
+        
     }
 }

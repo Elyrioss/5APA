@@ -219,7 +219,6 @@ public class tileMapManager : MonoBehaviour
                 w.odd = false;
             }
             w.transform.SetParent(grid.transform);
-            w.names = sw.Names;
             w.HeightType = sw.HeightType;
             w.BiomeType = sw.BiomeType;
             
@@ -252,47 +251,47 @@ public class tileMapManager : MonoBehaviour
             Waypoint w = LineOrder[i];
             if (i - 1 >= 0 && w.X == LineOrder[i - 1].X) // TUILE D'AVANT VERTICALEMENT => LeftBot pour les odd, RightBot pour les even
             {
-                LineOrder[i].Neighbors.Add(LineOrder[i - 1].gameObject);
+                LineOrder[i].Neighbors.Add(LineOrder[i - 1]);
                 if (w.odd)
                 {
-                    w.leftBot = LineOrder[i - 1].gameObject;
+                    w.leftBot = LineOrder[i - 1];
                 }
                 else
                 {
-                    w.rightBot = LineOrder[i - 1].gameObject;
+                    w.rightBot = LineOrder[i - 1];
                 }
             }
 
             if (i + 1 < LineOrder.Count && w.X == LineOrder[i + 1].X)// TUILE D'APRES VERTICALEMENT => LeftTop pour les odd, RightTop pour les even
             {
-                LineOrder[i].Neighbors.Add(LineOrder[i + 1].gameObject);        
+                LineOrder[i].Neighbors.Add(LineOrder[i + 1]);        
                 if (w.odd)
                 {
-                    w.leftTop = LineOrder[i + 1].gameObject;
+                    w.leftTop = LineOrder[i + 1];
                 }
                 else
                 {
-                    w.rightTop = LineOrder[i + 1].gameObject;
+                    w.rightTop = LineOrder[i + 1];
                 }
             }
 
             if (w.odd && i + chunkY * sizeChunkX < LineOrder.Count) // Tuiles en diagonal pour les odd
             {
-                w.Neighbors.Add(LineOrder[i + chunkY * sizeChunkX].gameObject); // RIGHT
-                w.right = LineOrder[i + chunkY * sizeChunkX].gameObject;
+                w.Neighbors.Add(LineOrder[i + chunkY * sizeChunkX]); // RIGHT
+                w.right = LineOrder[i + chunkY * sizeChunkX];
                 
-                LineOrder[i + chunkY * sizeChunkX].Neighbors.Add(w.gameObject); // LEFT
-                LineOrder[i + chunkY * sizeChunkX].left = w.gameObject;
+                LineOrder[i + chunkY * sizeChunkX].Neighbors.Add(w); // LEFT
+                LineOrder[i + chunkY * sizeChunkX].left = w;
                 
                 if (i + (chunkY * sizeChunkX) + 1 < LineOrder.Count)
                 {
                     if (LineOrder[i + (chunkY * sizeChunkX) + 1].X == LineOrder[i + chunkY * sizeChunkX].X)
                     {
-                        w.Neighbors.Add(LineOrder[i + (chunkY * sizeChunkX) + 1].gameObject); //BOTLEFT
-                        w.rightTop = LineOrder[i + (chunkY * sizeChunkX) + 1].gameObject;
+                        w.Neighbors.Add(LineOrder[i + (chunkY * sizeChunkX) + 1]); //BOTLEFT
+                        w.rightTop = LineOrder[i + (chunkY * sizeChunkX) + 1];
                         
-                        LineOrder[i + (chunkY * sizeChunkX) + 1].Neighbors.Add(w.gameObject); //TOPRIGHT
-                        LineOrder[i + (chunkY * sizeChunkX) + 1].leftBot = w.gameObject;
+                        LineOrder[i + (chunkY * sizeChunkX) + 1].Neighbors.Add(w); //TOPRIGHT
+                        LineOrder[i + (chunkY * sizeChunkX) + 1].leftBot = w;
 
                     }
 
@@ -302,12 +301,12 @@ public class tileMapManager : MonoBehaviour
                 {
                     if (LineOrder[i + (chunkY * sizeChunkX) - 1].X == LineOrder[i +chunkY * sizeChunkX].X)
                     {
-                        w.Neighbors.Add(LineOrder[i + (chunkY * sizeChunkX) - 1].gameObject); // TOPLEFT
-                        w.rightBot = LineOrder[i + (chunkY * sizeChunkX) - 1].gameObject;
+                        w.Neighbors.Add(LineOrder[i + (chunkY * sizeChunkX) - 1]); // TOPLEFT
+                        w.rightBot = LineOrder[i + (chunkY * sizeChunkX) - 1];
                         
                         
-                        LineOrder[i + (chunkY * sizeChunkX) - 1].Neighbors.Add(w.gameObject); // BOTRIGHT
-                        LineOrder[i + (chunkY * sizeChunkX) - 1].leftTop = w.gameObject;
+                        LineOrder[i + (chunkY * sizeChunkX) - 1].Neighbors.Add(w); // BOTRIGHT
+                        LineOrder[i + (chunkY * sizeChunkX) - 1].leftTop = w;
                         
                     }
 
@@ -317,18 +316,18 @@ public class tileMapManager : MonoBehaviour
 
             if (!w.odd && i + chunkY * sizeChunkX < LineOrder.Count) // Tuile sur les côté pour les even
             {
-                w.Neighbors.Add(LineOrder[i + chunkY * sizeChunkX].gameObject); // TUILE D'APRES HORIZONTALEMENT => Right    
-                w.right = LineOrder[i + chunkY * sizeChunkX].gameObject;
-                LineOrder[i + chunkY * sizeChunkX].Neighbors.Add(w.gameObject); // TUILE D'AVANT HORIZONTALEMENT => Left
-                LineOrder[i + chunkY * sizeChunkX].left = w.gameObject;
+                w.Neighbors.Add(LineOrder[i + chunkY * sizeChunkX]); // TUILE D'APRES HORIZONTALEMENT => Right    
+                w.right = LineOrder[i + chunkY * sizeChunkX];
+                LineOrder[i + chunkY * sizeChunkX].Neighbors.Add(w); // TUILE D'AVANT HORIZONTALEMENT => Left
+                LineOrder[i + chunkY * sizeChunkX].left = w;
             }
 
             if (w.X == 0)
             {
-                w.Neighbors.Add(LineOrder[(chunkX * sizeChunkX * sizeChunkY * chunkY)-(sizeChunkY * chunkY)+w.Y].gameObject); // TUILE D'APRES HORIZONTALEMENT => Right    
-                w.left = LineOrder[(chunkX * sizeChunkX * sizeChunkY * chunkY)-(sizeChunkY * chunkY)+w.Y].gameObject;
-                LineOrder[(chunkX * sizeChunkX * sizeChunkY * chunkY)-(sizeChunkY * chunkY)+w.Y].Neighbors.Add(w.gameObject); // TUILE D'AVANT HORIZONTALEMENT => Left
-                LineOrder[(chunkX * sizeChunkX * sizeChunkY * chunkY)-(sizeChunkY * chunkY)+w.Y].right = w.gameObject;
+                w.Neighbors.Add(LineOrder[(chunkX * sizeChunkX * sizeChunkY * chunkY)-(sizeChunkY * chunkY)+w.Y]); // TUILE D'APRES HORIZONTALEMENT => Right    
+                w.left = LineOrder[(chunkX * sizeChunkX * sizeChunkY * chunkY)-(sizeChunkY * chunkY)+w.Y];
+                LineOrder[(chunkX * sizeChunkX * sizeChunkY * chunkY)-(sizeChunkY * chunkY)+w.Y].Neighbors.Add(w); // TUILE D'AVANT HORIZONTALEMENT => Left
+                LineOrder[(chunkX * sizeChunkX * sizeChunkY * chunkY)-(sizeChunkY * chunkY)+w.Y].right = w;
               
             }
             
@@ -342,18 +341,18 @@ public class tileMapManager : MonoBehaviour
                 if (w.left.GetComponent<Waypoint>().rightTop)
                 {
                     Waypoint W = w.left.GetComponent<Waypoint>().rightTop.GetComponent<Waypoint>();
-                    w.leftTop = W.gameObject;
-                    W.rightBot = w.gameObject;
-                    w.Neighbors.Add(W.gameObject);
-                    W.Neighbors.Add(w.gameObject);
+                    w.leftTop = W;
+                    W.rightBot = w;
+                    w.Neighbors.Add(W);
+                    W.Neighbors.Add(w);
                 }
                 if (w.left.GetComponent<Waypoint>().rightBot)
                 {
                     Waypoint W = w.left.GetComponent<Waypoint>().rightBot.GetComponent<Waypoint>();
-                    w.leftBot = W.gameObject;
-                    W.rightTop = w.gameObject;
-                    w.Neighbors.Add(W.gameObject);
-                    W.Neighbors.Add(w.gameObject);
+                    w.leftBot = W;
+                    W.rightTop = w;
+                    w.Neighbors.Add(W);
+                    W.Neighbors.Add(w);
                 }
             }
             else
@@ -381,9 +380,9 @@ public class tileMapManager : MonoBehaviour
                 {
                     float total = 0;
                     int div = 0;
-                    foreach (GameObject N in w.Neighbors)
+                    foreach (Waypoint N in w.Neighbors)
                     {                      
-                        if (N.GetComponent<Waypoint>().elevation != 0f)
+                        if (N.elevation != 0f)
                         {
                             total += N.GetComponent<Waypoint>().elevation;
                             div++;
@@ -425,18 +424,19 @@ public class tileMapManager : MonoBehaviour
             
             w.Food = selection.Food;
             w.Production = selection.Production;
-            w.Gold = selection.Gold;               
+            w.Gold = selection.Gold; 
+            w.mouvCost = selection.MovCost;
+            
             currentWayPoint.transform.GetChild(0).GetComponent<MeshRenderer>().material = mat;
             
             if (w.HeightType==HeightType.DeepWater || w.HeightType==HeightType.ShallowWater)
             {
                 
-                foreach (GameObject neighbor in w.GetComponent<Waypoint>().Neighbors)
+                foreach (Waypoint neighbor in w.GetComponent<Waypoint>().Neighbors)
                 {
                     if (w.HeightType!=HeightType.DeepWater && w.HeightType!=HeightType.ShallowWater)
                     {
-                        Waypoint W = neighbor.GetComponent<Waypoint>();
-                        if (W.HeatType == HeatType.Cold || W.HeatType == HeatType.Coldest || W.HeatType == HeatType.Colder)
+                        if (neighbor.HeatType == HeatType.Cold || neighbor.HeatType == HeatType.Coldest || neighbor.HeatType == HeatType.Colder)
                         {
                             GameObject Ice = Instantiate(ice,w.transform);                
                             Ice.transform.localPosition = new Vector3(0,w.elevation,0);
@@ -454,7 +454,7 @@ public class tileMapManager : MonoBehaviour
                 w.Food += p.foodBonus;
                 w.Production += p.productionBonus;
                 w.Gold += p.goldBonus;
-                
+                w.mouvCost += p.MovCost;
                 currentProp.transform.localPosition = new Vector3(0,0,0);
             }
             w.spriteContainer.transform.Translate(new Vector3(0,w.elevation+0.05f,0));
@@ -503,11 +503,43 @@ public class tileMapManager : MonoBehaviour
             Tile.HeightType = Tiles[Tile.X, Tile.Y].HeightType;
             Tile.HeatType = Tiles[Tile.X, Tile.Y].HeatType;
             Tile.MoistureType = Tiles[Tile.X, Tile.Y].MoistureType;
+            
         }
-     
+             
+        Waypoint middle = Draw();
+
+       
         
-        Waypoint middle = Draw();      
         return middle;
+    }
+
+    public void ShowDijtra()
+    {
+        foreach (Waypoint w in ChunkOrder)
+        {
+            w.gameObject.SetActive(false);
+        }
+        Waypoint Start = ChunkOrder[0];
+        Waypoint End = LineOrder[(LineOrder.Count/2)+chunkX*sizeChunkX];        
+        ChunkOrder[0].DijkstraSearch(Start,End);
+        var shortestPath = new List<Waypoint>();
+        shortestPath.Add(End);
+        if (End.NearestToStart)
+        {
+            ChunkOrder[ChunkOrder.Count-1].BuildShortestPath(shortestPath, End);
+            shortestPath.Reverse();
+            foreach (Waypoint path in shortestPath)
+            {
+                path.gameObject.SetActive(true);
+            }
+        }
+        else
+        {
+            foreach (Waypoint Tile in LineOrder)
+            {     
+                Tile.gameObject.SetActive(true);
+            }
+        }
     }
     public _3DtileType ClimateDiagram(BiomeType type)
     {
@@ -580,6 +612,7 @@ public class _3DtileType
     public float Food;
     public float Production;
     public float Gold;
+    public int MovCost = 1;
     
     private static Random rng = new Random();
     public static void Shuffle<T>(IList<T> list)
@@ -622,6 +655,8 @@ public class Prop
     public float foodBonus = 0;
     public float productionBonus = 0;
     public float goldBonus = 0;
+    
+    public int MovCost = 1;
 } 
 
 public class SavedWaypoint
@@ -641,7 +676,7 @@ public class SavedWaypoint
     {
         WPname = w.name;
         Names=new List<string>();
-        foreach (GameObject n in w.Neighbors)
+        foreach (Waypoint n in w.Neighbors)
         {
             Names.Add(n.name);
         }
