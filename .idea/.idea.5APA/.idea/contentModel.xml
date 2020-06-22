@@ -68,10 +68,18 @@
           <e p="GameController" t="Include">
             <e p="GameController.cs" t="Include" />
           </e>
-          <e p="Generator.cs" t="Include" />
+          <e p="Generator" t="Include">
+            <e p="Generator.cs" t="Include" />
+            <e p="MapData.cs" t="Include" />
+            <e p="MathHelper.cs" t="Include" />
+            <e p="River.cs" t="Include" />
+            <e p="TextureGenerator.cs" t="Include" />
+            <e p="Tile.cs" t="Include" />
+            <e p="TileGroup.cs" t="Include" />
+            <e p="WrappingWorldGenerator.cs" t="Include" />
+          </e>
           <e p="MainMapControllerScript.cs" t="Include" />
           <e p="ManageCity.cs" t="Include" />
-          <e p="MathHelper.cs" t="Include" />
           <e p="Noise.cs" t="Include" />
           <e p="RTS_Camera.cs" t="Include" />
           <e p="tileMapManager.cs" t="Include" />

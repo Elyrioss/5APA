@@ -44,7 +44,10 @@ public class Waypoint : MonoBehaviour
     
     public float noiseValue;
     public float elevation=0;
-    public type type;
+    public BiomeType BiomeType;
+    public HeightType HeightType;
+    public HeatType HeatType;
+    public MoistureType MoistureType;
     
     public float Food;
     public float Production;
@@ -83,19 +86,5 @@ public class Waypoint : MonoBehaviour
     public string tilemapname;
     [HideInInspector]
     public int tileid;
-    public Waypoint(SavedWaypoint w)
-    {
-        names = w.Names;
-        type = w.type;
-        elevation = w.elevation;
-        X = w.X;
-        Y = w.Y;
-        i = w.i;
-        j = w.j;
-        tileid = w.tileid;
-    }
-    public void Clicked()
-    {
-        
-    }
+
 }

@@ -13,11 +13,15 @@ using Random = System.Random;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
+
 public class tileMapManager : MonoBehaviour
 {
 
     
     //* DISPLAY *//
+
+    public GameObject Prefab;
+    public GameObject PrefabOcean;
 
     public List<Material> Materials;
     public GameObject ice;
@@ -25,13 +29,9 @@ public class tileMapManager : MonoBehaviour
     public TileMapPos map;//Reference pour le contenant pour les tuiles (voir le fonctionnement des tilemap unity)
     public List<TileMapPos> Chunks = new List<TileMapPos>(); 
     public List<_3DtileType> _3DTiles;
-    public List<tileType> tiles;//Liste de tout les types de tuiles possibles
     public Grid grid; //Contenant pour les contenant des tuile (voir le fonctionnement des tilemap unity)
     //public List<Tilemap> _maps = new List<Tilemap>();//Liste des Chunk instancié 
     public Waypoint waypointPrefab;//Prefab pour les waypoint qui stocke les donnés 
-    public List<type> cold;//Listes des tuiles de type froide
-    public List<type> hot;//Listes des tuiles de type chaude
-    public List<type> temperate;//Listes des tuiles de type temperé
     
     
     //* TAILLE DE LA CARTE *// 
@@ -68,13 +68,24 @@ public class tileMapManager : MonoBehaviour
     private Waypoint start;
     private bool loaded=false;
     private float[,] noise;
-    public Generator Generator;
-    Tile[,] Tiles;
+    public WrappingWorldGenerator Generator;
+    public Tile[,] Tiles;
+    public float ColdestValue, ColderValue, ColdValue;
     
     private void Start()
-    {        
+    {
+        Generate();
         camOn = true;
+        Generator.Maps((chunkX * sizeChunkX), (chunkY * sizeChunkY), Tiles, ColdestValue, ColderValue, ColdValue);
+        MainMapControllerScript MMCS = Camera.main.GetComponent<MainMapControllerScript>();
+        MMCS.SetLeft();
         
+        TileMapPos Chunk = Chunks[0];
+        List<TileMapPos> result = new List<TileMapPos>();
+        result = MMCS.HeightCull(Chunk, 3);
+        MMCS.currentChunk = Chunk;
+        MMCS.CurrentChunks = result;
+
     }
 
     //Create the waypoints gameobjects
@@ -140,24 +151,43 @@ public class tileMapManager : MonoBehaviour
             {
                 if (chunk != chunk2)
                 {
-                    if(chunk2.X == chunk.X+1 && chunk2.Y == chunk.Y)
+                    if (chunk2.X == chunk.X + 1 && chunk2.Y == chunk.Y)
+                    {
                         chunk.neighBours.Add(chunk2);
+                        chunk.Right = chunk2;
+                    }
+                        
 
                     if (chunk2.X == chunkX && chunk.X == 1 && chunk2.Y == chunk.Y)
                     {
                         chunk.neighBours.Add(chunk2);
+                        chunk.Left = chunk2;
+                        
                         chunk2.neighBours.Add(chunk);
+                        chunk2.Right = chunk;
+                    }
+
+
+                    if (chunk2.X == chunk.X - 1 && chunk2.Y == chunk.Y)
+                    {
+                        chunk.neighBours.Add(chunk2);
+                        chunk.Left = chunk2;
+                    }
+
+
+                    if (chunk2.Y == chunk.Y + 1 && chunk2.X == chunk.X)
+                    {
+                        chunk.neighBours.Add(chunk2);
+                        chunk.Top = chunk2;
+                    }
+
+
+                    if (chunk2.Y == chunk.Y - 1 && chunk2.X == chunk.X)
+                    {
+                        chunk.neighBours.Add(chunk2);
+                        chunk.Bot = chunk2;
                     }
                         
-                
-                    if(chunk2.X == chunk.X-1 && chunk2.Y == chunk.Y)
-                        chunk.neighBours.Add(chunk2);
-                
-                    if(chunk2.Y == chunk.Y+1 && chunk2.X == chunk.X)
-                        chunk.neighBours.Add(chunk2);
-                
-                    if(chunk2.Y == chunk.Y-1 && chunk2.X == chunk.X)
-                        chunk.neighBours.Add(chunk2);
                 }
                 
             }
@@ -190,13 +220,17 @@ public class tileMapManager : MonoBehaviour
             }
             w.transform.SetParent(grid.transform);
             w.names = sw.Names;
-            w.type = sw.type;
+            w.HeightType = sw.HeightType;
+            w.BiomeType = sw.BiomeType;
+            
+            w.HeatType = sw.HeatType;
+            w.MoistureType = sw.MoistureType;
+            
             w.elevation = sw.elevation;
             w.X = sw.X;
             w.Y = sw.Y;
             w.i = sw.i;
             w.j = sw.j;
-            w.tileid = sw.tileid;
             w.name = ""+(w.X) + (w.Y);
             ChunkOrder.Add(w);
         }
@@ -310,12 +344,16 @@ public class tileMapManager : MonoBehaviour
                     Waypoint W = w.left.GetComponent<Waypoint>().rightTop.GetComponent<Waypoint>();
                     w.leftTop = W.gameObject;
                     W.rightBot = w.gameObject;
+                    w.Neighbors.Add(W.gameObject);
+                    W.Neighbors.Add(w.gameObject);
                 }
                 if (w.left.GetComponent<Waypoint>().rightBot)
                 {
                     Waypoint W = w.left.GetComponent<Waypoint>().rightBot.GetComponent<Waypoint>();
                     w.leftBot = W.gameObject;
                     W.rightTop = w.gameObject;
+                    w.Neighbors.Add(W.gameObject);
+                    W.Neighbors.Add(w.gameObject);
                 }
             }
             else
@@ -324,87 +362,81 @@ public class tileMapManager : MonoBehaviour
             }
         }
         
-        Tiles = Generator.Generate((chunkX*sizeChunkX),(chunkY*sizeChunkY),LineOrder,lacunarity);
+        Tiles = Generator.GenerateTileMap(this,(chunkX*sizeChunkX),(chunkY*sizeChunkY),lacunarity,seed);
     }
     
     //Dessiné la carte 
     public Waypoint Draw()
     {
-        List<tileType> selection;
-        List<_3DtileType> selection3D;
+        _3DtileType selection;
         Waypoint result = LineOrder[0];
         foreach (Waypoint w in ChunkOrder)
         {
-            Material mat = Materials[0];    
+            Material mat = Materials[0];
+            GameObject currentWayPoint;
             
-            if (w.elevation < 0.2f)//Si l'altitude est inférieur a 0, la case est un océan
+            if (w.HeightType == HeightType.DeepWater || w.HeightType == HeightType.ShallowWater ||w.HeightType == HeightType.River)//Si l'altitude est inférieur a 0, la case est un océan
             {
-                selection = ClimateDiagram(type.ocean);
-                selection3D = _3DClimateDiagram(type.ocean);// prend une case de type océan
-                w.type = type.ocean;
-                //w.elevation += 0.25f;
-                           
-                if (w.elevation < 0f)
+                if (w.HeightType == HeightType.River)
                 {
-                    mat = Materials[2];
+                    float total = 0;
+                    int div = 0;
+                    foreach (GameObject N in w.Neighbors)
+                    {                      
+                        if (N.GetComponent<Waypoint>().elevation != 0f)
+                        {
+                            total += N.GetComponent<Waypoint>().elevation;
+                            div++;
+                        }
+                    }
+
+                    w.elevation = total / div;
                 }
-                
-                if (w.elevation < -0.1f)
+                else
                 {
-                    mat = Materials[3];
-                }                
+                    if (w.noiseValue < 0.3f)
+                    {
+                        mat = Materials[1];
+                    }
                 
+                    if (w.noiseValue < 0.2f)
+                    {
+                        mat = Materials[2];
+                    }
+                }
+                           
+                   
+                
+                selection = ClimateDiagram(BiomeType.Water);  
+                currentWayPoint = Instantiate(PrefabOcean,w.transform);
             }
             else
             {
-                selection = ClimateDiagram(w.type);//Prend une case du type stocké dans la tuile 
-                selection3D = _3DClimateDiagram(w.type);
-                
-                
+                selection = ClimateDiagram(w.BiomeType);      
+                mat = selection.mat;
+                currentWayPoint = Instantiate(Prefab,w.transform);
             }
-
-            int s;
-            int s2;
+    
             
-            if (!loaded)
-            {
-                s = UnityEngine.Random.Range(0, selection.Count);
-                s2 = UnityEngine.Random.Range(0, selection3D.Count);
-                w.tileid = s;
-            }
-            else
-            {
-                s2 = w.tileid;
-                s = w.tileid;
-                
-            }
-
-            if (w.type != type.ocean)
-            {
-                mat = Materials[selection3D[s2].mat];
-            }
-            
-            
-            GameObject currentWayPoint = Instantiate(selection3D[s2].Prefab,w.transform);
             currentWayPoint.transform.localPosition = new Vector3(0,w.elevation,0);
-            Prop p = selection3D[s2].getProp(w.elevation);
+            Prop p = selection.getProp(w.elevation);
 
             // Donner les valeur du type de case a la case
             
-            w.Food = selection3D[s2].Food;
-            w.Production = selection3D[s2].Production;
-            w.Gold = selection3D[s2].Gold;               
+            w.Food = selection.Food;
+            w.Production = selection.Production;
+            w.Gold = selection.Gold;               
             currentWayPoint.transform.GetChild(0).GetComponent<MeshRenderer>().material = mat;
             
-            if (w.type == type.ocean)
+            if (w.HeightType==HeightType.DeepWater || w.HeightType==HeightType.ShallowWater)
             {
                 
                 foreach (GameObject neighbor in w.GetComponent<Waypoint>().Neighbors)
                 {
-                    if (neighbor.GetComponent<Waypoint>().type != type.ocean)
+                    if (w.HeightType!=HeightType.DeepWater && w.HeightType!=HeightType.ShallowWater)
                     {
                         Waypoint W = neighbor.GetComponent<Waypoint>();
-                        if ((W.type == type.artic || W.type == type.tundra)&& W.elevation>0.4f)
+                        if (W.HeatType == HeatType.Cold || W.HeatType == HeatType.Coldest || W.HeatType == HeatType.Colder)
                         {
                             GameObject Ice = Instantiate(ice,w.transform);                
                             Ice.transform.localPosition = new Vector3(0,w.elevation,0);
@@ -424,10 +456,6 @@ public class tileMapManager : MonoBehaviour
                 w.Gold += p.goldBonus;
                 
                 currentProp.transform.localPosition = new Vector3(0,0,0);
-                if (p.swapMat)
-                {
-                    currentProp.transform.GetChild(0).GetComponent<MeshRenderer>().material = mat;
-                }
             }
             w.spriteContainer.transform.Translate(new Vector3(0,w.elevation+0.05f,0));
             w.DisableWaypoint();
@@ -436,7 +464,7 @@ public class tileMapManager : MonoBehaviour
                 GameObject Border = Instantiate(border,w.transform);                
                 Border.transform.localPosition = new Vector3(0,w.elevation,0);
                 Border.transform.localEulerAngles = new Vector3(0,-120,0);
-                if (w.type==type.ocean)
+                if (w.HeightType==HeightType.DeepWater || w.HeightType==HeightType.ShallowWater)
                 {
                     GameObject Ice = Instantiate(ice,w.transform);                
                     Ice.transform.localPosition = new Vector3(0,w.elevation,0);
@@ -447,7 +475,7 @@ public class tileMapManager : MonoBehaviour
                 GameObject Border = Instantiate(border,w.transform);                
                 Border.transform.localPosition = new Vector3(0,w.elevation,0);
                 Border.transform.localEulerAngles = new Vector3(0,0,0);
-                if (w.type==type.ocean)
+                if (w.HeightType==HeightType.DeepWater || w.HeightType==HeightType.ShallowWater)
                 {
                     GameObject Ice = Instantiate(ice,w.transform);                
                     Ice.transform.localPosition = new Vector3(0,w.elevation,0);
@@ -466,221 +494,31 @@ public class tileMapManager : MonoBehaviour
         Order();
         
         loaded = false;
-        
-        
-        //prep
-
-        int changeTemp=0, changeHot=0, changeCold=0;
-        
-        List<Waypoint> temp = new List<Waypoint>();
-        foreach (Waypoint w in ChunkOrder)
-        {
-            temp.Add(w);
-        }
-        
-        int HOT = 0;
-        int COLD = 0;
-        int TEMP = 0;
-
-        //noise = Noise.GenerateNoiseMap(sizeChunkX * chunkX * 2, sizeChunkY * chunkY * 2, this.seed, noiseScale, octaves,persistence, lacunarity, offset);
-           
-        Queue<Waypoint> frontier = new Queue<Waypoint>();
-        Waypoint start = ChunkOrder[UnityEngine.Random.Range(0, ChunkOrder.Count)];
-        frontier.Enqueue(start);
-        start.visited = true;
-        start.type = cold[0];
-        int index=0;
-        
-        /*
-         *Principe de l'algo :
-         *
-         * On utilise une Queue contenant une seul tuile prise au hasard. Ensuite on Choisis le méridien ou la tuile se trouve pour choisir le climat.
-         * Une fois le climat choisis on vérifis si on change de biome, puis on lui donne un biome. Ensuite on utilise la courbe d'animation pour
-         * séléctionné une hauteur adapté.
-         *
-         * Pour changé de tuile on prend un voisin aux hasard et l'ajoute a la queue.Si les voisins sont visité on prend une tuile aléatoire
-         * parmis toutes les toiles.
-         * 
-        */
-        while (frontier.Count > 0)
-        {
-            
-            type currentType;
-            index++;
-            Waypoint current = frontier.Dequeue();
-                   
-            int c = UnityEngine.Random.Range(0, 1000);
-            List<GameObject> tempNeighbors = current.Neighbors;
-            Shuffle(tempNeighbors);
-
-            if (current.Y < (sizeChunkY * chunkY) / 7)
-            {
-                if (c < biomeVariation && changeCold>minNumberOfTile)
-                {
-                    COLD = UnityEngine.Random.Range(0, cold.Count);
-                    changeCold = 0;
-                }
-
-                changeCold++;
-                currentType = cold[COLD];
-            }
-            else if (current.Y < (2 * sizeChunkY * chunkY) / 7)
-            {
-                if (c < biomeVariation && changeTemp>minNumberOfTile)
-                {
-                    TEMP = UnityEngine.Random.Range(0, temperate.Count);
-                    changeTemp = 0;
-                }
-
-                changeTemp++;
-                currentType = temperate[TEMP];              
-            }
-            else if (current.Y < (4 * sizeChunkY * chunkY) / 7)
-            {
-                if (c < biomeVariation && changeHot>minNumberOfTile)
-                {
-                    HOT = UnityEngine.Random.Range(0, hot.Count);
-                    changeHot = 0;
-                }
-
-                changeHot++;
-                currentType = hot[HOT];
-            }
-            else if (current.Y < (6 * sizeChunkY * chunkY) / 7)
-            {
-                if (c < biomeVariation && changeTemp>minNumberOfTile)
-                {
-                    TEMP = UnityEngine.Random.Range(0, temperate.Count);
-                    changeTemp = 0;
-                }
-
-                changeTemp++;
-                currentType = temperate[TEMP];
-            }
-            else
-            {
-                if (c < biomeVariation && changeCold>minNumberOfTile)
-                {
-                    COLD = UnityEngine.Random.Range(0, cold.Count);
-                    changeCold = 0;
-                }
-
-                changeCold++;
-                
-                currentType = cold[COLD];                
-            }
-
-            
-            current.type = currentType;
-
-                  
-            for (int i = 0; i < current.Neighbors.Count; i++)
-            {
-                GameObject Next = tempNeighbors[i];
-                Waypoint next = Next.GetComponent<Waypoint>();
-                if (next != null) // Si la case existe
-                {
-                    if (!next.visited)
-                    {
-                        temp.Remove(next);
-                        next.visited = true;
-                        frontier.Enqueue(next);
-                        break;
-                    }
-                }                
-            }
-            
-            
-            if(index < ChunkOrder.Count && frontier.Count == 0)
-            {
-                Waypoint start2 = temp[UnityEngine.Random.Range(0, temp.Count)];
-                if (!start2.visited)
-                {
-                    temp.Remove(start2);
-                    start2.visited = true;
-                    frontier.Enqueue(start2);
-                }
-                else
-                {
-                    while (start2.visited)
-                    {
-                        start2 = temp[UnityEngine.Random.Range(0, temp.Count)];
-                        if (!start2.visited)
-                        {
-                            temp.Remove(start2);   
-                            frontier.Enqueue(start2);
-                        } 
-                    }
-                    start2.visited = true; 
-                }
-                           
-            }
-        }
-
-        
-        //Mélange les tuiles en copiant le type d'une tuile voisine pour rendre les limite entre les climat et biome moins homogène
+                        
         foreach (Waypoint Tile in LineOrder)
-        {
-            float change = UnityEngine.Random.Range(0, 1);          
-            Tile.elevation = SmoothCurve.Evaluate(Tiles[Tile.X, Tile.Y].HeightValue);
+        {     
+            Tile.elevation = Tiles[Tile.X, Tile.Y].HeightValue*noiseScale;
             Tile.noiseValue = Tiles[Tile.X,Tile.Y].HeightValue;
-            
-            
-            
-            if (change < 0.2)
-            {
-                int k = UnityEngine.Random.Range(0, Tile.Neighbors.Count);
-                type T = Tile.Neighbors[k].GetComponent<Waypoint>().type;
-                if ( Tile.type != type.ocean)
-                {
-                    int rand = UnityEngine.Random.Range(0, Tile.Neighbors.Count);
-                    Tile.type = Tile.Neighbors[rand].GetComponent<Waypoint>().type;                    
-                }
-                
-            }
-            
-            
-            if (!Tile.visited)
-            {
-                Debug.Log("You missed one !");
-            }
+            Tile.BiomeType = Tiles[Tile.X, Tile.Y].BiomeType;
+            Tile.HeightType = Tiles[Tile.X, Tile.Y].HeightType;
+            Tile.HeatType = Tiles[Tile.X, Tile.Y].HeatType;
+            Tile.MoistureType = Tiles[Tile.X, Tile.Y].MoistureType;
         }
      
         
         Waypoint middle = Draw();      
         return middle;
     }
-    
-    //Renvoie la liste des tuiles pour un type précis
-    public List<tileType> ClimateDiagram(type type)
+    public _3DtileType ClimateDiagram(BiomeType type)
     {
-        List<tileType> results = new List<tileType>();
-        foreach (tileType t in tiles)
-        {
-            if (t.Type == type)
-            {
-                results.Add(t);
-            }
-        }
-
-        return results;
-    }
-    
-    public List<_3DtileType> _3DClimateDiagram(type type)
-    {
-        List<_3DtileType> results = new List<_3DtileType>();
         foreach (_3DtileType t in _3DTiles)
         {
-            if (t.Type == type)
+            if (t.BiomeType == type)
             {
-                for (int i = 0; i < t.prob; i++)
-                {
-                    results.Add(t);
-                }              
+                return t;            
             }
         }
-
-        return results;
+        return _3DTiles[10];
     }
     
     //Clean map
@@ -730,42 +568,15 @@ public class tileMapManager : MonoBehaviour
 
 }
 
-public enum type
-{
-    ocean,
-    island,
-    jungle,
-    mesa,
-    desert,
-    swamp,
-    forest,
-    grass,
-    dirt,
-    savana,
-    tundra,
-    artic,
-    hellscape
-};
 
-[Serializable]
-public class tileType
-{
-    public string name;
-    public type Type;
-    public int elevation;
-    public Tile _tile;
-}
 
 [Serializable]
 public class _3DtileType
 {
     public string Name;
-    public type Type;
-    public int prob=1;
-    public int mat=0;
-    public GameObject Prefab;
-    public List<Prop> props;
-      
+    public BiomeType BiomeType;
+    public Material mat;
+    public List<Prop> props;    
     public float Food;
     public float Production;
     public float Gold;
@@ -807,8 +618,7 @@ public class Prop
     public float minElevation;
     public float maxElevation;
     public float prob;
-    public bool swapMat = true;
-
+    
     public float foodBonus = 0;
     public float productionBonus = 0;
     public float goldBonus = 0;
@@ -819,13 +629,14 @@ public class SavedWaypoint
     public string WPname;
     public List<String> Names;
     public float elevation=0;
-    public type type;
+    public HeightType HeightType;
+    public BiomeType BiomeType;
+    public HeatType HeatType;
+    public MoistureType MoistureType;
     public int X;
     public int Y;
     public int i;
     public int j;
-    public int id;
-    public int tileid;
     public SavedWaypoint(Waypoint w, int _i)
     {
         WPname = w.name;
@@ -835,14 +646,15 @@ public class SavedWaypoint
             Names.Add(n.name);
         }
 
-        type = w.type;
+        BiomeType = w.BiomeType;
+        HeightType = w.HeightType;
+        HeatType = w.HeatType;
+        MoistureType = w.MoistureType;
         elevation = w.elevation;
         X = w.X;
         Y = w.Y;
         i = w.i;
-        j = w.j;
-        id = _i;
-        tileid = w.tileid;
+        j = w.j;  
     }
     
     
