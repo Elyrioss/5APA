@@ -15,11 +15,17 @@ public class GameController : MonoBehaviour
 
     public int NumberOfTurn = 1;
 
+    public GameObject cityMenu;
+
+
+    public MainMapControllerScript MapControllerScript;
+    public ManageCity SelectedCity;
+
     // Start is called before the first frame update
     void Start()
     {
         state = TurnState.START;
-        // Initialisation de trucs ?
+        MapControllerScript = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<MainMapControllerScript>();
     }
 
     // Update is called once per frame
@@ -31,13 +37,34 @@ public class GameController : MonoBehaviour
 
 
 
+    //UI
     public void NextTurn()
     {
         state = TurnState.ENDTURN;
+        cityMenu.SetActive(false);
         //Les ennemies ? La recolte ?
-        //On fait des choooooooses
+        foreach (City c in MapControllerScript._cities)
+        {
+            c.EndOfTurn();
+        }
         NumberOfTurn++;
         TurnTxt.text = "Turn : " + NumberOfTurn;
         state = TurnState.START;
+    }
+
+
+    public void FoodBatConstruction()
+    {
+        SelectedCity.CreateFoodBat();
+    }
+
+    public void ProducBatConstruction()
+    {
+        SelectedCity.CreateProducBat();
+    }
+
+    public void GoldBatConstruction()
+    {
+        SelectedCity.CreateGoldBat();
     }
 }

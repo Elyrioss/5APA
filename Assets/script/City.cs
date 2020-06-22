@@ -9,19 +9,22 @@ public class City
     public int population;
     public Waypoint position;
     public Color civColor;
-    public List<Waypoint> controlArea=new List<Waypoint>();
+    public List<Waypoint> controlArea= new List<Waypoint>();
 
     public float food = 0;
     public float production = 0;
     public float gold = 0;
     
-    public Construction construction;
+    public Construction construction = new Construction();
+
+    //Construction Var
+    public bool ThisCityAction; // Empeche le joueur d'effectuer plus d'une action sur la ville par tour.
        
-    public City(Waypoint position,Color color)
+    public City(Waypoint pos,Color color)
     {
 
         civColor = color;
-        position = position;
+        position = pos;
         position.CivColor = civColor;
         position.EnableWaypoint();
         controlArea.Add(position);
@@ -158,6 +161,54 @@ public class City
                 waypoint.spriteRenderer[4].gameObject.SetActive(false);
             }
         }
+    }
+
+
+
+    public void EndOfTurn()
+    {
+        //On récupère les resources naturelles
+        food += position.Food;
+        production += position.Production;
+        gold += position.Gold;
+        foreach (GameObject w in position.Neighbors)
+        {
+            Waypoint W = w.GetComponent<Waypoint>();
+            controlArea.Add(W);
+            W.CivColor = civColor;
+            W.EnableWaypoint();
+            food += W.Food;
+            production += W.Production;
+            gold += W.Gold;
+        }
+        //Resources Batiments interieurs
+        if (construction.buildings != null)
+        {
+            foreach (Buildings b in construction.buildings)
+            {
+                if (b.BuildType == Buildings.BuildingType.Ressource)
+                {
+                    switch (b.RessourceType)
+                    {
+                        case 0:
+                            break;
+                        case 1:
+                            food += 50;
+                            break;
+                        case 2:
+                            production += 50;
+                            break;
+                        case 3:
+                            gold += 50;
+                            break;
+                    }
+                }
+            }
+        }
+
+        //On regarde la file de construction de la ville.
+        construction.ConstructionProcess();
+        ThisCityAction = false;
     }
     
 }
