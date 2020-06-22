@@ -33,15 +33,14 @@ public class City
         production += position.Production;
         gold += position.Gold;
         
-        foreach (GameObject w in position.Neighbors)
+        foreach (Waypoint w in position.Neighbors)
         {
-            Waypoint W = w.GetComponent<Waypoint>();
-            controlArea.Add(W);
-            W.CivColor = civColor;
-            W.EnableWaypoint();
-            food += W.Food;
-            production += W.Production;
-            gold += W.Gold;
+            controlArea.Add(w);
+            w.CivColor = civColor;
+            w.EnableWaypoint();
+            food += w.Food;
+            production += w.Production;
+            gold += w.Gold;
         }
         ClearFrontiers();
         population = 1;
