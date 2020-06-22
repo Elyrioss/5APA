@@ -281,24 +281,6 @@ MonoBehaviour:
     BiomeType: 0
     mat: {fileID: 2100000, guid: 764e9dc2512a8094bb4e249a4784aed5, type: 2}
     props:
-    - name: Pyramid
-      prefab: {fileID: 1000011157020050, guid: 5d443afd8fd784be58d352974b0f1729, type: 3}
-      minElevation: -10
-      maxElevation: 10
-      prob: 0.001
-      foodBonus: 0
-      productionBonus: 1
-      goldBonus: 4
-      MovCost: 2
-    - name: Hill
-      prefab: {fileID: 1000012542023498, guid: 3353e02a5d4f040ac9a6dae6df5cd749, type: 3}
-      minElevation: 6
-      maxElevation: 10
-      prob: 0.01
-      foodBonus: 0
-      productionBonus: 2
-      goldBonus: 0
-      MovCost: 3
     - name: Cactus3
       prefab: {fileID: 5969850972450284570, guid: c41f191965c5b734290d787cb9ddcba2,
         type: 3}
@@ -319,6 +301,24 @@ MonoBehaviour:
       productionBonus: 1
       goldBonus: 0
       MovCost: 1
+    - name: Pyramid
+      prefab: {fileID: 1000011157020050, guid: 5d443afd8fd784be58d352974b0f1729, type: 3}
+      minElevation: -10
+      maxElevation: 10
+      prob: 0.001
+      foodBonus: 0
+      productionBonus: 1
+      goldBonus: 4
+      MovCost: 2
+    - name: Hill
+      prefab: {fileID: 1000012542023498, guid: 3353e02a5d4f040ac9a6dae6df5cd749, type: 3}
+      minElevation: 6
+      maxElevation: 10
+      prob: 0.01
+      foodBonus: 0
+      productionBonus: 2
+      goldBonus: 0
+      MovCost: 3
     - name: Cactus2
       prefab: {fileID: 5092987480313838738, guid: efb6f1fa85762614f9ec3b8fba5de115,
         type: 3}
@@ -357,16 +357,6 @@ MonoBehaviour:
       productionBonus: 2
       goldBonus: 1
       MovCost: 1
-    - name: Grass
-      prefab: {fileID: 2762360639567958854, guid: 1ec334f1eb425d745b089d8c19814651,
-        type: 3}
-      minElevation: -10
-      maxElevation: 10
-      prob: 0.4
-      foodBonus: 2
-      productionBonus: 1
-      goldBonus: 0
-      MovCost: 0
     - name: Tree2
       prefab: {fileID: 7653197145662444302, guid: f793d85690de23a40a710c44f7065854,
         type: 3}
@@ -377,6 +367,16 @@ MonoBehaviour:
       productionBonus: 2
       goldBonus: 0
       MovCost: 2
+    - name: Grass
+      prefab: {fileID: 2762360639567958854, guid: 1ec334f1eb425d745b089d8c19814651,
+        type: 3}
+      minElevation: -10
+      maxElevation: 10
+      prob: 0.4
+      foodBonus: 2
+      productionBonus: 1
+      goldBonus: 0
+      MovCost: 0
     Food: 1
     Production: 2
     Gold: 3
@@ -385,8 +385,8 @@ MonoBehaviour:
     BiomeType: 2
     mat: {fileID: 2100000, guid: 290f5ccf217b3704381d0852db345eb1, type: 2}
     props:
-    - name: Tree3
-      prefab: {fileID: 8697614974457373045, guid: 836808159a996944bb8aed00c5d85ca7,
+    - name: Tree2
+      prefab: {fileID: 5408095256018823940, guid: 3f0959028c4560840bd14ede7c8b410e,
         type: 3}
       minElevation: -10
       maxElevation: 10
@@ -405,16 +405,6 @@ MonoBehaviour:
       productionBonus: 2
       goldBonus: 0
       MovCost: 2
-    - name: Tree2
-      prefab: {fileID: 5408095256018823940, guid: 3f0959028c4560840bd14ede7c8b410e,
-        type: 3}
-      minElevation: -10
-      maxElevation: 10
-      prob: 0.2
-      foodBonus: 0
-      productionBonus: 2
-      goldBonus: 0
-      MovCost: 2
     - name: Clear
       prefab: {fileID: 6769945061246099026, guid: 4db34f9414a915a47b7f231b2e5f22f7,
         type: 3}
@@ -425,6 +415,16 @@ MonoBehaviour:
       productionBonus: 1
       goldBonus: 1
       MovCost: 0
+    - name: Tree3
+      prefab: {fileID: 8697614974457373045, guid: 836808159a996944bb8aed00c5d85ca7,
+        type: 3}
+      minElevation: -10
+      maxElevation: 10
+      prob: 0.2
+      foodBonus: 0
+      productionBonus: 2
+      goldBonus: 0
+      MovCost: 2
     Food: 4
     Production: 1
     Gold: 1
@@ -433,15 +433,6 @@ MonoBehaviour:
     BiomeType: 3
     mat: {fileID: 2100000, guid: 18ac9324ae4026340b71c086968071ef, type: 2}
     props:
-    - name: Hill
-      prefab: {fileID: 1000012907116042, guid: 12233475374e34830b24dd1a84b45a8b, type: 3}
-      minElevation: 1.6
-      maxElevation: 10
-      prob: 0.2
-      foodBonus: 1
-      productionBonus: 1
-      goldBonus: 1
-      MovCost: 2
     - name: Grass
       prefab: {fileID: 1366914380307584206, guid: 0a58495e1fed8eb4790453d556beba1a,
         type: 3}
@@ -452,6 +443,15 @@ MonoBehaviour:
       productionBonus: 0
       goldBonus: 0
       MovCost: 0
+    - name: Hill
+      prefab: {fileID: 1000012907116042, guid: 12233475374e34830b24dd1a84b45a8b, type: 3}
+      minElevation: 1.6
+      maxElevation: 10
+      prob: 0.2
+      foodBonus: 1
+      productionBonus: 1
+      goldBonus: 1
+      MovCost: 2
     Food: 3
     Production: 2
     Gold: 1
@@ -460,26 +460,6 @@ MonoBehaviour:
     BiomeType: 4
     mat: {fileID: 2100000, guid: da5af521ed7f81e4e839cbf69f25c0ec, type: 2}
     props:
-    - name: Tree2
-      prefab: {fileID: 6789358411793278913, guid: ac1cc2759a1fb3049bbd10851f3643e6,
-        type: 3}
-      minElevation: -10
-      maxElevation: 10
-      prob: 0.3
-      foodBonus: 0
-      productionBonus: 2
-      goldBonus: 0
-      MovCost: 2
-    - name: Tree3
-      prefab: {fileID: 5398692979834241492, guid: a38650083e97a334d83e7f05b26dd019,
-        type: 3}
-      minElevation: -10
-      maxElevation: 10
-      prob: 0.3
-      foodBonus: 0
-      productionBonus: 2
-      goldBonus: 0
-      MovCost: 2
     - name: Tree4
       prefab: {fileID: 482194962952344344, guid: 3bece83ecdc62bd4086b53ce115ae0d7,
         type: 3}
@@ -492,6 +472,26 @@ MonoBehaviour:
       MovCost: 2
     - name: Tree
       prefab: {fileID: 5455492406051052248, guid: b19c17dfb70dadd469ceb321821f4ced,
+        type: 3}
+      minElevation: -10
+      maxElevation: 10
+      prob: 0.3
+      foodBonus: 0
+      productionBonus: 2
+      goldBonus: 0
+      MovCost: 2
+    - name: Tree2
+      prefab: {fileID: 6789358411793278913, guid: ac1cc2759a1fb3049bbd10851f3643e6,
+        type: 3}
+      minElevation: -10
+      maxElevation: 10
+      prob: 0.3
+      foodBonus: 0
+      productionBonus: 2
+      goldBonus: 0
+      MovCost: 2
+    - name: Tree3
+      prefab: {fileID: 5398692979834241492, guid: a38650083e97a334d83e7f05b26dd019,
         type: 3}
       minElevation: -10
       maxElevation: 10
@@ -518,8 +518,18 @@ MonoBehaviour:
       productionBonus: 2
       goldBonus: 0
       MovCost: 2
-    - name: SeasonalTree
-      prefab: {fileID: 2263620294049494662, guid: a0d3e293beea04e45a57229ef72b1f03,
+    - name: Clear
+      prefab: {fileID: 7541282235961019013, guid: fe0065f83c06dc540bdfe74bc18249bd,
+        type: 3}
+      minElevation: -10
+      maxElevation: 10
+      prob: 0.1
+      foodBonus: 1
+      productionBonus: 0
+      goldBonus: 1
+      MovCost: 0
+    - name: Seasonal2
+      prefab: {fileID: 4633006425646583751, guid: 4628dab6bd6e61049b8b42564ef7884d,
         type: 3}
       minElevation: -10
       maxElevation: 10
@@ -538,8 +548,8 @@ MonoBehaviour:
       productionBonus: 2
       goldBonus: 2
       MovCost: 0
-    - name: Seasonal2
-      prefab: {fileID: 4633006425646583751, guid: 4628dab6bd6e61049b8b42564ef7884d,
+    - name: SeasonalTree
+      prefab: {fileID: 2263620294049494662, guid: a0d3e293beea04e45a57229ef72b1f03,
         type: 3}
       minElevation: -10
       maxElevation: 10
@@ -548,16 +558,6 @@ MonoBehaviour:
       productionBonus: 2
       goldBonus: 0
       MovCost: 2
-    - name: Clear
-      prefab: {fileID: 7541282235961019013, guid: fe0065f83c06dc540bdfe74bc18249bd,
-        type: 3}
-      minElevation: -10
-      maxElevation: 10
-      prob: 0.1
-      foodBonus: 1
-      productionBonus: 0
-      goldBonus: 1
-      MovCost: 0
     Food: 1
     Production: 3
     Gold: 2
@@ -566,14 +566,14 @@ MonoBehaviour:
     BiomeType: 6
     mat: {fileID: 2100000, guid: 91d4683d1e315c947aa0b636e0e95b2e, type: 2}
     props:
-    - name: Tree3
-      prefab: {fileID: 8364085218978969387, guid: 95a3f86bb964461409b9da786df108a6,
+    - name: Grass
+      prefab: {fileID: 7564864325656275551, guid: 1a0dd29b81468164f868ddddd1431401,
         type: 3}
       minElevation: -10
       maxElevation: 10
       prob: 0.2
-      foodBonus: 0
-      productionBonus: 2
+      foodBonus: 1
+      productionBonus: 0
       goldBonus: 0
       MovCost: 2
     - name: Tree2
@@ -586,8 +586,8 @@ MonoBehaviour:
       productionBonus: 2
       goldBonus: 0
       MovCost: 2
-    - name: Tree1
-      prefab: {fileID: 7920123866302819031, guid: 915900988fadf274f86cb2e6f6fc5350,
+    - name: Tree3
+      prefab: {fileID: 8364085218978969387, guid: 95a3f86bb964461409b9da786df108a6,
         type: 3}
       minElevation: -10
       maxElevation: 10
@@ -606,14 +606,14 @@ MonoBehaviour:
       productionBonus: 1
       goldBonus: 1
       MovCost: 0
-    - name: Grass
-      prefab: {fileID: 7564864325656275551, guid: 1a0dd29b81468164f868ddddd1431401,
+    - name: Tree1
+      prefab: {fileID: 7920123866302819031, guid: 915900988fadf274f86cb2e6f6fc5350,
         type: 3}
       minElevation: -10
       maxElevation: 10
       prob: 0.2
-      foodBonus: 1
-      productionBonus: 0
+      foodBonus: 0
+      productionBonus: 2
       goldBonus: 0
       MovCost: 2
     Food: 2
@@ -624,16 +624,6 @@ MonoBehaviour:
     BiomeType: 7
     mat: {fileID: 2100000, guid: a62af611da9b8f4458e9215fe7ca204b, type: 2}
     props:
-    - name: BorealTree2
-      prefab: {fileID: 2330619745751782891, guid: ecb1c52841ba8104692d5a9df9314de7,
-        type: 3}
-      minElevation: -10
-      maxElevation: 10
-      prob: 0.2
-      foodBonus: 0
-      productionBonus: 2
-      goldBonus: 0
-      MovCost: 2
     - name: BorealTree1
       prefab: {fileID: 3916613891158341923, guid: 72ec307f7c801f94b8190c68e9d5160c,
         type: 3}
@@ -646,6 +636,16 @@ MonoBehaviour:
       MovCost: 2
     - name: BorealTree3
       prefab: {fileID: 7368556941514260282, guid: 4a794c6a59aaf2c45930c25669a95ea3,
+        type: 3}
+      minElevation: -10
+      maxElevation: 10
+      prob: 0.2
+      foodBonus: 0
+      productionBonus: 2
+      goldBonus: 0
+      MovCost: 2
+    - name: BorealTree2
+      prefab: {fileID: 2330619745751782891, guid: ecb1c52841ba8104692d5a9df9314de7,
         type: 3}
       minElevation: -10
       maxElevation: 10
@@ -670,6 +670,16 @@ MonoBehaviour:
     BiomeType: 8
     mat: {fileID: 2100000, guid: 9123429a48aaaa94c8939f22133674f6, type: 2}
     props:
+    - name: TundraTree1
+      prefab: {fileID: 3676161985292702471, guid: 94ed582805415754f841ca8ba72c25f0,
+        type: 3}
+      minElevation: -10
+      maxElevation: 10
+      prob: 0.2
+      foodBonus: 0
+      productionBonus: 2
+      goldBonus: 0
+      MovCost: 2
     - name: TundraTree2
       prefab: {fileID: 6905551798318783948, guid: 2013c46ef55f2354ea102b0981f6eafb,
         type: 3}
@@ -682,16 +692,6 @@ MonoBehaviour:
       MovCost: 2
     - name: TundraTree
       prefab: {fileID: 6279982255119393669, guid: a8680f9eca4c2a94e8b1bf17787f0e44,
-        type: 3}
-      minElevation: -10
-      maxElevation: 10
-      prob: 0.2
-      foodBonus: 0
-      productionBonus: 2
-      goldBonus: 0
-      MovCost: 2
-    - name: TundraTree1
-      prefab: {fileID: 3676161985292702471, guid: 94ed582805415754f841ca8ba72c25f0,
         type: 3}
       minElevation: -10
       maxElevation: 10
@@ -726,7 +726,7 @@ MonoBehaviour:
   persistence: 0.5
   lacunarity: 2
   offset: {x: 0, y: 0}
-  seed: 2788
+  seed: 392
   biomeVariation: 2
   minNumberOfTile: 100
   SmoothCurve:
@@ -793,6 +793,8 @@ MonoBehaviour:
   ColdestValue: 0.05
   ColderValue: 0.18
   ColdValue: 0.4
+  Biomes: []
+  mesh: {fileID: 8280543926562195367, guid: 843a32b5b4c02c042a4ef09aab936e16, type: 3}
 --- !u!156049354 &79866702
 Grid:
   m_ObjectHideFlags: 0

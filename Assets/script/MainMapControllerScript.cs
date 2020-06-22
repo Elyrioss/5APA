@@ -58,7 +58,7 @@ public class MainMapControllerScript : MonoBehaviour
         
         if (changeCull)
         {                   
-            foreach (TileMapPos chunk in Map.Chunks)
+            /*foreach (TileMapPos chunk in Map.Chunks)
             {
                 if (CurrentChunks.Contains(chunk))
                 {
@@ -70,7 +70,7 @@ public class MainMapControllerScript : MonoBehaviour
                 }
             }
             currentChunk.gameObject.SetActive(true);
-            changeCull = false;
+            changeCull = false;*/
                     
         }
         if (Input.GetKeyDown(KeyCode.L))

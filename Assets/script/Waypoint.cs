@@ -36,6 +36,7 @@ public class Waypoint : MonoBehaviour
     
     public GameObject spriteContainer;
     
+    public bool visitedDijstra = false;
     public bool visited = false;
     
     [SerializeField]
@@ -61,7 +62,9 @@ public class Waypoint : MonoBehaviour
     public float Food;
     public float Production;
     public float Gold;
-    
+
+    public MeshFilter TileFilter;
+    public Material mat;
     [SerializeField] public Color CivColor = Color.blue;
     [SerializeField]
     Color Deactivated = Color.clear;
@@ -114,7 +117,7 @@ public class Waypoint : MonoBehaviour
             foreach (var cnn in node.Neighbors.OrderBy(x => x.GetComponent<Waypoint>().mouvCost))
             {
                 var childNode = cnn;
-                if (childNode.visited)
+                if (childNode.visitedDijstra)
                     continue;
                 Debug.Log(prioQueue.Count);
                 if (node.MinCostToStart + cnn.mouvCost < childNode.MinCostToStart)
@@ -126,7 +129,7 @@ public class Waypoint : MonoBehaviour
                 }
             }            
             
-            node.visited = true;
+            node.visitedDijstra = true;
             if (node == End)
                 return;           
         } while (prioQueue.Any());
