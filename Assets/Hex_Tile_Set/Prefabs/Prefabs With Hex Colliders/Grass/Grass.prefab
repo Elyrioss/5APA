@@ -51,6 +51,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: grass_dense (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: ada9fade606cd9b409cade7b636af033, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: ada9fade606cd9b409cade7b636af033, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.02
@@ -117,6 +121,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: ada9fade606cd9b409cade7b636af033, type: 3}
       propertyPath: m_Name
       value: grass_dense (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: ada9fade606cd9b409cade7b636af033, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: ada9fade606cd9b409cade7b636af033, type: 3}
       propertyPath: m_LocalPosition.x
@@ -185,6 +193,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: grass_dense (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: ada9fade606cd9b409cade7b636af033, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: ada9fade606cd9b409cade7b636af033, type: 3}
       propertyPath: m_LocalPosition.x
       value: -4.45
@@ -251,6 +263,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: ada9fade606cd9b409cade7b636af033, type: 3}
       propertyPath: m_Name
       value: grass_dense (7)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: ada9fade606cd9b409cade7b636af033, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: ada9fade606cd9b409cade7b636af033, type: 3}
       propertyPath: m_LocalPosition.x
@@ -319,6 +335,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: grass_dense (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: ada9fade606cd9b409cade7b636af033, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: ada9fade606cd9b409cade7b636af033, type: 3}
       propertyPath: m_LocalPosition.x
       value: 3.98
@@ -385,6 +405,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: ada9fade606cd9b409cade7b636af033, type: 3}
       propertyPath: m_Name
       value: grass_dense (8)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: ada9fade606cd9b409cade7b636af033, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: ada9fade606cd9b409cade7b636af033, type: 3}
       propertyPath: m_LocalPosition.x
@@ -520,6 +544,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: grass_dense (9)
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: ada9fade606cd9b409cade7b636af033, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: ada9fade606cd9b409cade7b636af033, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.34
@@ -586,6 +614,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: ada9fade606cd9b409cade7b636af033, type: 3}
       propertyPath: m_Name
       value: grass_dense (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: ada9fade606cd9b409cade7b636af033, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: ada9fade606cd9b409cade7b636af033, type: 3}
       propertyPath: m_LocalPosition.x

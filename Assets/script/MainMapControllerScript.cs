@@ -31,12 +31,14 @@ public class MainMapControllerScript : MonoBehaviour
         _camera = GetComponent<Camera>();
         Anim = FileUI.GetComponent<Animator>();
         PreviousHeight = transform.position.y;
+        SetToLOD();
     }
 
     // Update is called once per frame
     void Update()
     {
         RaycastHit hit;
+
         if (Physics.Raycast(Raystarter.position, Raystarter.TransformDirection(Vector3.down), out hit, 1000))
         {
             Debug.DrawRay(Raystarter.position, Raystarter.TransformDirection(Vector3.down) * hit.distance, Color.yellow);
@@ -45,24 +47,24 @@ public class MainMapControllerScript : MonoBehaviour
                 Waypoint w = hit.transform.parent.GetComponent<Waypoint>();
                 if (w.Chunk != currentChunk)
                 {
-                    CurrentChunks=HeightCull(w.Chunk, (int) CamHeightCurve.Evaluate(PreviousHeight));
+                   //// CurrentChunks=HeightCull(w.Chunk, (int) CamHeightCurve.Evaluate(PreviousHeight));
                     currentChunk = w.Chunk;
-                    changeCull = true;
+                    //changeCull = true;
                 }
             }
         }
 
         if ((int) CamHeightCurve.Evaluate(PreviousHeight) != (int) CamHeightCurve.Evaluate(transform.position.y))
         {
-            Debug.Log("heigt");
-            PreviousHeight = transform.position.y;
-            CurrentChunks=HeightCull(currentChunk, (int) CamHeightCurve.Evaluate(PreviousHeight));
-            changeCull = true;
+          //  Debug.Log("heigt");
+          //  PreviousHeight = transform.position.y;
+          //  CurrentChunks=HeightCull(currentChunk, (int) CamHeightCurve.Evaluate(PreviousHeight));
+          //  changeCull = true;
         }
         
         if (changeCull)
         {                   
-            foreach (TileMapPos chunk in Map.Chunks)
+            /*foreach (TileMapPos chunk in Map.Chunks)
             {
                 if (CurrentChunks.Contains(chunk))
                 {
@@ -74,7 +76,7 @@ public class MainMapControllerScript : MonoBehaviour
                 }
             }
             currentChunk.gameObject.SetActive(true);
-            changeCull = false;
+            changeCull = false;*/
                     
         }
         if (Input.GetKeyDown(KeyCode.L))
@@ -179,4 +181,30 @@ public class MainMapControllerScript : MonoBehaviour
         return result;
     }
 
+    public void SetToLOD()
+    {
+        foreach (Waypoint w in Map.LineOrder)
+        {
+            if (w.prop)
+            {
+                w.prop.SetActive(false);
+                if(w.LOD)
+                    w.LOD.SetActive(true);
+            }
+        }
+    }
+    public void SetToProp()
+    {
+        foreach (Waypoint w in Map.LineOrder)
+        {
+            if (w.prop)
+            {
+                w.prop.SetActive(true);
+                if(w.LOD)
+                    w.LOD.SetActive(false);
+            }
+        }
+    }
+    
+    
 }

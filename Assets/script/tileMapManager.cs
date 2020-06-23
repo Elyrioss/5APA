@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using AccidentalNoise;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -78,7 +79,7 @@ public class tileMapManager : MonoBehaviour
         camOn = true;
         Generator.Maps((chunkX * sizeChunkX), (chunkY * sizeChunkY), Tiles, ColdestValue, ColderValue, ColdValue);
         MainMapControllerScript MMCS = Camera.main.GetComponent<MainMapControllerScript>();
-        MMCS.SetLeft();
+        //MMCS.SetLeft();
         
         TileMapPos Chunk = Chunks[0];
         List<TileMapPos> result = new List<TileMapPos>();
@@ -376,6 +377,7 @@ public class tileMapManager : MonoBehaviour
             
             if (w.HeightType == HeightType.DeepWater || w.HeightType == HeightType.ShallowWater ||w.HeightType == HeightType.River)//Si l'altitude est inférieur a 0, la case est un océan
             {
+                w.BiomeType = BiomeType.Water;
                 if (w.HeightType == HeightType.River)
                 {
                     float total = 0;
@@ -396,16 +398,16 @@ public class tileMapManager : MonoBehaviour
                     if (w.noiseValue < 0.3f)
                     {
                         mat = Materials[1];
+                        w.BiomeType = BiomeType.ShallowWater;
                     }
                 
                     if (w.noiseValue < 0.2f)
                     {
                         mat = Materials[2];
+                        w.BiomeType = BiomeType.DeepWater;
                     }
                 }
-                           
-                   
-                
+                                                         
                 selection = ClimateDiagram(BiomeType.Water);  
                 currentWayPoint = Instantiate(PrefabOcean,w.transform);
             }
@@ -426,9 +428,9 @@ public class tileMapManager : MonoBehaviour
             w.Production = selection.Production;
             w.Gold = selection.Gold; 
             w.mouvCost = selection.MovCost;
-            
+            w.mat = mat;
             currentWayPoint.transform.GetChild(0).GetComponent<MeshRenderer>().material = mat;
-            
+            w.TileFilter = currentWayPoint.transform.GetChild(0).GetComponent<MeshFilter>();
             if (w.HeightType==HeightType.DeepWater || w.HeightType==HeightType.ShallowWater)
             {
                 
@@ -450,12 +452,19 @@ public class tileMapManager : MonoBehaviour
             {
                 
                 GameObject currentProp = Instantiate(p.prefab,currentWayPoint.transform);
-                
+                if (p.LOD)
+                {
+                    GameObject currentLOD = Instantiate(p.LOD,currentWayPoint.transform);
+                    currentLOD.transform.localPosition = new Vector3(0,0,0);
+                    w.LOD = currentLOD;
+                    currentLOD.SetActive(false);
+                }
                 w.Food += p.foodBonus;
                 w.Production += p.productionBonus;
                 w.Gold += p.goldBonus;
                 w.mouvCost += p.MovCost;
                 currentProp.transform.localPosition = new Vector3(0,0,0);
+                w.prop = currentProp;
             }
             w.spriteContainer.transform.Translate(new Vector3(0,w.elevation+0.05f,0));
             w.DisableWaypoint();
@@ -502,22 +511,130 @@ public class tileMapManager : MonoBehaviour
             Tile.BiomeType = Tiles[Tile.X, Tile.Y].BiomeType;
             Tile.HeightType = Tiles[Tile.X, Tile.Y].HeightType;
             Tile.HeatType = Tiles[Tile.X, Tile.Y].HeatType;
-            Tile.MoistureType = Tiles[Tile.X, Tile.Y].MoistureType;
-            
+            Tile.MoistureType = Tiles[Tile.X, Tile.Y].MoistureType;            
         }
              
         Waypoint middle = Draw();
 
-       
+        DefineBiomes();
         
         return middle;
     }
+    
+    public List<Biome> Biomes;
+    public void DefineBiomes()
+    {
 
+        Biome CurrentBiome;
+        foreach (Waypoint w in LineOrder)
+        { 
+            if(w.visited)
+                continue;
+            
+            CurrentBiome=new Biome(w.BiomeType);
+            CurrentBiome.Waypoints.Add(w); 
+            CurrentBiome.MeshFilters.Add(w.TileFilter);
+            
+            Biomes.Add(CurrentBiome);
+            
+            var prioQueue = new List<Waypoint>();
+            prioQueue.Add(w);      
+            do {
+                if(CurrentBiome.Waypoints.Count>1000)
+                    break;
+                prioQueue = prioQueue.OrderBy(x => x.MinCostToStart).ToList();
+                var node = prioQueue.First();
+                prioQueue.Remove(node);
+                if(node.BiomeType !=w.BiomeType)
+                    break;
+                foreach (Waypoint N in node.Neighbors)
+                {
+                    if (N.visited)
+                        continue;
+                    if (N.BiomeType==w.BiomeType)
+                    {
+                        if(CurrentBiome.Waypoints.Count>1000)
+                            break;
+                        CurrentBiome.Waypoints.Add(N);
+                        CurrentBiome.MeshFilters.Add(N.TileFilter);
+                        if (!prioQueue.Contains(N))
+                            prioQueue.Add(N);
+                    }
+                }                       
+                node.visited = true; 
+                
+            } while (prioQueue.Any());
+        }
+
+        HeightCombine();
+    }
+
+    public void ShowBiome(int i)
+    {
+        foreach (Waypoint w in LineOrder)
+        {
+            w.gameObject.SetActive(false);
+        }
+        
+        foreach (Waypoint w in Biomes[i].Waypoints)
+        {
+            w.gameObject.SetActive(true);
+        }
+    }
+
+    public void ResetBiome()
+    {
+        foreach (Waypoint w in LineOrder)
+        {
+            w.gameObject.SetActive(true);
+        }
+    }
+
+    public GameObject mesh;
+    public void HeightCombine()
+    {
+
+        foreach (Biome biome in Biomes)
+        {
+            Transform Chunk = biome.Waypoints[0].Chunk.transform;//parent qui contiendra la mesh combiner
+            Transform source = Instantiate(mesh, new Vector3(0, 0, 0), Quaternion.identity).transform;
+            Material mat = biome.Waypoints[0].mat;
+            Combine(source, mat,biome.MeshFilters.ToArray());
+            source.SetParent(Chunk);
+            
+        }
+                  
+        
+    }
+    
+    public void Combine(Transform parent,Material matToUse,MeshFilter[] meshFilters) // fais la combinaison
+    {
+        
+        CombineInstance[] combine = new CombineInstance[meshFilters.Length];
+        int i = 0;
+        while (i < meshFilters.Length)
+        {
+            combine[i].mesh = meshFilters[i].sharedMesh;
+            combine[i].transform = meshFilters[i].transform.localToWorldMatrix; 
+            meshFilters[i].gameObject.SetActive(false);
+            i++;
+        }
+        parent.GetComponent<MeshFilter>().mesh = new Mesh();
+        if(combine!=null)
+            parent.GetComponent<MeshFilter>().sharedMesh.CombineMeshes(combine);//Une fois qu'on a recup tout les mesh on les combine
+        if (matToUse != null)
+        {
+            parent.GetComponent<MeshRenderer>().material=matToUse;// on ajoute un matériel
+        }
+        parent.gameObject.SetActive(true);
+    }
+    
     public void ShowDijtra()
     {
         foreach (Waypoint w in ChunkOrder)
         {
             w.gameObject.SetActive(false);
+            w.NearestToStart = null;
         }
         Waypoint Start = ChunkOrder[0];
         Waypoint End = LineOrder[(LineOrder.Count/2)+chunkX*sizeChunkX];        
@@ -563,6 +680,7 @@ public class tileMapManager : MonoBehaviour
         Chunks.Clear();
         ChunkOrder.Clear();
         LineOrder.Clear();
+        Biomes.Clear();
     }
 
     #region Helper
@@ -648,6 +766,8 @@ public class Prop
 {
     public string name;
     public GameObject prefab;
+
+    public GameObject LOD;
     public float minElevation;
     public float maxElevation;
     public float prob;
@@ -693,4 +813,24 @@ public class SavedWaypoint
     }
     
     
+    
+}
+
+[Serializable]
+public class Biome
+{
+    public List<Waypoint> Waypoints;
+    public BiomeType Type;
+    public List<MeshFilter> MeshFilters=new List<MeshFilter>();
+    public Biome()
+    {
+        Type = BiomeType.Water;
+        Waypoints=new List<Waypoint>();
+    } 
+    
+    public Biome(BiomeType type)
+    {
+        Type = type;
+        Waypoints=new List<Waypoint>();
+    } 
 }
