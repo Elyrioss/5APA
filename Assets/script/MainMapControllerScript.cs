@@ -83,14 +83,15 @@ public class MainMapControllerScript : MonoBehaviour
                 if (!StartingCity) // Création de la ville du début ( et des autres villes après ?)
                 {
                     selectedWaypoint = hit.transform.parent.gameObject.GetComponent<Waypoint>();
-                    var CityObj = Instantiate(cityPref, hit.transform);
-                    CityObj.transform.localPosition = new Vector3(0,0, 0);
+                    var CityObj = Instantiate(cityPref, selectedWaypoint.transform);
+                    CityObj.transform.localPosition = new Vector3(0,selectedWaypoint.elevation, 0);
                     _cities.Add(new City(selectedWaypoint, Color.red));
                     CityObj.GetComponent<ManageCity>().ThisCity = _cities.Count - 1;
                     //TWIN
                     if (selectedWaypoint.AsTwin || selectedWaypoint.IsTwin)
                     {
                         var CityObjC = Instantiate(cityClonePref, selectedWaypoint.Twin.transform);
+                        CityObjC.transform.localPosition = new Vector3(0, selectedWaypoint.elevation, 0);
                         CityObjC.GetComponent<ManageCityClone>().ManageRef = this.GetComponent<ManageCity>();
 
                     }
@@ -112,6 +113,7 @@ public class MainMapControllerScript : MonoBehaviour
                         if (selectedWaypoint.AsTwin || selectedWaypoint.IsTwin)
                         {
                             var ExtObjC = Instantiate(ExtensionPref, selectedWaypoint.Twin.transform);
+                            ExtObjC.transform.localPosition = new Vector3(0, 0, 0);
                         }
                         //
                         Extension = false;
