@@ -83,14 +83,6 @@ public class tileMapManager : MonoBehaviour
         Generate();
         camOn = true;
         Generator.Maps((chunkX * sizeChunkX), (chunkY * sizeChunkY), Tiles, ColdestValue, ColderValue, ColdValue);
-        MainMapControllerScript MMCS = Camera.main.GetComponent<MainMapControllerScript>();
-        //MMCS.SetLeft();
-        
-        TileMapPos Chunk = Chunks[0];
-        List<TileMapPos> result = new List<TileMapPos>();
-        result = MMCS.HeightCull(Chunk, 3);
-        MMCS.currentChunk = Chunk;
-        MMCS.CurrentChunks = result;
 
     }
 
@@ -715,6 +707,7 @@ public class tileMapManager : MonoBehaviour
             Waypoint W = LineOrder[LineOrder.Count - TwinOrder.Count + i];
             Waypoint w = TwinOrder[i];
             W.Twin = w;
+            w.Twin = W;
             W.AsTwin = true;
             w.IsTwin = true;
             
