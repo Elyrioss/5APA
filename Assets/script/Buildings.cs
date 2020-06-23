@@ -16,6 +16,11 @@ public class Construction
     public int NumberOfGoldBat = 0;
     public bool GoldConstruction;
     public int GoldCounter = 2;
+    //Extension Bat
+    public int NumberOfExtension = 0;
+    public bool ExtensionConstruction;
+    public int ExtensionCounter;
+    public Waypoint ExtensionWaypoint;
 
     //Liste Buildings
     public List<Buildings> buildings = new List<Buildings>();
@@ -26,45 +31,6 @@ public class Construction
         Debug.Log("File de construction");
     }
 
-
-    public void ConstructionProcess()
-    {
-        if (FoodConstruction)
-        {
-            FoodCounter--;
-            if (FoodCounter == 0)
-            {
-                buildings.Add(new Buildings(Buildings.BuildingType.Ressource, 1));
-                NumberOfFoodBat++;
-                FoodCounter = 2;
-                FoodConstruction = false;
-            }
-        }
-
-        if (ProducConstruction)
-        {
-            ProducCounter--;
-            if (ProducCounter == 0)
-            {
-                buildings.Add(new Buildings(Buildings.BuildingType.Ressource, 2));
-                NumberOfProducBat++;
-                ProducCounter = 2;
-                ProducConstruction = false;
-            }
-        }
-
-        if (GoldConstruction)
-        {
-            GoldCounter--;
-            if (GoldCounter == 0)
-            {
-                buildings.Add(new Buildings(Buildings.BuildingType.Ressource, 3));
-                NumberOfGoldBat++;
-                GoldCounter = 2;
-                GoldConstruction = false;
-            }
-        }
-    }
 }
 
 
@@ -81,10 +47,9 @@ public class Buildings : Construction
     {
         Ressource,
         Unit,
-        Wonder
+        Wonder,
+        Extension
     }
-
-
 
     public Buildings(BuildingType a,int TypeOfRessource)
     {

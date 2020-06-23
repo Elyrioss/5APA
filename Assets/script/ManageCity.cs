@@ -5,11 +5,11 @@ public class ManageCity : MonoBehaviour
 {
     // Start is called before the first frame update
 
-    //public City ThisCity;
-    public int ThisCity; //Index of List _cities
+    public int ThisCity; //Index of List _cities in MainMapController
     public MainMapControllerScript Mapcontroller;
     public GameController Controller;
     public GameObject CityMenu;
+    public GameObject CityName;
 
     private GameObject Population;
     private GameObject Nourriture;
@@ -26,6 +26,9 @@ public class ManageCity : MonoBehaviour
     private GameObject GoldBatButton;
     private GameObject GoldBatCounter;
     private GameObject GoldBatNumber;
+    private GameObject ExtBatButton;
+    private GameObject ExtBatCounter;
+    private GameObject ExtBatNumber;
 
     void Start()
     {
@@ -45,12 +48,14 @@ public class ManageCity : MonoBehaviour
         GoldBatButton = CityMenu.transform.Find("CityMenu/BuildingPannel/BttnBulding/GoldBat").gameObject;
         GoldBatCounter = CityMenu.transform.Find("CityMenu/BuildingPannel/BttnBulding/GoldBat/Nbturn").gameObject;
         GoldBatNumber = CityMenu.transform.Find("CityMenu/BuildingPannel/ListOfBuilding/Banks/Number").gameObject;
+        ExtBatButton = CityMenu.transform.Find("CityMenu/BuildingPannel/BttnBulding/Extension").gameObject;
+        ExtBatCounter = CityMenu.transform.Find("CityMenu/BuildingPannel/BttnBulding/Extension/Nbturn").gameObject;
+        ExtBatNumber = CityMenu.transform.Find("CityMenu/BuildingPannel/ListOfBuilding/Extension/Number").gameObject;
     }
 
 
     public void SelectCity()
     {
-        //Debug.Log("GOOOOOO et food : " + Mapcontroller._cities[ThisCity].food);
         Controller.SelectedCity = this.gameObject.GetComponent<ManageCity>();
         CityMenu.transform.Find("CityMenu").gameObject.SetActive(true);   
         //CityPannel
@@ -93,6 +98,19 @@ public class ManageCity : MonoBehaviour
         GoldBatCounter.GetComponent<Text>().text = "" + Mapcontroller._cities[ThisCity].construction.GoldCounter;
         GoldBatNumber.GetComponent<Text>().text = "" + Mapcontroller._cities[ThisCity].construction.NumberOfGoldBat;
 
+
+        if (Mapcontroller._cities[ThisCity].construction.ExtensionConstruction)
+        {
+            ExtBatButton.GetComponent<Image>().color = Color.black;
+        }
+        else
+        {
+            ExtBatButton.GetComponent<Image>().color = Color.blue;
+        }
+        ExtBatCounter.GetComponent<Text>().text = "" + Mapcontroller._cities[ThisCity].construction.ExtensionCounter;
+        ExtBatNumber.GetComponent<Text>().text = "" + Mapcontroller._cities[ThisCity].construction.NumberOfExtension;
+
+
         //CityMenu.SetActive(true);
     }
 
@@ -127,6 +145,19 @@ public class ManageCity : MonoBehaviour
         Mapcontroller._cities[ThisCity].construction.GoldConstruction = true;
         Mapcontroller._cities[ThisCity].ThisCityAction = true;
         GoldBatButton.GetComponent<Image>().color = Color.black;
+    }
+
+    public void CreateExtensionBat()
+    {
+        if (Mapcontroller._cities[ThisCity].ThisCityAction || Mapcontroller._cities[ThisCity].construction.ExtensionConstruction) // Si action deja effectué ou batiment deja en construction
+        {
+            return;
+        }
+        CityName.SetActive(false);
+        Mapcontroller.TmpCityIndex = ThisCity;
+        Mapcontroller.CanRaycast = true;
+        Mapcontroller.Extension = true;
+        Mapcontroller.TmpManageCity = this.gameObject.GetComponent<ManageCity>();
     }
 
 }

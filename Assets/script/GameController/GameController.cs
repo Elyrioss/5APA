@@ -67,4 +67,9 @@ public class GameController : MonoBehaviour
     {
         SelectedCity.CreateGoldBat();
     }
+
+    public void ExtensionBatConstruction()
+    {
+        SelectedCity.CreateExtensionBat();
+    }
 }

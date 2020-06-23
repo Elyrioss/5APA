@@ -7,7 +7,9 @@ public class MainMapControllerScript : MonoBehaviour
     Camera _camera = null;
     Waypoint selectedWaypoint = null;
     public GameObject cityPref;
+    public GameObject ExtensionPref;
     public List<City> _cities = new List<City>();
+    public int TmpCityIndex;
     public tileMapManager Map;
     public Transform Raystarter;
     ///TESTSUI
@@ -15,6 +17,8 @@ public class MainMapControllerScript : MonoBehaviour
     public GameObject FileUI;
     private Animator Anim;  
     public bool CanRaycast = true;
+    public bool Extension;
+    public ManageCity TmpManageCity;
     public AnimationCurve CamHeightCurve;
     private float PreviousHeight;
     
@@ -103,6 +107,21 @@ public class MainMapControllerScript : MonoBehaviour
                     CityObj.GetComponent<ManageCity>().ThisCity = _cities.Count - 1;
                     StartingCity = true;
                     CanRaycast = false;
+                }
+                else if (Extension)
+                {
+                    selectedWaypoint = hit.transform.parent.gameObject.GetComponent<Waypoint>();
+                    if (_cities[TmpCityIndex].controlArea.Contains(selectedWaypoint))
+                    {
+                        _cities[TmpCityIndex].construction.ExtensionWaypoint = selectedWaypoint;
+                        _cities[TmpCityIndex].construction.ExtensionConstruction = true;
+                        var ExtObj = Instantiate(ExtensionPref, hit.transform);
+                        ExtObj.transform.localPosition = new Vector3(0, 0, 0);
+                        TmpManageCity.CityName.SetActive(true);
+                        Extension = false;
+                        CanRaycast = false;
+                    }
+                    
                 }
             }
         }

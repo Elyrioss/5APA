@@ -171,7 +171,7 @@ public class City
         food += position.Food;
         production += position.Production;
         gold += position.Gold;
-        foreach (GameObject w in position.Neighbors)
+        foreach (Waypoint w in position.Neighbors)
         {
             Waypoint W = w.GetComponent<Waypoint>();
             controlArea.Add(W);
@@ -207,8 +207,64 @@ public class City
         }
 
         //On regarde la file de construction de la ville.
-        construction.ConstructionProcess();
+        ConstructionProcess();
         ThisCityAction = false;
     }
-    
+
+
+
+    public void ConstructionProcess()
+    {
+        if (construction.FoodConstruction)
+        {
+            construction.FoodCounter--;
+            if (construction.FoodCounter == 0)
+            {
+                construction.buildings.Add(new Buildings(Buildings.BuildingType.Ressource, 1));
+                construction.NumberOfFoodBat++;
+                construction.FoodCounter = 2;
+                construction.FoodConstruction = false;
+            }
+        }
+
+        if (construction.ProducConstruction)
+        {
+            construction.ProducCounter--;
+            if (construction.ProducCounter == 0)
+            {
+                construction.buildings.Add(new Buildings(Buildings.BuildingType.Ressource, 2));
+                construction.NumberOfProducBat++;
+                construction.ProducCounter = 2;
+                construction.ProducConstruction = false;
+            }
+        }
+
+        if (construction.GoldConstruction)
+        {
+            construction.GoldCounter--;
+            if (construction.GoldCounter == 0)
+            {
+                construction.buildings.Add(new Buildings(Buildings.BuildingType.Ressource, 3));
+                construction.NumberOfGoldBat++;
+                construction.GoldCounter = 2;
+                construction.GoldConstruction = false;
+            }
+        }
+
+        if (construction.ExtensionConstruction)
+        {
+            construction.ExtensionCounter--;
+            if (construction.ExtensionCounter == 0)
+            {
+                construction.buildings.Add(new Buildings(Buildings.BuildingType.Extension));
+                construction.NumberOfExtension++;
+                construction.ExtensionCounter = 2;
+                construction.ExtensionConstruction = false;
+                ExtendTown(construction.ExtensionWaypoint);
+                ClearFrontiers(construction.ExtensionWaypoint);
+            }
+        }
+    }
+
+
 }
