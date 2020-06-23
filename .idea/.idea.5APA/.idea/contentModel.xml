@@ -80,6 +80,7 @@
           </e>
           <e p="MainMapControllerScript.cs" t="Include" />
           <e p="ManageCity.cs" t="Include" />
+          <e p="ManageCityClone.cs" t="Include" />
           <e p="Noise.cs" t="Include" />
           <e p="RTS_Camera.cs" t="Include" />
           <e p="tileMapManager.cs" t="Include" />

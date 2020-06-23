@@ -190,7 +190,7 @@ public class City
             controlAreaClone.Add(w);
             w.CivColor = civColor;
             w.EnableWaypoint();
-            ClearFrontiersClone(w);
+            //ClearFrontiersClone(w);
             w.EnableWaypoint();
             return true;
         }

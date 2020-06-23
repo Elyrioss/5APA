@@ -640,37 +640,73 @@ public class tileMapManager : MonoBehaviour
                     if (w.left)
                     {
                         if (w.left.Twin)
-                            w.Twin.left = w.left.Twin; 
+                        {
+                            w.Twin.left = w.left.Twin;
+                        }                            
+                        else
+                        {
+                            w.Twin.left = w.left;
+                        }
                     }
 
                     if (w.right)
                     {
                         if (w.right.Twin)
+                        {
                             w.Twin.right = w.right.Twin;
+                        }                            
+                        else
+                        {
+                            w.Twin.right = w.right;
+                        }
                     }
 
                     if (w.leftTop)
                     {
                         if (w.leftTop.Twin)
-                            w.Twin.leftTop = w.leftTop.Twin;   
+                        {
+                            w.Twin.leftTop = w.leftTop.Twin;
+                        }                            
+                        else
+                        {
+                            w.Twin.leftTop = w.leftTop;
+                        }
                     }
 
                     if (w.rightTop)
                     {
                         if (w.rightTop.Twin)
+                        {
                             w.Twin.rightTop = w.rightTop.Twin;
+                        }                            
+                        else
+                        {
+                            w.Twin.rightTop = w.rightTop;
+                        }
                     }
 
                     if (w.leftBot)
                     {
                         if (w.leftBot.Twin)
-                            w.Twin.leftBot = w.leftBot.Twin;     
+                        {
+                            w.Twin.leftBot = w.leftBot.Twin;
+                        }                            
+                        else
+                        {
+                            w.Twin.leftBot = w.leftBot;
+                        }                                                        
                     }
 
                     if (w.rightBot)
-                    {
-                        if (w.rightBot.Twin && w.rightBot)
+                    {                                            
+                        if (w.rightBot.Twin)
+                        {
                             w.Twin.rightBot = w.rightBot.Twin;
+                        }                            
+                        else
+                        {
+                            w.Twin.rightBot = w.rightBot;
+                        }
                     }
                    
                     
@@ -723,6 +759,36 @@ public class tileMapManager : MonoBehaviour
 
         DefineBiomes(LineOrder);
         DefineBiomes(TwinOrder);
+    
+        foreach (Waypoint w in LineOrder)
+        {
+            if (w.X == 0)
+            {
+                Waypoint WTwinRight = w.left.Twin;
+                w.left = WTwinRight;              
+                WTwinRight.right = w;
+                
+                if (w.left.GetComponent<Waypoint>().rightTop)
+                {
+                    Waypoint W = w.left.GetComponent<Waypoint>().rightTop.GetComponent<Waypoint>();
+                    w.leftTop = W;
+                    W.rightBot = w;                    
+                }
+                if (w.left.GetComponent<Waypoint>().rightBot)
+                {
+                    Waypoint W = w.left.GetComponent<Waypoint>().rightBot.GetComponent<Waypoint>();
+                    w.leftBot = W;
+                    W.rightTop = w;                    
+                }
+                w.Neighbors= new List<Waypoint>(){w.left,w.right,w.leftTop,w.leftBot,w.rightTop,w.rightBot};
+                WTwinRight.Neighbors= new List<Waypoint>(){WTwinRight.left,WTwinRight.right,WTwinRight.leftTop,WTwinRight.leftBot,WTwinRight.rightTop,WTwinRight.rightBot};
+                
+            }
+            else
+            {
+                break;
+            }
+        }
 
         
         return middle;
