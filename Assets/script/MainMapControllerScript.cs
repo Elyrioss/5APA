@@ -92,7 +92,7 @@ public class MainMapControllerScript : MonoBehaviour
                     {
                         var CityObjC = Instantiate(cityClonePref, selectedWaypoint.Twin.transform);
                         CityObjC.transform.localPosition = new Vector3(0, selectedWaypoint.elevation, 0);
-                        CityObjC.GetComponent<ManageCityClone>().ManageRef = this.GetComponent<ManageCity>();
+                        CityObjC.GetComponent<ManageCityClone>().ManageRef = this.gameObject;
 
                     }
                     //
@@ -106,14 +106,14 @@ public class MainMapControllerScript : MonoBehaviour
                     {
                         _cities[TmpCityIndex].construction.ExtensionWaypoint = selectedWaypoint;
                         _cities[TmpCityIndex].construction.ExtensionConstruction = true;
-                        var ExtObj = Instantiate(ExtensionPref, hit.transform);
-                        ExtObj.transform.localPosition = new Vector3(0, 0, 0);
+                        var ExtObj = Instantiate(ExtensionPref, selectedWaypoint.transform);
+                        ExtObj.transform.localPosition = new Vector3(0, selectedWaypoint.elevation, 0);
                         TmpManageCity.CityName.SetActive(true);
                         //TWIN
                         if (selectedWaypoint.AsTwin || selectedWaypoint.IsTwin)
                         {
                             var ExtObjC = Instantiate(ExtensionPref, selectedWaypoint.Twin.transform);
-                            ExtObjC.transform.localPosition = new Vector3(0, 0, 0);
+                            ExtObjC.transform.localPosition = new Vector3(0, selectedWaypoint.elevation, 0);
                         }
                         //
                         Extension = false;
