@@ -260,8 +260,16 @@ public class City
                 construction.NumberOfExtension++;
                 construction.ExtensionCounter = 2;
                 construction.ExtensionConstruction = false;
-                ExtendTown(construction.ExtensionWaypoint);
-                ClearFrontiers(construction.ExtensionWaypoint);
+                foreach (Waypoint w in construction.ExtensionWaypoint.Neighbors)
+                {
+                    controlArea.Add(w);
+                    w.CivColor = civColor;
+                    w.EnableWaypoint();
+                    food += w.Food;
+                    production += w.Production;
+                    gold += w.Gold;
+                }
+                ClearFrontiers();
             }
         }
     }

@@ -19,7 +19,7 @@ public class Construction
     //Extension Bat
     public int NumberOfExtension = 0;
     public bool ExtensionConstruction;
-    public int ExtensionCounter;
+    public int ExtensionCounter = 2;
     public Waypoint ExtensionWaypoint;
 
     //Liste Buildings
