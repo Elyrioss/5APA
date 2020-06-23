@@ -10,6 +10,7 @@ public class City
     public Waypoint position;
     public Color civColor;
     public List<Waypoint> controlArea= new List<Waypoint>();
+    public List<Waypoint> controlAreaClone = new List<Waypoint>();
 
     public float food = 0;
     public float production = 0;
@@ -28,7 +29,15 @@ public class City
         position.CivColor = civColor;
         position.EnableWaypoint();
         controlArea.Add(position);
-        
+        //TWIN
+        if (position.AsTwin || position.IsTwin)
+        {
+            position.Twin.CivColor = civColor;
+            position.Twin.EnableWaypoint();
+            controlAreaClone.Add(position.Twin);
+        }
+        //
+
         food += position.Food;
         production += position.Production;
         gold += position.Gold;
@@ -38,11 +47,20 @@ public class City
             controlArea.Add(w);
             w.CivColor = civColor;
             w.EnableWaypoint();
+            //TWIN
+            if (w.AsTwin || w.IsTwin)
+            {
+                w.Twin.CivColor = civColor;
+                w.Twin.EnableWaypoint();
+                controlAreaClone.Add(w.Twin);
+            }
+            //
             food += w.Food;
             production += w.Production;
             gold += w.Gold;
         }
         ClearFrontiers();
+        ClearFrontiersClone();
         population = 1;
         
     }
@@ -163,7 +181,126 @@ public class City
         }
     }
 
+    //
 
+    public bool ExtendTownClone(Waypoint w)
+    {
+        if (!controlAreaClone.Contains(w))
+        {
+            controlAreaClone.Add(w);
+            w.CivColor = civColor;
+            w.EnableWaypoint();
+            ClearFrontiersClone(w);
+            w.EnableWaypoint();
+            return true;
+        }
+
+        return false;
+    }
+
+    // left , leftbot , lefttop, right , rightbot, rightop
+
+    public void ClearFrontiersClone()
+    {
+        foreach (Waypoint waypoint in controlAreaClone)
+        {
+            if (waypoint.left)
+            {
+                if (controlAreaClone.Contains(waypoint.left.GetComponent<Waypoint>()))
+                {
+                    waypoint.spriteRenderer[0].gameObject.SetActive(false);
+                }
+            }
+            if (waypoint.right)
+            {
+                if (controlAreaClone.Contains(waypoint.right.GetComponent<Waypoint>()))
+                {
+                    waypoint.spriteRenderer[3].gameObject.SetActive(false);
+                }
+            }
+            if (waypoint.leftTop)
+            {
+                if (controlAreaClone.Contains(waypoint.leftTop.GetComponent<Waypoint>()))
+                {
+                    waypoint.spriteRenderer[2].gameObject.SetActive(false);
+                }
+            }
+            if (waypoint.rightTop)
+            {
+                if (controlAreaClone.Contains(waypoint.rightTop.GetComponent<Waypoint>()))
+                {
+                    waypoint.spriteRenderer[5].gameObject.SetActive(false);
+                }
+            }
+            if (waypoint.leftBot)
+            {
+                if (controlAreaClone.Contains(waypoint.leftBot.GetComponent<Waypoint>()))
+                {
+                    waypoint.spriteRenderer[1].gameObject.SetActive(false);
+                }
+            }
+            if (waypoint.rightBot)
+            {
+                if (controlAreaClone.Contains(waypoint.rightBot.GetComponent<Waypoint>()))
+                {
+                    waypoint.spriteRenderer[4].gameObject.SetActive(false);
+                }
+            }
+
+        }
+    }
+
+    public void ClearFrontiersClone(Waypoint waypoint)
+    {
+        if (waypoint.left)
+        {
+            if (controlAreaClone.Contains(waypoint.left.GetComponent<Waypoint>()))
+            {
+                waypoint.spriteRenderer[0].gameObject.SetActive(false);
+            }
+        }
+        if (waypoint.right)
+        {
+            if (controlAreaClone.Contains(waypoint.right.GetComponent<Waypoint>()))
+            {
+                waypoint.spriteRenderer[3].gameObject.SetActive(false);
+            }
+        }
+        if (waypoint.leftTop)
+        {
+            if (controlAreaClone.Contains(waypoint.leftTop.GetComponent<Waypoint>()))
+            {
+                waypoint.spriteRenderer[2].gameObject.SetActive(false);
+            }
+        }
+        if (waypoint.rightTop)
+        {
+            if (controlAreaClone.Contains(waypoint.rightTop.GetComponent<Waypoint>()))
+            {
+                waypoint.spriteRenderer[5].gameObject.SetActive(false);
+            }
+        }
+        if (waypoint.leftBot)
+        {
+            if (controlAreaClone.Contains(waypoint.leftBot.GetComponent<Waypoint>()))
+            {
+                waypoint.spriteRenderer[1].gameObject.SetActive(false);
+            }
+        }
+        if (waypoint.rightBot)
+        {
+            if (controlAreaClone.Contains(waypoint.rightBot.GetComponent<Waypoint>()))
+            {
+                waypoint.spriteRenderer[4].gameObject.SetActive(false);
+            }
+        }
+    }
+
+
+
+
+
+    //
 
     public void EndOfTurn()
     {
@@ -265,11 +402,20 @@ public class City
                     controlArea.Add(w);
                     w.CivColor = civColor;
                     w.EnableWaypoint();
+                    //TWIN
+                    if (w.AsTwin || w.IsTwin)
+                    {
+                        w.Twin.CivColor = civColor;
+                        w.Twin.EnableWaypoint();
+                        controlAreaClone.Add(w.Twin);
+                    }
+                    //
                     food += w.Food;
                     production += w.Production;
                     gold += w.Gold;
                 }
                 ClearFrontiers();
+                ClearFrontiersClone();
             }
         }
     }
