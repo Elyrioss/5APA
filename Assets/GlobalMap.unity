@@ -284,50 +284,61 @@ MonoBehaviour:
     props:
     - name: Pyramid
       prefab: {fileID: 1000011157020050, guid: 5d443afd8fd784be58d352974b0f1729, type: 3}
+      LOD: {fileID: 1000011157020050, guid: 5d443afd8fd784be58d352974b0f1729, type: 3}
       minElevation: -10
       maxElevation: 10
       prob: 0.001
       foodBonus: 0
       productionBonus: 1
       goldBonus: 4
-    - name: Cactus
-      prefab: {fileID: 5226458655345939069, guid: 4739693d9aea46444b8b0760048c3dbe,
+      MovCost: 1
+    - name: Cactus2
+      prefab: {fileID: 5092987480313838738, guid: efb6f1fa85762614f9ec3b8fba5de115,
         type: 3}
+      LOD: {fileID: 5092987480313838738, guid: efb6f1fa85762614f9ec3b8fba5de115, type: 3}
       minElevation: -10
       maxElevation: 10
       prob: 0.05
       foodBonus: 2
       productionBonus: 1
       goldBonus: 0
+      MovCost: 1
+    - name: Cactus3
+      prefab: {fileID: 5969850972450284570, guid: c41f191965c5b734290d787cb9ddcba2,
+        type: 3}
+      LOD: {fileID: 5969850972450284570, guid: c41f191965c5b734290d787cb9ddcba2, type: 3}
+      minElevation: -10
+      maxElevation: 10
+      prob: 0.05
+      foodBonus: 2
+      productionBonus: 1
+      goldBonus: 0
+      MovCost: 1
+    - name: Cactus
+      prefab: {fileID: 5226458655345939069, guid: 4739693d9aea46444b8b0760048c3dbe,
+        type: 3}
+      LOD: {fileID: 5226458655345939069, guid: 4739693d9aea46444b8b0760048c3dbe, type: 3}
+      minElevation: -10
+      maxElevation: 10
+      prob: 0.05
+      foodBonus: 2
+      productionBonus: 1
+      goldBonus: 0
+      MovCost: 1
     - name: Hill
       prefab: {fileID: 1000012542023498, guid: 3353e02a5d4f040ac9a6dae6df5cd749, type: 3}
+      LOD: {fileID: 1000012542023498, guid: 3353e02a5d4f040ac9a6dae6df5cd749, type: 3}
       minElevation: 6
       maxElevation: 10
       prob: 0.01
       foodBonus: 0
       productionBonus: 2
       goldBonus: 0
-    - name: Cactus2
-      prefab: {fileID: 5092987480313838738, guid: efb6f1fa85762614f9ec3b8fba5de115,
-        type: 3}
-      minElevation: -10
-      maxElevation: 10
-      prob: 0.05
-      foodBonus: 2
-      productionBonus: 1
-      goldBonus: 0
-    - name: Cactus3
-      prefab: {fileID: 5969850972450284570, guid: c41f191965c5b734290d787cb9ddcba2,
-        type: 3}
-      minElevation: -10
-      maxElevation: 10
-      prob: 0.05
-      foodBonus: 2
-      productionBonus: 1
-      goldBonus: 0
+      MovCost: 1
     Food: 1
     Production: 1
     Gold: 4
+    MovCost: 1
   - Name: Savanna
     BiomeType: 1
     mat: {fileID: 2100000, guid: a3271603f8a277046a2809ab4f997551, type: 2}
@@ -335,290 +346,351 @@ MonoBehaviour:
     - name: Savanna Rock
       prefab: {fileID: 576204289472971609, guid: 5804eab8c7f130d468743d3eedea8e5e,
         type: 3}
+      LOD: {fileID: 2664732427198530432, guid: 7bd9aa0d44bcdc644b8807565cd43234, type: 3}
       minElevation: -10
       maxElevation: 10
       prob: 0.1
       foodBonus: 1
       productionBonus: 2
       goldBonus: 1
-    - name: Tree2
-      prefab: {fileID: 7653197145662444302, guid: f793d85690de23a40a710c44f7065854,
+      MovCost: 1
+    - name: Tree
+      prefab: {fileID: 106504906164823610, guid: 49a3261c35ba8334db100fba2d1f2f07,
         type: 3}
+      LOD: {fileID: 3003366511915537959, guid: 8d63072522384b84fad9f666017fead1, type: 3}
       minElevation: -10
       maxElevation: 10
       prob: 0.2
       foodBonus: 0
       productionBonus: 2
       goldBonus: 0
+      MovCost: 1
+    - name: Tree2
+      prefab: {fileID: 7653197145662444302, guid: f793d85690de23a40a710c44f7065854,
+        type: 3}
+      LOD: {fileID: 6511768426176769144, guid: 022ad9b9398f05048b4ef08722969203, type: 3}
+      minElevation: -10
+      maxElevation: 10
+      prob: 0.2
+      foodBonus: 0
+      productionBonus: 2
+      goldBonus: 0
+      MovCost: 1
     - name: Grass
       prefab: {fileID: 2762360639567958854, guid: 1ec334f1eb425d745b089d8c19814651,
         type: 3}
+      LOD: {fileID: 7517474673489897056, guid: c1e1f60a9bed0b64a8ca2ca9acb9feaf, type: 3}
       minElevation: -10
       maxElevation: 10
       prob: 0.4
       foodBonus: 2
       productionBonus: 1
       goldBonus: 0
-    - name: Tree
-      prefab: {fileID: 106504906164823610, guid: 49a3261c35ba8334db100fba2d1f2f07,
-        type: 3}
-      minElevation: -10
-      maxElevation: 10
-      prob: 0.2
-      foodBonus: 0
-      productionBonus: 2
-      goldBonus: 0
+      MovCost: 1
     Food: 1
     Production: 2
     Gold: 3
+    MovCost: 1
   - Name: Tropical
     BiomeType: 2
     mat: {fileID: 2100000, guid: 290f5ccf217b3704381d0852db345eb1, type: 2}
     props:
-    - name: Tree
-      prefab: {fileID: 3761001421105892328, guid: c2b2c698e7ddcd646884121cdfe3ca4c,
+    - name: Tree3
+      prefab: {fileID: 8697614974457373045, guid: 836808159a996944bb8aed00c5d85ca7,
         type: 3}
+      LOD: {fileID: 4644421511766144752, guid: 4d8877f5990539c4dbc579d22bce93e6, type: 3}
       minElevation: -10
       maxElevation: 10
       prob: 0.2
       foodBonus: 0
       productionBonus: 2
       goldBonus: 0
+      MovCost: 1
+    - name: Tree2
+      prefab: {fileID: 5408095256018823940, guid: 3f0959028c4560840bd14ede7c8b410e,
+        type: 3}
+      LOD: {fileID: 4580369273134238157, guid: 22101f01d3c891b48862820d425c6a13, type: 3}
+      minElevation: -10
+      maxElevation: 10
+      prob: 0.2
+      foodBonus: 0
+      productionBonus: 2
+      goldBonus: 0
+      MovCost: 1
     - name: Clear
       prefab: {fileID: 6769945061246099026, guid: 4db34f9414a915a47b7f231b2e5f22f7,
         type: 3}
+      LOD: {fileID: 1866868127788122262, guid: 2a45659d33f8fde439da57020dec881a, type: 3}
       minElevation: -10
       maxElevation: 10
       prob: 0.05
       foodBonus: 3
       productionBonus: 1
       goldBonus: 1
-    - name: Tree2
-      prefab: {fileID: 5408095256018823940, guid: 3f0959028c4560840bd14ede7c8b410e,
+      MovCost: 1
+    - name: Tree
+      prefab: {fileID: 3761001421105892328, guid: c2b2c698e7ddcd646884121cdfe3ca4c,
         type: 3}
+      LOD: {fileID: 1970870465340599624, guid: ffd6588b953b8c6488eba8666492e4c7, type: 3}
       minElevation: -10
       maxElevation: 10
       prob: 0.2
       foodBonus: 0
       productionBonus: 2
       goldBonus: 0
-    - name: Tree3
-      prefab: {fileID: 8697614974457373045, guid: 836808159a996944bb8aed00c5d85ca7,
-        type: 3}
-      minElevation: -10
-      maxElevation: 10
-      prob: 0.2
-      foodBonus: 0
-      productionBonus: 2
-      goldBonus: 0
+      MovCost: 1
     Food: 4
     Production: 1
     Gold: 1
+    MovCost: 1
   - Name: Grass
     BiomeType: 3
     mat: {fileID: 2100000, guid: 18ac9324ae4026340b71c086968071ef, type: 2}
     props:
     - name: Hill
       prefab: {fileID: 1000012907116042, guid: 12233475374e34830b24dd1a84b45a8b, type: 3}
+      LOD: {fileID: 1000012907116042, guid: 12233475374e34830b24dd1a84b45a8b, type: 3}
       minElevation: 1.6
       maxElevation: 10
       prob: 0.2
       foodBonus: 1
       productionBonus: 1
       goldBonus: 1
+      MovCost: 1
     - name: Grass
       prefab: {fileID: 1366914380307584206, guid: 0a58495e1fed8eb4790453d556beba1a,
         type: 3}
+      LOD: {fileID: 297337492078485851, guid: dcb38a3b6fa6fd14f92835f0adf287ac, type: 3}
       minElevation: -10
       maxElevation: 10
       prob: 0.3
       foodBonus: 1
       productionBonus: 0
       goldBonus: 0
+      MovCost: 1
     Food: 3
     Production: 2
     Gold: 1
+    MovCost: 1
   - Name: WoodLand
     BiomeType: 4
     mat: {fileID: 2100000, guid: da5af521ed7f81e4e839cbf69f25c0ec, type: 2}
     props:
-    - name: Tree2
-      prefab: {fileID: 6789358411793278913, guid: ac1cc2759a1fb3049bbd10851f3643e6,
-        type: 3}
-      minElevation: -10
-      maxElevation: 10
-      prob: 0.3
-      foodBonus: 0
-      productionBonus: 2
-      goldBonus: 0
-    - name: Tree4
-      prefab: {fileID: 482194962952344344, guid: 3bece83ecdc62bd4086b53ce115ae0d7,
-        type: 3}
-      minElevation: -10
-      maxElevation: 10
-      prob: 0.3
-      foodBonus: 0
-      productionBonus: 2
-      goldBonus: 0
-    - name: Tree
-      prefab: {fileID: 5455492406051052248, guid: b19c17dfb70dadd469ceb321821f4ced,
-        type: 3}
-      minElevation: -10
-      maxElevation: 10
-      prob: 0.3
-      foodBonus: 0
-      productionBonus: 2
-      goldBonus: 0
     - name: Tree3
       prefab: {fileID: 5398692979834241492, guid: a38650083e97a334d83e7f05b26dd019,
         type: 3}
+      LOD: {fileID: 6203689595083217518, guid: 38a0b222687e1b545866470f03929d04, type: 3}
       minElevation: -10
       maxElevation: 10
       prob: 0.3
       foodBonus: 0
       productionBonus: 2
       goldBonus: 0
+      MovCost: 1
+    - name: Tree4
+      prefab: {fileID: 482194962952344344, guid: 3bece83ecdc62bd4086b53ce115ae0d7,
+        type: 3}
+      LOD: {fileID: 2479067171219415434, guid: 640fae28d83cbf54d8e97d733754d816, type: 3}
+      minElevation: -10
+      maxElevation: 10
+      prob: 0.3
+      foodBonus: 0
+      productionBonus: 2
+      goldBonus: 0
+      MovCost: 1
+    - name: Tree2
+      prefab: {fileID: 6789358411793278913, guid: ac1cc2759a1fb3049bbd10851f3643e6,
+        type: 3}
+      LOD: {fileID: 5800623264807011586, guid: 699bc0b32727c0843aa2bcb7a4a9b419, type: 3}
+      minElevation: -10
+      maxElevation: 10
+      prob: 0.3
+      foodBonus: 0
+      productionBonus: 2
+      goldBonus: 0
+      MovCost: 1
+    - name: Tree
+      prefab: {fileID: 5455492406051052248, guid: b19c17dfb70dadd469ceb321821f4ced,
+        type: 3}
+      LOD: {fileID: 8596119940333920152, guid: 0598a90ddb3ec9f42a9ef869af30329c, type: 3}
+      minElevation: -10
+      maxElevation: 10
+      prob: 0.3
+      foodBonus: 0
+      productionBonus: 2
+      goldBonus: 0
+      MovCost: 1
     Food: 2
     Production: 3
     Gold: 1
+    MovCost: 1
   - Name: Seasonal
     BiomeType: 5
     mat: {fileID: 2100000, guid: 3511133d627844743925b90a98b825a3, type: 2}
     props:
-    - name: Seasonal3
-      prefab: {fileID: 3169369286461525734, guid: f433bebfec004174dbab8a97def6051a,
+    - name: SeasonalTree
+      prefab: {fileID: 2263620294049494662, guid: a0d3e293beea04e45a57229ef72b1f03,
         type: 3}
+      LOD: {fileID: 6648301261649686340, guid: 5895762ce367d154c935d2145e4668e8, type: 3}
       minElevation: -10
       maxElevation: 10
-      prob: 0.3
+      prob: 0.2
       foodBonus: 0
       productionBonus: 2
       goldBonus: 0
+      MovCost: 1
+    - name: Seasonal2
+      prefab: {fileID: 4633006425646583751, guid: 4628dab6bd6e61049b8b42564ef7884d,
+        type: 3}
+      LOD: {fileID: 6641646144742085779, guid: a08f1b492c7c54d499c4ea7934cf2814, type: 3}
+      minElevation: -10
+      maxElevation: 10
+      prob: 0.2
+      foodBonus: 0
+      productionBonus: 2
+      goldBonus: 0
+      MovCost: 1
     - name: Head
       prefab: {fileID: 3709131946091731919, guid: 1a56fea8e7a8662478f0040e827108bb,
         type: 3}
+      LOD: {fileID: 2169987533863707460, guid: 04ac470d1eb2c6f4da7d2a0ba5371bee, type: 3}
       minElevation: -10
       maxElevation: 10
       prob: 0.05
       foodBonus: 0
       productionBonus: 2
       goldBonus: 2
+      MovCost: 1
+    - name: Seasonal3
+      prefab: {fileID: 3169369286461525734, guid: f433bebfec004174dbab8a97def6051a,
+        type: 3}
+      LOD: {fileID: 6878483060803700710, guid: fc4b4c20ba15d4a43a330cdc85125630, type: 3}
+      minElevation: -10
+      maxElevation: 10
+      prob: 0.3
+      foodBonus: 0
+      productionBonus: 2
+      goldBonus: 0
+      MovCost: 1
     - name: Clear
       prefab: {fileID: 7541282235961019013, guid: fe0065f83c06dc540bdfe74bc18249bd,
         type: 3}
+      LOD: {fileID: 3499428068301905165, guid: c097876e83137cd44bb23d1bc63ff6f5, type: 3}
       minElevation: -10
       maxElevation: 10
       prob: 0.1
       foodBonus: 1
       productionBonus: 0
       goldBonus: 1
-    - name: Seasonal2
-      prefab: {fileID: 4633006425646583751, guid: 4628dab6bd6e61049b8b42564ef7884d,
-        type: 3}
-      minElevation: -10
-      maxElevation: 10
-      prob: 0.2
-      foodBonus: 0
-      productionBonus: 2
-      goldBonus: 0
-    - name: SeasonalTree
-      prefab: {fileID: 2263620294049494662, guid: a0d3e293beea04e45a57229ef72b1f03,
-        type: 3}
-      minElevation: -10
-      maxElevation: 10
-      prob: 0.2
-      foodBonus: 0
-      productionBonus: 2
-      goldBonus: 0
+      MovCost: 1
     Food: 1
     Production: 3
     Gold: 2
+    MovCost: 1
   - Name: Temperate RainForest
     BiomeType: 6
     mat: {fileID: 2100000, guid: 91d4683d1e315c947aa0b636e0e95b2e, type: 2}
     props:
-    - name: Grass
-      prefab: {fileID: 7564864325656275551, guid: 1a0dd29b81468164f868ddddd1431401,
-        type: 3}
-      minElevation: -10
-      maxElevation: 10
-      prob: 0.2
-      foodBonus: 1
-      productionBonus: 0
-      goldBonus: 0
     - name: Tree2
       prefab: {fileID: 5014727420590831441, guid: 74a53f8e813e87045a8eb5d047e0ae0e,
         type: 3}
+      LOD: {fileID: 229775066930440315, guid: de37ba25593310047b29a798d665f168, type: 3}
       minElevation: -10
       maxElevation: 10
       prob: 0.2
       foodBonus: 0
       productionBonus: 2
       goldBonus: 0
+      MovCost: 1
     - name: Clear
       prefab: {fileID: 5206724044699033310, guid: 0716d87e98d5f844fa0258378771d9b1,
         type: 3}
+      LOD: {fileID: 3649006887826639172, guid: 86f72cd955085b6468ed392dfc94be9e, type: 3}
       minElevation: -10
       maxElevation: 10
       prob: 0.05
       foodBonus: 2
       productionBonus: 1
       goldBonus: 1
-    - name: Tree1
-      prefab: {fileID: 7920123866302819031, guid: 915900988fadf274f86cb2e6f6fc5350,
+      MovCost: 1
+    - name: Grass
+      prefab: {fileID: 7564864325656275551, guid: 1a0dd29b81468164f868ddddd1431401,
         type: 3}
+      LOD: {fileID: 3187121567573918293, guid: dacc839b96bd62e4c854b49c251d54ae, type: 3}
       minElevation: -10
       maxElevation: 10
       prob: 0.2
-      foodBonus: 0
-      productionBonus: 2
+      foodBonus: 1
+      productionBonus: 0
       goldBonus: 0
+      MovCost: 1
     - name: Tree3
       prefab: {fileID: 8364085218978969387, guid: 95a3f86bb964461409b9da786df108a6,
         type: 3}
+      LOD: {fileID: 992476348559365671, guid: df2c9cbbcbfea5245b858459ba0cbf87, type: 3}
       minElevation: -10
       maxElevation: 10
       prob: 0.2
       foodBonus: 0
       productionBonus: 2
       goldBonus: 0
+      MovCost: 1
+    - name: Tree1
+      prefab: {fileID: 7920123866302819031, guid: 915900988fadf274f86cb2e6f6fc5350,
+        type: 3}
+      LOD: {fileID: 2465670369613766697, guid: 867417f5e0d3d404fbddce28aee2e989, type: 3}
+      minElevation: -10
+      maxElevation: 10
+      prob: 0.2
+      foodBonus: 0
+      productionBonus: 2
+      goldBonus: 0
+      MovCost: 1
     Food: 2
     Production: 3
     Gold: 1
+    MovCost: 1
   - Name: Boreal
     BiomeType: 7
     mat: {fileID: 2100000, guid: a62af611da9b8f4458e9215fe7ca204b, type: 2}
     props:
-    - name: BorealTree2
-      prefab: {fileID: 2330619745751782891, guid: ecb1c52841ba8104692d5a9df9314de7,
-        type: 3}
-      minElevation: -10
-      maxElevation: 10
-      prob: 0.2
-      foodBonus: 0
-      productionBonus: 2
-      goldBonus: 0
-    - name: BorealTree3
-      prefab: {fileID: 7368556941514260282, guid: 4a794c6a59aaf2c45930c25669a95ea3,
-        type: 3}
-      minElevation: -10
-      maxElevation: 10
-      prob: 0.2
-      foodBonus: 0
-      productionBonus: 2
-      goldBonus: 0
     - name: BorealTree1
       prefab: {fileID: 3916613891158341923, guid: 72ec307f7c801f94b8190c68e9d5160c,
         type: 3}
+      LOD: {fileID: 4775753142189667243, guid: 5d37e82f052a4634c9dc89c798caa4a2, type: 3}
       minElevation: -10
       maxElevation: 10
       prob: 0.2
       foodBonus: 0
       productionBonus: 2
       goldBonus: 0
+      MovCost: 1
+    - name: BorealTree2
+      prefab: {fileID: 2330619745751782891, guid: ecb1c52841ba8104692d5a9df9314de7,
+        type: 3}
+      LOD: {fileID: 1651025548580456171, guid: a31765a6f532d2e4a98556f6f9e25037, type: 3}
+      minElevation: -10
+      maxElevation: 10
+      prob: 0.2
+      foodBonus: 0
+      productionBonus: 2
+      goldBonus: 0
+      MovCost: 1
+    - name: BorealTree3
+      prefab: {fileID: 7368556941514260282, guid: 4a794c6a59aaf2c45930c25669a95ea3,
+        type: 3}
+      LOD: {fileID: 7609961266652471153, guid: c4abd6956c511fe4ca7b68155091159e, type: 3}
+      minElevation: -10
+      maxElevation: 10
+      prob: 0.2
+      foodBonus: 0
+      productionBonus: 2
+      goldBonus: 0
+      MovCost: 1
     Food: 1
     Production: 3
     Gold: 2
+    MovCost: 1
   - Name: Ice
     BiomeType: 9
     mat: {fileID: 2100000, guid: e487203f796724e499a9cd82cf8c9b5a, type: 2}
@@ -626,6 +698,7 @@ MonoBehaviour:
     Food: 1
     Production: 1
     Gold: 1
+    MovCost: 1
   - Name: Tundra
     BiomeType: 8
     mat: {fileID: 2100000, guid: 9123429a48aaaa94c8939f22133674f6, type: 2}
@@ -633,33 +706,40 @@ MonoBehaviour:
     - name: TundraTree
       prefab: {fileID: 6279982255119393669, guid: a8680f9eca4c2a94e8b1bf17787f0e44,
         type: 3}
+      LOD: {fileID: 6279982255119393669, guid: a8680f9eca4c2a94e8b1bf17787f0e44, type: 3}
       minElevation: -10
       maxElevation: 10
       prob: 0.2
       foodBonus: 0
       productionBonus: 2
       goldBonus: 0
-    - name: TundraTree2
-      prefab: {fileID: 6905551798318783948, guid: 2013c46ef55f2354ea102b0981f6eafb,
-        type: 3}
-      minElevation: -10
-      maxElevation: 10
-      prob: 0.2
-      foodBonus: 0
-      productionBonus: 2
-      goldBonus: 0
+      MovCost: 1
     - name: TundraTree1
       prefab: {fileID: 3676161985292702471, guid: 94ed582805415754f841ca8ba72c25f0,
         type: 3}
+      LOD: {fileID: 3676161985292702471, guid: 94ed582805415754f841ca8ba72c25f0, type: 3}
       minElevation: -10
       maxElevation: 10
       prob: 0.2
       foodBonus: 0
       productionBonus: 2
       goldBonus: 0
+      MovCost: 1
+    - name: TundraTree2
+      prefab: {fileID: 6905551798318783948, guid: 2013c46ef55f2354ea102b0981f6eafb,
+        type: 3}
+      LOD: {fileID: 6905551798318783948, guid: 2013c46ef55f2354ea102b0981f6eafb, type: 3}
+      minElevation: -10
+      maxElevation: 10
+      prob: 0.2
+      foodBonus: 0
+      productionBonus: 2
+      goldBonus: 0
+      MovCost: 1
     Food: 1
     Production: 3
     Gold: 2
+    MovCost: 1
   - Name: Water
     BiomeType: 10
     mat: {fileID: 2100000, guid: e487203f796724e499a9cd82cf8c9b5a, type: 2}
@@ -667,6 +747,7 @@ MonoBehaviour:
     Food: 1
     Production: 1
     Gold: 2
+    MovCost: 1
   grid: {fileID: 79866702}
   waypointPrefab: {fileID: 357240163, guid: 7b0d95c519e8db444964b27c36e502b6, type: 3}
   chunkX: 16
@@ -681,7 +762,7 @@ MonoBehaviour:
   persistence: 0.5
   lacunarity: 2
   offset: {x: 0, y: 0}
-  seed: 4883
+  seed: 4507
   biomeVariation: 2
   minNumberOfTile: 100
   SmoothCurve:
@@ -748,6 +829,8 @@ MonoBehaviour:
   ColdestValue: 0.05
   ColderValue: 0.18
   ColdValue: 0.4
+  Biomes: []
+  mesh: {fileID: 8280543926562195367, guid: 843a32b5b4c02c042a4ef09aab936e16, type: 3}
 --- !u!156049354 &79866702
 Grid:
   m_ObjectHideFlags: 0
@@ -774,6 +857,80 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &140782147
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 140782148}
+  - component: {fileID: 140782149}
+  m_Layer: 0
+  m_Name: cam2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &140782148
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 140782147}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 219.96399, y: -0.000015258789, z: 0.000026428997}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1820412814}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!20 &140782149
+Camera:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 140782147}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_ClearFlags: 3
+  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_projectionMatrixMode: 1
+  m_GateFitMode: 2
+  m_FOVAxisMode: 0
+  m_SensorSize: {x: 36, y: 24}
+  m_LensShift: {x: 0, y: 0}
+  m_FocalLength: 50
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: 0.3
+  far clip plane: 1000
+  field of view: 60
+  orthographic: 0
+  orthographic size: 5
+  m_Depth: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 256
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
+  m_TargetEye: 3
+  m_HDR: 1
+  m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
+  m_ForceIntoRT: 0
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
 --- !u!1 &172184486
 GameObject:
   m_ObjectHideFlags: 0
@@ -1351,7 +1508,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &661957616
 GameObject:
@@ -1467,6 +1624,80 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 677181019}
   m_CullTransparentMesh: 0
+--- !u!1 &687147607
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 687147608}
+  - component: {fileID: 687147609}
+  m_Layer: 0
+  m_Name: Camera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &687147608
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 687147607}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.000061035156, y: -0.000015258789, z: 0.000026428997}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1820412814}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!20 &687147609
+Camera:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 687147607}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_ClearFlags: 3
+  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_projectionMatrixMode: 1
+  m_GateFitMode: 2
+  m_FOVAxisMode: 0
+  m_SensorSize: {x: 36, y: 24}
+  m_LensShift: {x: 0, y: 0}
+  m_FocalLength: 50
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: 0.3
+  far clip plane: 1000
+  field of view: 60
+  orthographic: 0
+  orthographic size: 5
+  m_Depth: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 256
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
+  m_TargetEye: 2
+  m_HDR: 1
+  m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
+  m_ForceIntoRT: 0
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
 --- !u!1 &746011442
 GameObject:
   m_ObjectHideFlags: 0
@@ -2193,7 +2424,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1820412814}
-  m_RootOrder: 0
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: -60, y: 0, z: 0}
 --- !u!23 &948170788
 MeshRenderer:
@@ -2337,7 +2568,7 @@ MonoBehaviour:
   state: 0
   TurnTxt: {fileID: 1316950601}
   NumberOfTurn: 1
-  cityMenu: {fileID: 1003722705}
+  cityMenu: {fileID: 0}
   MapControllerScript: {fileID: 0}
   SelectedCity: {fileID: 0}
 --- !u!1 &1003722705
@@ -4108,11 +4339,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 459968, guid: 6f13bff90c30c3a41b8f0e3cb2ef1b66, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 459968, guid: 6f13bff90c30c3a41b8f0e3cb2ef1b66, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 459968, guid: 6f13bff90c30c3a41b8f0e3cb2ef1b66, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4150,6 +4381,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2056488, guid: 6f13bff90c30c3a41b8f0e3cb2ef1b66, type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 11455738, guid: 6f13bff90c30c3a41b8f0e3cb2ef1b66, type: 3}
       propertyPath: lastTab
       value: 2
@@ -4184,7 +4419,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 11455738, guid: 6f13bff90c30c3a41b8f0e3cb2ef1b66, type: 3}
       propertyPath: maxHeight
-      value: 35
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 11455738, guid: 6f13bff90c30c3a41b8f0e3cb2ef1b66, type: 3}
+      propertyPath: minHeight
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 11455738, guid: 6f13bff90c30c3a41b8f0e3cb2ef1b66, type: 3}
+      propertyPath: keyboardMovementSpeed
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 11455738, guid: 6f13bff90c30c3a41b8f0e3cb2ef1b66, type: 3}
+      propertyPath: autoHeight
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6f13bff90c30c3a41b8f0e3cb2ef1b66, type: 3}
@@ -5298,13 +5545,13 @@ GameObject:
   m_Component:
   - component: {fileID: 1994095364}
   - component: {fileID: 1994095362}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Tilemap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1994095362
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5336,7 +5583,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2057425149
 GameObject:

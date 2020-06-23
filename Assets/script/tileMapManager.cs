@@ -79,7 +79,7 @@ public class tileMapManager : MonoBehaviour
         camOn = true;
         Generator.Maps((chunkX * sizeChunkX), (chunkY * sizeChunkY), Tiles, ColdestValue, ColderValue, ColdValue);
         MainMapControllerScript MMCS = Camera.main.GetComponent<MainMapControllerScript>();
-        MMCS.SetLeft();
+        //MMCS.SetLeft();
         
         TileMapPos Chunk = Chunks[0];
         List<TileMapPos> result = new List<TileMapPos>();
@@ -452,12 +452,19 @@ public class tileMapManager : MonoBehaviour
             {
                 
                 GameObject currentProp = Instantiate(p.prefab,currentWayPoint.transform);
-                
+                if (p.LOD)
+                {
+                    GameObject currentLOD = Instantiate(p.LOD,currentWayPoint.transform);
+                    currentLOD.transform.localPosition = new Vector3(0,0,0);
+                    w.LOD = currentLOD;
+                    currentLOD.SetActive(false);
+                }
                 w.Food += p.foodBonus;
                 w.Production += p.productionBonus;
                 w.Gold += p.goldBonus;
                 w.mouvCost += p.MovCost;
                 currentProp.transform.localPosition = new Vector3(0,0,0);
+                w.prop = currentProp;
             }
             w.spriteContainer.transform.Translate(new Vector3(0,w.elevation+0.05f,0));
             w.DisableWaypoint();
@@ -759,6 +766,8 @@ public class Prop
 {
     public string name;
     public GameObject prefab;
+
+    public GameObject LOD;
     public float minElevation;
     public float maxElevation;
     public float prob;

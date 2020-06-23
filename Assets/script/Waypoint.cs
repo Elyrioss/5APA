@@ -63,6 +63,9 @@ public class Waypoint : MonoBehaviour
     public float Production;
     public float Gold;
 
+
+    public GameObject LOD;
+    public GameObject prop;
     public MeshFilter TileFilter;
     public Material mat;
     [SerializeField] public Color CivColor = Color.blue;

@@ -171,7 +171,7 @@ public class City
         food += position.Food;
         production += position.Production;
         gold += position.Gold;
-        foreach (GameObject w in position.Neighbors)
+        foreach (Waypoint w in position.Neighbors)
         {
             Waypoint W = w.GetComponent<Waypoint>();
             controlArea.Add(W);
