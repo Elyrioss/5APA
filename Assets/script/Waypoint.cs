@@ -51,6 +51,10 @@ public class Waypoint : MonoBehaviour
     public bool odd;
 
     public TileMapPos Chunk;
+
+    public Waypoint Twin;
+    public bool AsTwin=false;
+    public bool IsTwin=false;
     
     public float noiseValue;
     public float elevation=0;

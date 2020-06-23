@@ -26,7 +26,7 @@ public class MainMapControllerScript : MonoBehaviour
     public List<TileMapPos> CurrentChunks = new List<TileMapPos>();
     private bool changeCull = true;
     
-    void Awake()
+    void Start()
     {
         _camera = GetComponent<Camera>();
         Anim = FileUI.GetComponent<Animator>();
