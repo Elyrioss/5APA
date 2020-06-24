@@ -13,6 +13,10 @@ public class MainMapControllerScript : MonoBehaviour
     public int TmpCityIndex;
     public tileMapManager Map;
     public Transform Raystarter;
+    public Transform Raystarter2;
+
+    private Transform CurrentRayCast;
+    private Camera CurrentCamera;
     
     ///TESTSUI
     private bool StartingCity;
@@ -22,18 +26,20 @@ public class MainMapControllerScript : MonoBehaviour
     public bool Extension;
     public ManageCity TmpManageCity;
 
-    public float LeftLimit = 0;
-    public float RightLimit = 0;
+    public Waypoint LeftLimit;
+    public Waypoint RightLimit;
+    public Camera secondCam;
     
     void Start()
     {
         _camera = GetComponent<Camera>();
         Anim = FileUI.GetComponent<Animator>();
         SetToLOD();
-        float Quarter = ((float)(Map.sizeChunkX * Map.chunkX + Map.sizeChunkX * (Map.chunkX/8)))/4;
-        LeftLimit = Map.TwinOrder[0].transform.localPosition.x + Quarter;
-        RightLimit = Map.LineOrder[Map.LineOrder.Count-1].transform.localPosition.x - Quarter;
-
+        LeftLimit = Map.TwinOrder[Map.TwinOrder.Count/4];
+        RightLimit =  Map.LineOrder[Map.LineOrder.Count-1];
+        CurrentRayCast = Raystarter;
+        CurrentCamera = _camera;
+        secondCam.transform.localPosition = new Vector3(RightLimit.transform.localPosition.x,secondCam.transform.localPosition.y,secondCam.transform.localPosition.z);
     }
 
     // Update is called once per frame
@@ -41,32 +47,20 @@ public class MainMapControllerScript : MonoBehaviour
     {
         RaycastHit hit;
 
-        if (transform.position.x < LeftLimit)
+        if (CurrentRayCast.position.x < LeftLimit.transform.localPosition.x)
         {
-            transform.localPosition = new Vector3(RightLimit,transform.localPosition.y,transform.localPosition.z);
-            if (Physics.Raycast(Raystarter.position, Raystarter.TransformDirection(Vector3.down), out hit, 1000))
-            {
-                Debug.DrawRay(Raystarter.position, Raystarter.TransformDirection(Vector3.down) * hit.distance, Color.yellow);
-                if (hit.transform.parent.GetComponent<Waypoint>())
-                {
-                    Waypoint w = hit.transform.parent.GetComponent<Waypoint>();
-                   
-                }
-            }
+            secondCam.enabled = true;
+            _camera.enabled = false;
+            CurrentRayCast = Raystarter2;
+            CurrentCamera = secondCam;
         }
         
-        if (transform.position.x > RightLimit)
+        if (CurrentRayCast.position.x > RightLimit.transform.localPosition.x)
         {
-            transform.localPosition = new Vector3(LeftLimit,transform.localPosition.y,transform.localPosition.z);
-            if (Physics.Raycast(Raystarter.position, Raystarter.TransformDirection(Vector3.down), out hit, 1000))
-            {
-                Debug.DrawRay(Raystarter.position, Raystarter.TransformDirection(Vector3.down) * hit.distance, Color.yellow);
-                if (hit.transform.parent.GetComponent<Waypoint>())
-                {
-                    Waypoint w = hit.transform.parent.GetComponent<Waypoint>();
-                   
-                }
-            }
+            secondCam.enabled = false;
+            _camera.enabled = true;
+            CurrentRayCast = Raystarter;
+            CurrentCamera = _camera;
         }
 
         if (Input.GetMouseButtonDown(0))
@@ -75,7 +69,7 @@ public class MainMapControllerScript : MonoBehaviour
             {
                 return;
             }
-            Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
+            Ray ray = CurrentCamera.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit)) // Ici on va gérer toutes les possibilités de click d'éléments
             {
                 if (!hit.transform.parent.gameObject.GetComponent<Waypoint>())
