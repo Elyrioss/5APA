@@ -10,6 +10,8 @@ public class TileMapPos : MonoBehaviour
     public TileMapPos Bot;
     public TileMapPos Right;
     public TileMapPos Left;
+
+    public int index;
     
     public List<TileMapPos> neighBours = new List<TileMapPos>();
     

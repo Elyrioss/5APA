@@ -30,7 +30,17 @@ public class tileEditor : Editor
         {
             map.Clear();
         } 
+       
         
+        if (GUILayout.Button("Save")) // BOUTON GENERATE MAP
+        {
+            map.SaveManager.SaveGame(map);
+        } 
+        
+        if (GUILayout.Button("DeleteSave")) // BOUTON GENERATE MAP
+        {
+            map.SaveManager.DeleteSave();
+        } 
         
     }
 }

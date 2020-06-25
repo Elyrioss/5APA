@@ -15,6 +15,7 @@ public class MainMapControllerScript : MonoBehaviour
     public tileMapManager Map;
     public Transform Raystarter;
     public Transform Raystarter2;
+    public Transform Raystarter3;
 
     private Transform CurrentRayCast;
     private Camera CurrentCamera;
@@ -30,20 +31,27 @@ public class MainMapControllerScript : MonoBehaviour
     public bool Rider;
     public ManageCity TmpManageCity;
 
-    public Waypoint LeftLimit;
-    public Waypoint RightLimit;
+    public float LeftLimit;
+    public float RightLimit;
     public Camera secondCam;
+    public Camera thirdCam;
     
     void Start()
     {
         _camera = GetComponent<Camera>();
         Anim = FileUI.GetComponent<Animator>();
         SetToLOD();
-        LeftLimit = Map.TwinOrder[Map.TwinOrder.Count/4];
-        RightLimit =  Map.LineOrder[Map.LineOrder.Count-1];
+        
+        RightLimit =  Map.LineOrder[Map.LineOrder.Count-1].transform.position.x;
+        LeftLimit = -RightLimit;
+        
+        Debug.Log("Left :"+LeftLimit+", Right :"+RightLimit);
+        
         CurrentRayCast = Raystarter;
         CurrentCamera = _camera;
-        secondCam.transform.localPosition = new Vector3(RightLimit.transform.localPosition.x,secondCam.transform.localPosition.y,secondCam.transform.localPosition.z);
+        secondCam.transform.localPosition = new Vector3(RightLimit,secondCam.transform.localPosition.y,secondCam.transform.localPosition.z);
+        thirdCam.transform.localPosition = new Vector3(LeftLimit,secondCam.transform.localPosition.y,secondCam.transform.localPosition.z);
+
     }
 
     // Update is called once per frame
@@ -51,20 +59,14 @@ public class MainMapControllerScript : MonoBehaviour
     {
         RaycastHit hit;
 
-        if (CurrentRayCast.position.x < LeftLimit.transform.localPosition.x)
+        if (CurrentRayCast.position.x < (LeftLimit/2)+40)
         {
-            secondCam.enabled = true;
-            _camera.enabled = false;
-            CurrentRayCast = Raystarter2;
-            CurrentCamera = secondCam;
+            _camera.transform.position = secondCam.transform.position;
         }
-        
-        if (CurrentRayCast.position.x > RightLimit.transform.localPosition.x)
+       
+        if (CurrentRayCast.position.x > RightLimit-40)
         {
-            secondCam.enabled = false;
-            _camera.enabled = true;
-            CurrentRayCast = Raystarter;
-            CurrentCamera = _camera;
+            _camera.transform.position = thirdCam.transform.position;
         }
 
         if (Input.GetMouseButtonDown(0))
