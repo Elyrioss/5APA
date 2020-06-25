@@ -79,6 +79,7 @@ public class Waypoint : MonoBehaviour
     public int mouvCost=1;
     public int MinCostToStart;
     public Waypoint NearestToStart;
+    public float HeuristicDist;
     
     void Awake()
     {
@@ -139,8 +140,7 @@ public class Waypoint : MonoBehaviour
             node.visitedDijstra = true;
             if (node == End)
                 return;           
-        } while (prioQueue.Any());
-        
+        } while (prioQueue.Any()); 
     }
     
     

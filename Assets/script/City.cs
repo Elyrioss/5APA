@@ -418,6 +418,46 @@ public class City
                 ClearFrontiersClone();
             }
         }
+
+        if (construction.WarriorConstruction)
+        {
+            construction.WarriorCounter--;
+            if (construction.WarriorCounter == 0)
+            {
+                construction.Units.Add(new Unit(Unit.UnitType.Warrior,construction.WarriorWaypoint));
+                construction.WarriorUnit.GetComponent<ManageUnit>().ChoseUnitModel();
+                construction.NumberOfWarrior++;
+                construction.WarriorCounter = 2;
+                construction.WarriorConstruction = false;
+            }
+        }
+
+        if (construction.ArcherConstruction)
+        {
+            construction.ArcherCounter--;
+            if (construction.ArcherCounter == 0)
+            {
+                construction.Units.Add(new Unit(Unit.UnitType.Archer, construction.ArcherWaypoint));
+                construction.ArcherUnit.GetComponent<ManageUnit>().ChoseUnitModel();
+                construction.NumberOfArcher++;
+                construction.ArcherCounter = 2;
+                construction.ArcherConstruction = false;
+            }
+        }
+
+        if (construction.RiderConstruction)
+        {
+            construction.RiderCounter--;
+            if (construction.RiderCounter == 0)
+            {
+                construction.Units.Add(new Unit(Unit.UnitType.Rider, construction.RiderWaypoint));
+                construction.RiderUnit.GetComponent<ManageUnit>().ChoseUnitModel();
+                construction.NumberOfRider++;
+                construction.RiderCounter = 2;
+                construction.RiderConstruction = false;
+            }
+        }
+
     }
 
 

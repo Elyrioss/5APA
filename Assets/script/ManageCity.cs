@@ -29,6 +29,16 @@ public class ManageCity : MonoBehaviour
     private GameObject ExtBatButton;
     private GameObject ExtBatCounter;
     private GameObject ExtBatNumber;
+    private GameObject WarriorButton;
+    private GameObject WarriorCount;
+    private GameObject WarriorNumber;
+    private GameObject ArcherButton;
+    private GameObject ArcherCount;
+    private GameObject ArcherNumber;
+    private GameObject RiderButton;
+    private GameObject RiderCount;
+    private GameObject RiderNumber;
+
 
     void Start()
     {
@@ -47,10 +57,19 @@ public class ManageCity : MonoBehaviour
         ProducBatNumber = CityMenu.transform.Find("CityMenu/BuildingPannel/ListOfBuilding/ProductBat/Number").gameObject;
         GoldBatButton = CityMenu.transform.Find("CityMenu/BuildingPannel/BttnBulding/GoldBat").gameObject;
         GoldBatCounter = CityMenu.transform.Find("CityMenu/BuildingPannel/BttnBulding/GoldBat/Nbturn").gameObject;
-        GoldBatNumber = CityMenu.transform.Find("CityMenu/BuildingPannel/ListOfBuilding/Banks/Number").gameObject;
+        ExtBatNumber = CityMenu.transform.Find("CityMenu/BuildingPannel/ListOfBuilding/Banks/Number").gameObject;
         ExtBatButton = CityMenu.transform.Find("CityMenu/BuildingPannel/BttnBulding/Extension").gameObject;
         ExtBatCounter = CityMenu.transform.Find("CityMenu/BuildingPannel/BttnBulding/Extension/Nbturn").gameObject;
-        ExtBatNumber = CityMenu.transform.Find("CityMenu/BuildingPannel/ListOfBuilding/Extension/Number").gameObject;
+        GoldBatNumber = CityMenu.transform.Find("CityMenu/BuildingPannel/ListOfBuilding/Extension/Number").gameObject;
+        WarriorButton = CityMenu.transform.Find("CityMenu/BuildingPannel/BttnUnit/Warrior").gameObject;
+        WarriorCount = CityMenu.transform.Find("CityMenu/BuildingPannel/BttnUnit/Warrior/Nbturn").gameObject;
+        WarriorNumber = CityMenu.transform.Find("CityMenu/BuildingPannel/ListOfBuilding/Warrior/Number").gameObject;
+        ArcherButton = CityMenu.transform.Find("CityMenu/BuildingPannel/BttnUnit/Archer").gameObject;
+        ArcherCount = CityMenu.transform.Find("CityMenu/BuildingPannel/BttnUnit/Archer/Nbturn").gameObject;
+        ArcherNumber = CityMenu.transform.Find("CityMenu/BuildingPannel/ListOfBuilding/Archer/Number").gameObject;
+        RiderButton = CityMenu.transform.Find("CityMenu/BuildingPannel/BttnUnit/Rider").gameObject;
+        RiderCount = CityMenu.transform.Find("CityMenu/BuildingPannel/BttnUnit/Rider/Nbturn").gameObject;
+        RiderNumber = CityMenu.transform.Find("CityMenu/BuildingPannel/ListOfBuilding/Rider/Number").gameObject;
     }
 
 
@@ -111,6 +130,19 @@ public class ManageCity : MonoBehaviour
         ExtBatNumber.GetComponent<Text>().text = "" + Mapcontroller._cities[ThisCity].construction.NumberOfExtension;
 
 
+        if (Mapcontroller._cities[ThisCity].construction.WarriorConstruction)
+        {
+            WarriorButton.GetComponent<Image>().color = Color.black;
+        }
+        else
+        {
+            WarriorButton.GetComponent<Image>().color = Color.blue;
+        }
+        WarriorCount.GetComponent<Text>().text = "" + Mapcontroller._cities[ThisCity].construction.WarriorCounter;
+        WarriorNumber.GetComponent<Text>().text = "" + Mapcontroller._cities[ThisCity].construction.NumberOfWarrior;
+
+
+
         //CityMenu.SetActive(true);
     }
 
@@ -159,5 +191,48 @@ public class ManageCity : MonoBehaviour
         Mapcontroller.Extension = true;
         Mapcontroller.TmpManageCity = this.gameObject.GetComponent<ManageCity>();
     }
+
+
+    public void CreateWarrior()
+    {
+        if (Mapcontroller._cities[ThisCity].ThisCityAction || Mapcontroller._cities[ThisCity].construction.WarriorConstruction) // Si action deja effectué ou batiment deja en construction
+        {
+            return;
+        }
+        CityName.SetActive(false);
+        Mapcontroller.TmpCityIndex = ThisCity;
+        Mapcontroller.CanRaycast = true;
+        Mapcontroller.Warrior = true;
+        Mapcontroller.TmpManageCity = this.gameObject.GetComponent<ManageCity>();
+    }
+
+    public void CreateArcher()
+    {
+        if (Mapcontroller._cities[ThisCity].ThisCityAction || Mapcontroller._cities[ThisCity].construction.ArcherConstruction) // Si action deja effectué ou batiment deja en construction
+        {
+            return;
+        }
+        CityName.SetActive(false);
+        Mapcontroller.TmpCityIndex = ThisCity;
+        Mapcontroller.CanRaycast = true;
+        Mapcontroller.Archer = true;
+        Mapcontroller.TmpManageCity = this.gameObject.GetComponent<ManageCity>();
+    }
+
+    public void CreateRider()
+    {
+        if (Mapcontroller._cities[ThisCity].ThisCityAction || Mapcontroller._cities[ThisCity].construction.RiderConstruction) // Si action deja effectué ou batiment deja en construction
+        {
+            return;
+        }
+        CityName.SetActive(false);
+        Mapcontroller.TmpCityIndex = ThisCity;
+        Mapcontroller.CanRaycast = true;
+        Mapcontroller.Rider = true;
+        Mapcontroller.TmpManageCity = this.gameObject.GetComponent<ManageCity>();
+    }
+
+
+
 
 }

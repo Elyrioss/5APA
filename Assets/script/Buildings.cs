@@ -22,9 +22,33 @@ public class Construction
     public int ExtensionCounter = 2;
     public Waypoint ExtensionWaypoint;
 
+    //Warrior
+    public int NumberOfWarrior = 0;
+    public bool WarriorConstruction;
+    public int WarriorCounter = 2;
+    public Waypoint WarriorWaypoint;
+    public GameObject WarriorUnit;
+
+    //Archer
+    public int NumberOfArcher = 0;
+    public bool ArcherConstruction;
+    public int ArcherCounter = 2;
+    public Waypoint ArcherWaypoint;
+    public GameObject ArcherUnit;
+    //Rider
+    public int NumberOfRider = 0;
+    public bool RiderConstruction;
+    public int RiderCounter = 2;
+    public Waypoint RiderWaypoint;
+    public GameObject RiderUnit;
+
+
     //Liste Buildings
     public List<Buildings> buildings = new List<Buildings>();
-    
+
+    //Liste Unités
+    public List<Unit> Units = new List<Unit>();
+
 
     public Construction()
     {

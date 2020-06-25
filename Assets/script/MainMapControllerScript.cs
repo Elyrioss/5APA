@@ -9,6 +9,7 @@ public class MainMapControllerScript : MonoBehaviour
     public GameObject cityPref;
     public GameObject cityClonePref;
     public GameObject ExtensionPref;
+    public GameObject UnitPref;
     public List<City> _cities = new List<City>();
     public int TmpCityIndex;
     public tileMapManager Map;
@@ -24,6 +25,9 @@ public class MainMapControllerScript : MonoBehaviour
     private Animator Anim;  
     public bool CanRaycast = true;
     public bool Extension;
+    public bool Warrior;
+    public bool Archer;
+    public bool Rider;
     public ManageCity TmpManageCity;
 
     public Waypoint LeftLimit;
@@ -86,7 +90,7 @@ public class MainMapControllerScript : MonoBehaviour
                     {
                         var CityObjC = Instantiate(cityClonePref, selectedWaypoint.Twin.transform);
                         CityObjC.transform.localPosition = new Vector3(0, selectedWaypoint.elevation, 0);
-                        CityObjC.GetComponent<ManageCityClone>().ManageRef = this.gameObject;
+                        CityObjC.GetComponent<ManageCityClone>().ManageRef = CityObj;
 
                     }
                     //
@@ -130,6 +134,78 @@ public class MainMapControllerScript : MonoBehaviour
                         CanRaycast = false;
                     }
                     
+                }
+                else if (Warrior)
+                {
+                    selectedWaypoint = hit.transform.parent.gameObject.GetComponent<Waypoint>();
+                    if (_cities[TmpCityIndex].controlArea.Contains(selectedWaypoint))
+                    {
+                        _cities[TmpCityIndex].construction.WarriorWaypoint = selectedWaypoint;
+                        _cities[TmpCityIndex].construction.WarriorConstruction = true;
+                        var Obj = Instantiate(UnitPref, selectedWaypoint.transform);
+                        Obj.transform.localPosition = new Vector3(0, selectedWaypoint.elevation, 0);
+                        _cities[TmpCityIndex].construction.WarriorUnit = Obj;
+                        Obj.GetComponent<ManageUnit>().ThisCity = TmpCityIndex;
+                        Obj.GetComponent<ManageUnit>().ThisUnit = _cities[TmpCityIndex].construction.Units.Count;
+                        TmpManageCity.CityName.SetActive(true);
+                        //TWIN
+                        if (selectedWaypoint.AsTwin || selectedWaypoint.IsTwin)
+                        {
+                            var ObjC = Instantiate(UnitPref, selectedWaypoint.Twin.transform);
+                            ObjC.transform.localPosition = new Vector3(0, selectedWaypoint.elevation, 0);
+                        }
+                        //
+                        Warrior = false;
+                        CanRaycast = false;
+                    }
+                }
+                else if (Archer)
+                {
+                    selectedWaypoint = hit.transform.parent.gameObject.GetComponent<Waypoint>();
+                    if (_cities[TmpCityIndex].controlArea.Contains(selectedWaypoint))
+                    {
+                        _cities[TmpCityIndex].construction.ArcherWaypoint = selectedWaypoint;
+                        _cities[TmpCityIndex].construction.ArcherConstruction = true;
+                        var Obj = Instantiate(UnitPref, selectedWaypoint.transform);
+                        Obj.transform.localPosition = new Vector3(0, selectedWaypoint.elevation, 0);
+                        _cities[TmpCityIndex].construction.ArcherUnit = Obj;
+                        Obj.GetComponent<ManageUnit>().ThisCity = TmpCityIndex;
+                        Obj.GetComponent<ManageUnit>().ThisUnit = _cities[TmpCityIndex].construction.Units.Count; 
+                        TmpManageCity.CityName.SetActive(true);
+                        //TWIN
+                        if (selectedWaypoint.AsTwin || selectedWaypoint.IsTwin)
+                        {
+                            var ObjC = Instantiate(UnitPref, selectedWaypoint.Twin.transform);
+                            ObjC.transform.localPosition = new Vector3(0, selectedWaypoint.elevation, 0);
+                        }
+                        //
+                        Archer = false;
+                        CanRaycast = false;
+                    }
+                }
+                else if (Rider)
+                {
+                    selectedWaypoint = hit.transform.parent.gameObject.GetComponent<Waypoint>();
+                    if (_cities[TmpCityIndex].controlArea.Contains(selectedWaypoint))
+                    {
+                        _cities[TmpCityIndex].construction.RiderWaypoint = selectedWaypoint;
+                        _cities[TmpCityIndex].construction.RiderConstruction = true;
+                        var Obj = Instantiate(UnitPref, selectedWaypoint.transform);
+                        Obj.transform.localPosition = new Vector3(0, selectedWaypoint.elevation, 0);
+                        _cities[TmpCityIndex].construction.RiderUnit = Obj;
+                        Obj.GetComponent<ManageUnit>().ThisCity = TmpCityIndex;
+                        Obj.GetComponent<ManageUnit>().ThisUnit = _cities[TmpCityIndex].construction.Units.Count;
+                        TmpManageCity.CityName.SetActive(true);
+                        //TWIN
+                        if (selectedWaypoint.AsTwin || selectedWaypoint.IsTwin)
+                        {
+                            var ObjC = Instantiate(UnitPref, selectedWaypoint.Twin.transform);
+                            ObjC.transform.localPosition = new Vector3(0, selectedWaypoint.elevation, 0);
+                        }
+                        //
+                        Rider = false;
+                        CanRaycast = false;
+                    }
                 }
             }
         }

@@ -72,4 +72,18 @@ public class GameController : MonoBehaviour
     {
         SelectedCity.CreateExtensionBat();
     }
+
+    public void CreateWarrior()
+    {
+        SelectedCity.CreateWarrior();
+    }
+
+    public void CreateArcher()
+    {
+        SelectedCity.CreateArcher();
+    }
+    public void CreateRider()
+    {
+        SelectedCity.CreateRider();
+    }
 }
