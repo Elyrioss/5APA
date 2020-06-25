@@ -30,7 +30,17 @@ public class tileEditor : Editor
         {
             map.Clear();
         } 
+       
         
+        if (GUILayout.Button("dijkstra")) // BOUTON GENERATE MAP
+        {
+            map.ShowDijtra();
+        } 
+        
+        if (GUILayout.Button("Reset Dijkstra")) // BOUTON GENERATE MAP
+        {
+            map.ResetDijtra();
+        } 
         
     }
 }

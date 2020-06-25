@@ -14,63 +14,89 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-[System.Serializable]
-public struct ActionChoice
-{
-    public string actionName;
-    public UnityEvent actionEvent;
-}
+
 
 [RequireComponent(typeof(BoxCollider))]
 public class Waypoint : MonoBehaviour
 {
     [HideInInspector]
     public List<Waypoint> Neighbors = new List<Waypoint>(6){null,null,null,null,null,null};
+    
+    [HideInInspector]
 
     public Waypoint left = null;
+
+    [HideInInspector]
+
     public Waypoint right = null;
+
+    [HideInInspector]
+
     public Waypoint leftBot = null;
+
+    [HideInInspector]
+    
     public Waypoint rightBot = null;
+   
+    [HideInInspector]
+
     public Waypoint leftTop = null;
+    
+    [HideInInspector]
     public Waypoint rightTop = null;
     
     public GameObject spriteContainer;
     
+    [HideInInspector]
     public bool visitedDijstra = false;
+    [HideInInspector]
     public bool visited = false;
     
     [SerializeField]
     public SpriteRenderer[] spriteRenderer;// left , leftbot , lefttop, right , rightbot, rightop
+    [HideInInspector]
     public int X;
+    [HideInInspector]
     public int Y;
     [HideInInspector]
     public int i;
     [HideInInspector]
     public int j;
 
+    [HideInInspector]
     public bool odd;
-
+ 
     public TileMapPos Chunk;
-
+   
     public Waypoint Twin;
+    [HideInInspector]
     public bool AsTwin=false;
+    [HideInInspector]
     public bool IsTwin=false;
-    
+    [HideInInspector]
     public float noiseValue;
+    
     public float elevation=0;
     public BiomeType BiomeType;
     public HeightType HeightType;
     public HeatType HeatType;
     public MoistureType MoistureType;
     
+    
     public float Food;
     public float Production;
     public float Gold;
 
-
+    [HideInInspector]
     public GameObject LOD;
+    [HideInInspector]
+
     public GameObject prop;
+    [HideInInspector]
+
     public MeshFilter TileFilter;
+    [HideInInspector]
+
     public Material mat;
     [SerializeField] public Color CivColor = Color.blue;
     [SerializeField]
@@ -108,36 +134,40 @@ public class Waypoint : MonoBehaviour
         list.Add(node.NearestToStart);
         BuildShortestPath(list, node.NearestToStart);
     }
+
+    public int Heuristic(Vector2 a,Vector2 b)
+    {
+        return (int)(Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y));
+    }
     
     public void DijkstraSearch(Waypoint Start,Waypoint End)
     {
 
         Start.MinCostToStart = 0;
         var prioQueue = new List<Waypoint>();
-        prioQueue.Add(Start);
-        
+        prioQueue.Add(Start);       
         do {
             prioQueue = prioQueue.OrderBy(x => x.MinCostToStart).ToList();
-            var node = prioQueue.First();
-            prioQueue.Remove(node);
-            
-            foreach (var cnn in node.Neighbors.OrderBy(x => x.GetComponent<Waypoint>().mouvCost))
+            var next = prioQueue.First();
+            prioQueue.Remove(next);
+            foreach (var n in next.Neighbors.OrderBy(x => x.GetComponent<Waypoint>().mouvCost))
             {
-                var childNode = cnn;
-                if (childNode.visitedDijstra)
+                var child = n;
+                if (child.visitedDijstra)
                     continue;
-                Debug.Log(prioQueue.Count);
-                if (node.MinCostToStart + cnn.mouvCost < childNode.MinCostToStart)
+                if (next.MinCostToStart + n.mouvCost < child.MinCostToStart)
                 {
-                    childNode.MinCostToStart = node.MinCostToStart + cnn.mouvCost;
-                    childNode.NearestToStart = node;
-                    if (!prioQueue.Contains(childNode))
-                        prioQueue.Add(childNode);
+                    child.MinCostToStart = next.MinCostToStart + n.mouvCost;
+                    child.NearestToStart = next;
+                    if (!prioQueue.Contains(child))
+                    {
+                        prioQueue.Add(child);
+                    }                  
                 }
             }            
             
-            node.visitedDijstra = true;
-            if (node == End)
+            next.visitedDijstra = true;
+            if (next == End)
                 return;           
         } while (prioQueue.Any());
         

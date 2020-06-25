@@ -30,8 +30,10 @@ public class tileMapManager : MonoBehaviour
     public GameObject border;
     public TileMapPos map;//Reference pour le contenant pour les tuiles (voir le fonctionnement des tilemap unity)
     public List<TileMapPos> Chunks = new List<TileMapPos>(); 
-    public List<TileMapPos> ChunksTwin = new List<TileMapPos>(); 
+    public List<TileMapPos> ChunksTwin = new List<TileMapPos>();
 
+    public bool Dijtra;
+    
     public List<_3DtileType> _3DTiles;
     public Grid grid; //Contenant pour les contenant des tuile (voir le fonctionnement des tilemap unity)
     //public List<Tilemap> _maps = new List<Tilemap>();//Liste des Chunk instancié 
@@ -631,87 +633,90 @@ public class tileMapManager : MonoBehaviour
                 }
             }
 
-            foreach (Waypoint W in w.Neighbors)
+            if (!Dijtra)
             {
-                if (W.Twin && w.Twin)
+                foreach (Waypoint W in w.Neighbors)
                 {
-                    w.Twin.Neighbors.Add(W.Twin);
-
-                    if (w.left)
+                    if (W.Twin && w.Twin)
                     {
-                        if (w.left.Twin)
+                        w.Twin.Neighbors.Add(W.Twin);
+        
+                        if (w.left)
                         {
-                            w.Twin.left = w.left.Twin;
-                        }                            
-                        else
-                        {
-                            w.Twin.left = w.left;
+                            if (w.left.Twin)
+                            {
+                                w.Twin.left = w.left.Twin;
+                            }                            
+                            else
+                            {
+                                w.Twin.left = w.left;
+                            }
                         }
-                    }
-
-                    if (w.right)
-                    {
-                        if (w.right.Twin)
+        
+                        if (w.right)
                         {
-                            w.Twin.right = w.right.Twin;
-                        }                            
-                        else
-                        {
-                            w.Twin.right = w.right;
+                            if (w.right.Twin)
+                            {
+                                w.Twin.right = w.right.Twin;
+                            }                            
+                            else
+                            {
+                                w.Twin.right = w.right;
+                            }
                         }
-                    }
-
-                    if (w.leftTop)
-                    {
-                        if (w.leftTop.Twin)
+        
+                        if (w.leftTop)
                         {
-                            w.Twin.leftTop = w.leftTop.Twin;
-                        }                            
-                        else
-                        {
-                            w.Twin.leftTop = w.leftTop;
+                            if (w.leftTop.Twin)
+                            {
+                                w.Twin.leftTop = w.leftTop.Twin;
+                            }                            
+                            else
+                            {
+                                w.Twin.leftTop = w.leftTop;
+                            }
                         }
-                    }
-
-                    if (w.rightTop)
-                    {
-                        if (w.rightTop.Twin)
+        
+                        if (w.rightTop)
                         {
-                            w.Twin.rightTop = w.rightTop.Twin;
-                        }                            
-                        else
-                        {
-                            w.Twin.rightTop = w.rightTop;
+                            if (w.rightTop.Twin)
+                            {
+                                w.Twin.rightTop = w.rightTop.Twin;
+                            }                            
+                            else
+                            {
+                                w.Twin.rightTop = w.rightTop;
+                            }
                         }
-                    }
-
-                    if (w.leftBot)
-                    {
-                        if (w.leftBot.Twin)
+        
+                        if (w.leftBot)
                         {
-                            w.Twin.leftBot = w.leftBot.Twin;
-                        }                            
-                        else
-                        {
-                            w.Twin.leftBot = w.leftBot;
-                        }                                                        
-                    }
-
-                    if (w.rightBot)
-                    {                                            
-                        if (w.rightBot.Twin)
-                        {
-                            w.Twin.rightBot = w.rightBot.Twin;
-                        }                            
-                        else
-                        {
-                            w.Twin.rightBot = w.rightBot;
+                            if (w.leftBot.Twin)
+                            {
+                                w.Twin.leftBot = w.leftBot.Twin;
+                            }                            
+                            else
+                            {
+                                w.Twin.leftBot = w.leftBot;
+                            }                                                        
                         }
+        
+                        if (w.rightBot)
+                        {                                            
+                            if (w.rightBot.Twin)
+                            {
+                                w.Twin.rightBot = w.rightBot.Twin;
+                            }                            
+                            else
+                            {
+                                w.Twin.rightBot = w.rightBot;
+                            }
+                        }
+                                      
                     }
-                   
                     
                 }
-                            
+                          
             }
             
         }
@@ -759,7 +764,16 @@ public class tileMapManager : MonoBehaviour
 
         DefineBiomes(LineOrder);
         DefineBiomes(TwinOrder);
-    
+
+        if (Dijtra)
+        {
+            foreach (Waypoint w in TwinOrder)
+            {
+                w.gameObject.SetActive(false);
+            }
+            return middle;
+        }
+            
         foreach (Waypoint w in LineOrder)
         {
             if (w.X == 0)
@@ -841,7 +855,8 @@ public class tileMapManager : MonoBehaviour
             } while (prioQueue.Any());
         }
 
-        HeightCombine(Biomes);
+        if(!Dijtra)
+            HeightCombine(Biomes);
     }
 
 
@@ -884,33 +899,35 @@ public class tileMapManager : MonoBehaviour
         }
         parent.gameObject.SetActive(true);
     }
-    
-    public void ShowDijtra()
+
+    public void ResetDijtra()
     {
         foreach (Waypoint w in ChunkOrder)
         {
-            w.gameObject.SetActive(false);
             w.NearestToStart = null;
+            w.MinCostToStart = 1000;
+            w.DisableWaypoint();
+            w.visitedDijstra = false;
         }
+    }
+    
+    public void ShowDijtra()
+    {
+
         Waypoint Start = ChunkOrder[0];
-        Waypoint End = LineOrder[(LineOrder.Count/2)+chunkX*sizeChunkX];        
-        ChunkOrder[0].DijkstraSearch(Start,End);
+        Waypoint End = LineOrder[UnityEngine.Random.Range(0,LineOrder.Count-1)];        
+        Start.DijkstraSearch(Start,End);
         var shortestPath = new List<Waypoint>();
         shortestPath.Add(End);
+
+
         if (End.NearestToStart)
         {
-            ChunkOrder[ChunkOrder.Count-1].BuildShortestPath(shortestPath, End);
+            Start.BuildShortestPath(shortestPath, End);
             shortestPath.Reverse();
             foreach (Waypoint path in shortestPath)
             {
-                path.gameObject.SetActive(true);
-            }
-        }
-        else
-        {
-            foreach (Waypoint Tile in LineOrder)
-            {     
-                Tile.gameObject.SetActive(true);
+                path.EnableWaypoint();
             }
         }
     }
