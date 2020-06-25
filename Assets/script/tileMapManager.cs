@@ -22,6 +22,8 @@ public class tileMapManager : MonoBehaviour
     
     //* DISPLAY *//
 
+    public SaveManager SaveManager;
+    
     public GameObject Prefab;
     public GameObject PrefabOcean;
 
@@ -96,21 +98,19 @@ public class tileMapManager : MonoBehaviour
         seed = UnityEngine.Random.Range(0, 5000);//Seed
         UnityEngine.Random.InitState(seed);
         ChunkOrder = new List<Waypoint>();
-        
-        int idtile = 0; //Nom pour les tuiles 
-        
+        int index=0;
         for (int n = 1; n <= chunkX; n++)
         {
             for (int N = 1; N <= chunkY; N++) // chunk en (n;N)
             {
-                idtile++;
                 GameObject t = Instantiate(map.gameObject, new Vector3(n, N), Quaternion.identity);
                 t.GetComponent<TileMapPos>().X = n;
                 t.GetComponent<TileMapPos>().Y = N;
                 t.transform.SetParent(grid.transform);
                 t.name = "" + n + "" + N;
                 Chunks.Add(t.GetComponent<TileMapPos>());
-                
+                t.GetComponent<TileMapPos>().index = index;
+                index++;
                 for (int i = sizeChunkX * (n - 1); i < sizeChunkX * n; i++) // Create Waypoint in (i;j)
                 {
                     for (int j = sizeChunkY * (N - 1); j < sizeChunkY * N; j++)
@@ -135,8 +135,7 @@ public class tileMapManager : MonoBehaviour
                         w.transform.SetParent(t.transform);
                         ChunkOrder.Add(w);
                         w.name = "" + (w.X) + (w.Y);   
-                        w.i = i;
-                        w.j = j;
+   
                         w.Chunk = t.GetComponent<TileMapPos>();
                         
 
@@ -149,14 +148,14 @@ public class tileMapManager : MonoBehaviour
         {
             for (int N = 1; N <= chunkY; N++) // chunk en (n;N)
             {
-                idtile++;
                 GameObject t = Instantiate(map.gameObject, new Vector3(n, N), Quaternion.identity);
                 t.GetComponent<TileMapPos>().X = n;
                 t.GetComponent<TileMapPos>().Y = N;
                 t.transform.SetParent(grid.transform);
                 t.name = "" + n + "" + N;
                 ChunksTwin.Add(t.GetComponent<TileMapPos>());
-                
+               
+       
                 for (int i = sizeChunkX * (n - 1); i < sizeChunkX * n; i++) // Create Waypoint in (i;j)
                 {
                     for (int j = sizeChunkY * (N - 1); j < sizeChunkY * N; j++)
@@ -180,9 +179,7 @@ public class tileMapManager : MonoBehaviour
                         w.Y = j;
                         w.transform.SetParent(t.transform);
                         TwinOrder.Add(w);
-                        w.name = "" + (w.X) + (w.Y);   
-                        w.i = i;
-                        w.j = j;
+                        w.name = "" + (w.X) + (w.Y);                       
                         w.Chunk = t.GetComponent<TileMapPos>();
                         
 
@@ -246,40 +243,151 @@ public class tileMapManager : MonoBehaviour
     // Créer les waypoint en utilisant les Waypoint sauvegarder et une seed
     public void CreateWaypoint(List<SavedWaypoint> SW,int _seed)
     {
-       
+        
+        Debug.Log(SW.Count);
         seed = _seed;
         UnityEngine.Random.InitState(seed);
         ChunkOrder = new List<Waypoint>();
+        int index = 0;
         
+        for (int n = 1; n <= chunkX; n++)
+        {
+            for (int N = 1; N <= chunkY; N++) // chunk en (n;N)
+            {
+                GameObject t = Instantiate(map.gameObject, new Vector3(n, N), Quaternion.identity);
+                t.GetComponent<TileMapPos>().X = n;
+                t.GetComponent<TileMapPos>().Y = N;
+                t.transform.SetParent(grid.transform);
+                t.GetComponent<TileMapPos>().index = index;
+                t.name = "" + n + "" + N;
+                Chunks.Add(t.GetComponent<TileMapPos>());
+                index++;
+            }
+        }
+
         foreach (SavedWaypoint sw in SW) // Comme nous avons les waypoint il suffis de les charger et stocké
         {
             Waypoint w;
-            if (sw.j % 2 != 0)
+            if (sw.Y % 2 != 0) // Since columns are not aligned we have to differentiate odd columns from the rest 
             {
-                w = Instantiate(waypointPrefab, new Vector3((sw.i * 1.2f)+0.6f, 0.1f, sw.j*1.045f), Quaternion.identity);
-                w.odd = true;
+                w = Instantiate(waypointPrefab, new Vector3((sw.X * 1.732f) + 0.866f, 0, sw.Y * 1.5f),//Création d'un waypoint qui stock les donnée des tuiles
+                    Quaternion.Euler(0, 0, 0));//Create Waypoint for 
+                w.odd = true;                     
             }
             else
             {
-                w = Instantiate(waypointPrefab, new Vector3(sw.i * 1.2f, 0.1f, sw.j*1.045f), Quaternion.identity);
-                w.odd = false;
+                w = Instantiate(waypointPrefab, new Vector3(sw.X * 1.732f, 0, sw.Y * 1.5f),
+                    Quaternion.Euler(0, 0, 0));                                                                                
+                w.odd = false;                                                
             }
-            w.transform.SetParent(grid.transform);
-            w.HeightType = sw.HeightType;
-            w.BiomeType = sw.BiomeType;
-            
-            w.HeatType = sw.HeatType;
-            w.MoistureType = sw.MoistureType;
-            
-            w.elevation = sw.elevation;
+                        
             w.X = sw.X;
             w.Y = sw.Y;
-            w.i = sw.i;
-            w.j = sw.j;
-            w.name = ""+(w.X) + (w.Y);
+            TileMapPos t = Chunks[sw.chunkIndex];
+            w.transform.SetParent(t.transform);
             ChunkOrder.Add(w);
+            w.name = "" + (sw.X) + (sw.Y);   
+            w.Chunk = t.GetComponent<TileMapPos>();
+            w.Prop = sw.prop;
+            w.noiseValue = sw.noiseValue;
+            w.HeightType = sw.HeightType;
+            w.BiomeType = sw.BiomeType;            
+            w.HeatType = sw.HeatType;
+            w.MoistureType = sw.MoistureType;            
+            w.elevation = sw.elevation;
+            
         }
+        
+        for (int n = -chunkX/2; n <= 0; n++)
+        {
+            for (int N = 1; N <= chunkY; N++) // chunk en (n;N)
+            {
+                GameObject t = Instantiate(map.gameObject, new Vector3(n, N), Quaternion.identity);
+                t.GetComponent<TileMapPos>().X = n;
+                t.GetComponent<TileMapPos>().Y = N;
+                t.transform.SetParent(grid.transform);
+                t.name = "" + n + "" + N;
+                ChunksTwin.Add(t.GetComponent<TileMapPos>());
+                
+                for (int i = sizeChunkX * (n - 1); i < sizeChunkX * n; i++) // Create Waypoint in (i;j)
+                {
+                    for (int j = sizeChunkY * (N - 1); j < sizeChunkY * N; j++)
+                    {
+                        Waypoint w;
+                        if (j % 2 != 0) // Since columns are not aligned we have to differentiate odd columns from the rest 
+                        {
+                            w = Instantiate(waypointPrefab, new Vector3((i * 1.732f) + 0.866f, 0, j * 1.5f),//Création d'un waypoint qui stock les donnée des tuiles
+                                Quaternion.Euler(0, 0, 0));//Create Waypoint for 
+                            w.odd = true;                     
+                        }
+                        else
+                        {
+                            w = Instantiate(waypointPrefab, new Vector3(i * 1.732f, 0, j * 1.5f),
+                                Quaternion.Euler(0, 0, 0));                                                                                
+                            w.odd = false;                                                
+                        }
+                        
+                        w.X = i;
+                        w.Y = j;
+                        w.transform.SetParent(t.transform);
+                        TwinOrder.Add(w);
+                        w.name = "" + (w.X) + (w.Y);   
+                        w.Chunk = t.GetComponent<TileMapPos>();
+                        
 
+                    }
+                }
+            }
+        }
+        
+        foreach (TileMapPos chunk in Chunks)
+        {
+            foreach (TileMapPos chunk2 in Chunks)
+            {
+                if (chunk != chunk2)
+                {
+                    if (chunk2.X == chunk.X + 1 && chunk2.Y == chunk.Y)
+                    {
+                        chunk.neighBours.Add(chunk2);
+                        chunk.Right = chunk2;
+                    }
+                        
+
+                    if (chunk2.X == chunkX && chunk.X == 1 && chunk2.Y == chunk.Y)
+                    {
+                        chunk.neighBours.Add(chunk2);
+                        chunk.Left = chunk2;
+                        
+                        chunk2.neighBours.Add(chunk);
+                        chunk2.Right = chunk;
+                    }
+
+
+                    if (chunk2.X == chunk.X - 1 && chunk2.Y == chunk.Y)
+                    {
+                        chunk.neighBours.Add(chunk2);
+                        chunk.Left = chunk2;
+                    }
+
+
+                    if (chunk2.Y == chunk.Y + 1 && chunk2.X == chunk.X)
+                    {
+                        chunk.neighBours.Add(chunk2);
+                        chunk.Top = chunk2;
+                    }
+
+
+                    if (chunk2.Y == chunk.Y - 1 && chunk2.X == chunk.X)
+                    {
+                        chunk.neighBours.Add(chunk2);
+                        chunk.Bot = chunk2;
+                    }
+                        
+                }
+                
+            }
+        }
+        
     }
     
     //Passez l'ordre des liste de chunk a la liste en ligne 
@@ -497,8 +605,17 @@ public class tileMapManager : MonoBehaviour
     
             
             currentWayPoint.transform.localPosition = new Vector3(0,w.elevation,0);
-            Prop p = selection.getProp(w.elevation);
+            Prop p;
+            if (!loaded)
+            {
+                 p = selection.getProp(w.elevation);
 
+            }
+            else
+            {
+                 p = selection.getProp(w.Prop);
+            }
+            
             // Donner les valeur du type de case a la case
             
             w.Food = selection.Food;
@@ -557,6 +674,7 @@ public class tileMapManager : MonoBehaviour
                 w.mouvCost += p.MovCost;
                 currentProp.transform.localPosition = new Vector3(0,0,0);
                 w.prop = currentProp;
+                w.Prop = p.name;
                 if (w.AsTwin)
                 {
                     
@@ -573,7 +691,7 @@ public class tileMapManager : MonoBehaviour
                     w.Twin.Gold += p.goldBonus;
                     w.Twin.mouvCost += p.MovCost;
                     currentProp.transform.localPosition = new Vector3(0,0,0);
-                    w.Twin.prop = currentProp;
+                    w.Twin.prop = currentProp;                  
                     
                 }
             }
@@ -618,6 +736,7 @@ public class tileMapManager : MonoBehaviour
                 {
                     GameObject Ice = Instantiate(ice,w.transform);                
                     Ice.transform.localPosition = new Vector3(0,w.elevation,0);
+                    
                 }
 
                 if (w.AsTwin)
@@ -625,6 +744,7 @@ public class tileMapManager : MonoBehaviour
                     Border = Instantiate(border,w.Twin.transform);                
                     Border.transform.localPosition = new Vector3(0,w.elevation,0);
                     Border.transform.localEulerAngles = new Vector3(0,0,0);
+                    
                     if (w.HeightType==HeightType.DeepWater || w.HeightType==HeightType.ShallowWater)
                     {
                         GameObject Ice = Instantiate(ice,w.Twin.transform);                
@@ -728,21 +848,39 @@ public class tileMapManager : MonoBehaviour
     public Waypoint Generate()
     {
         Clear();
-        CreateWaypoint();
+        if (SaveManager)
+        {
+            if (SaveManager.LoadGame())
+            {
+                CreateWaypoint(SaveManager.Waypoints,SaveManager.seed);
+                loaded = true;
+            }
+            else
+            {
+                CreateWaypoint();
+                loaded = false;
+            }
+        }
+        else
+        {
+            CreateWaypoint();
+            loaded = false;
+        }
         Order();
         
-        loaded = false;
-                        
-        foreach (Waypoint Tile in LineOrder)
-        {     
-            Tile.elevation = Tiles[Tile.X, Tile.Y].HeightValue*noiseScale;
-            Tile.noiseValue = Tiles[Tile.X,Tile.Y].HeightValue;
-            Tile.BiomeType = Tiles[Tile.X, Tile.Y].BiomeType;
-            Tile.HeightType = Tiles[Tile.X, Tile.Y].HeightType;
-            Tile.HeatType = Tiles[Tile.X, Tile.Y].HeatType;
-            Tile.MoistureType = Tiles[Tile.X, Tile.Y].MoistureType;            
+        if (!loaded)
+        {
+            foreach (Waypoint Tile in LineOrder)
+            {     
+                Tile.elevation = Tiles[Tile.X, Tile.Y].HeightValue*noiseScale;
+                Tile.noiseValue = Tiles[Tile.X,Tile.Y].HeightValue;
+                Tile.BiomeType = Tiles[Tile.X, Tile.Y].BiomeType;
+                Tile.HeightType = Tiles[Tile.X, Tile.Y].HeightType;
+                Tile.HeatType = Tiles[Tile.X, Tile.Y].HeatType;
+                Tile.MoistureType = Tiles[Tile.X, Tile.Y].MoistureType;            
+            }
         }
-
+        
         for (int i = 0; i < TwinOrder.Count; i++)
         {
             Waypoint W = LineOrder[LineOrder.Count - TwinOrder.Count + i];
@@ -750,8 +888,7 @@ public class tileMapManager : MonoBehaviour
             W.Twin = w;
             w.Twin = W;
             W.AsTwin = true;
-            w.IsTwin = true;
-            
+            w.IsTwin = true;           
             w.elevation = W.elevation;
             w.noiseValue = W.noiseValue;
             w.BiomeType = W.BiomeType;
@@ -1037,6 +1174,17 @@ public class _3DtileType
 
         return null;
     }
+    
+    public Prop getProp(string name)
+    {
+        foreach (Prop p in props)
+        {
+            if (p.name.Equals(name))
+                return p;
+        }
+
+        return null;
+    }
 }
 
 [Serializable]
@@ -1059,35 +1207,32 @@ public class Prop
 
 public class SavedWaypoint
 {
-    public string WPname;
-    public List<String> Names;
+    public string name;
     public float elevation=0;
+    public float noiseValue;
+    public string prop;
     public HeightType HeightType;
     public BiomeType BiomeType;
     public HeatType HeatType;
     public MoistureType MoistureType;
     public int X;
     public int Y;
-    public int i;
-    public int j;
-    public SavedWaypoint(Waypoint w, int _i)
+    public int chunkIndex;
+    public SavedWaypoint(Waypoint w)
     {
-        WPname = w.name;
-        Names=new List<string>();
-        foreach (Waypoint n in w.Neighbors)
-        {
-            Names.Add(n.name);
-        }
-
+        
+        prop = w.Prop;
+        name = w.name;
         BiomeType = w.BiomeType;
         HeightType = w.HeightType;
         HeatType = w.HeatType;
         MoistureType = w.MoistureType;
         elevation = w.elevation;
+        noiseValue = w.noiseValue;
         X = w.X;
         Y = w.Y;
-        i = w.i;
-        j = w.j;  
+        chunkIndex = w.Chunk.index;
+
     }
     
     

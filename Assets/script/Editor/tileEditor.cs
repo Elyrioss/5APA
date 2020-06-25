@@ -32,14 +32,14 @@ public class tileEditor : Editor
         } 
        
         
-        if (GUILayout.Button("dijkstra")) // BOUTON GENERATE MAP
+        if (GUILayout.Button("Save")) // BOUTON GENERATE MAP
         {
-            map.ShowDijtra();
+            map.SaveManager.SaveGame(map);
         } 
         
-        if (GUILayout.Button("Reset Dijkstra")) // BOUTON GENERATE MAP
+        if (GUILayout.Button("DeleteSave")) // BOUTON GENERATE MAP
         {
-            map.ResetDijtra();
+            map.SaveManager.DeleteSave();
         } 
         
     }

@@ -58,10 +58,6 @@ public class Waypoint : MonoBehaviour
     public int X;
     [HideInInspector]
     public int Y;
-    [HideInInspector]
-    public int i;
-    [HideInInspector]
-    public int j;
 
     [HideInInspector]
     public bool odd;
@@ -87,12 +83,12 @@ public class Waypoint : MonoBehaviour
     public float Production;
     public float Gold;
 
-    [HideInInspector]
     public GameObject LOD;
-    [HideInInspector]
 
     public GameObject prop;
-    [HideInInspector]
+
+    public string Prop;
+    
 
     public MeshFilter TileFilter;
     [HideInInspector]
@@ -101,6 +97,7 @@ public class Waypoint : MonoBehaviour
     [SerializeField] public Color CivColor = Color.blue;
     [SerializeField]
     Color Deactivated = Color.clear;
+    
 
     public int mouvCost=1;
     public int MinCostToStart;
