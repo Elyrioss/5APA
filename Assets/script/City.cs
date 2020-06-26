@@ -21,6 +21,47 @@ public class City
     //Construction Var
     public bool ThisCityAction; // Empeche le joueur d'effectuer plus d'une action sur la ville par tour.
        
+    public City(Waypoint pos,SavedCity city)
+    {
+
+        civColor = new Color(city.r,city.g,city.b);
+        position = pos;
+        position.CivColor = civColor;
+        position.EnableWaypoint();
+        controlArea.Add(position);
+        
+        //TWIN
+        if (position.AsTwin || position.IsTwin)
+        {
+            position.Twin.CivColor = civColor;
+            position.Twin.EnableWaypoint();
+            controlAreaClone.Add(position.Twin);
+        }
+        //
+
+        food = city.food;
+        production += city.production;
+        gold += city.gold;
+        
+        foreach (Waypoint w in position.Neighbors)
+        {
+            controlArea.Add(w);
+            w.CivColor = civColor;
+            w.EnableWaypoint();
+            //TWIN
+            if (w.AsTwin || w.IsTwin)
+            {
+                w.Twin.CivColor = civColor;
+                w.Twin.EnableWaypoint();
+                controlAreaClone.Add(w.Twin);
+            }
+        }
+        ClearFrontiers();
+        ClearFrontiersClone();
+        population = city.population;
+        
+    }
+    
     public City(Waypoint pos,Color color)
     {
 
@@ -29,6 +70,7 @@ public class City
         position.CivColor = civColor;
         position.EnableWaypoint();
         controlArea.Add(position);
+        
         //TWIN
         if (position.AsTwin || position.IsTwin)
         {
@@ -461,4 +503,37 @@ public class City
     }
 
 
+}
+
+public class SavedCity
+{
+
+    public int population;
+    public int X;
+    public int Y;
+    
+    public float r;
+    public float b;
+    public float g;
+
+    public float food = 0;
+    public float production = 0;
+    public float gold = 0;
+    
+    public SavedCity(City c)
+    {
+        food = c.food;
+        production = c.production;
+        gold = c.gold;
+
+        X = c.position.X;
+        Y = c.position.Y;
+        population = c.population;
+
+        r = c.civColor.r;
+        b = c.civColor.b;
+        g = c.civColor.g;
+        
+        
+    }
 }
