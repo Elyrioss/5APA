@@ -197,43 +197,46 @@ public class ManageCity : MonoBehaviour
     }
 
 
-    public void CreateWarrior()
+    public bool CreateWarrior()
     {
         if (Mapcontroller._cities[ThisCity].ThisCityAction || Mapcontroller._cities[ThisCity].construction.WarriorConstruction) // Si action deja effectué ou batiment deja en construction
         {
-            return;
+            return false;
         }
         CityName.SetActive(false);
         Mapcontroller.TmpCityIndex = ThisCity;
         Mapcontroller.CanRaycast = true;
         Mapcontroller.Warrior = true;
         Mapcontroller.TmpManageCity = this.gameObject.GetComponent<ManageCity>();
+        return true;
     }
 
-    public void CreateArcher()
+    public bool CreateArcher()
     {
         if (Mapcontroller._cities[ThisCity].ThisCityAction || Mapcontroller._cities[ThisCity].construction.ArcherConstruction) // Si action deja effectué ou batiment deja en construction
         {
-            return;
+            return false;
         }
         CityName.SetActive(false);
         Mapcontroller.TmpCityIndex = ThisCity;
         Mapcontroller.CanRaycast = true;
         Mapcontroller.Archer = true;
         Mapcontroller.TmpManageCity = this.gameObject.GetComponent<ManageCity>();
+        return true;
     }
 
-    public void CreateRider()
+    public bool CreateRider()
     {
         if (Mapcontroller._cities[ThisCity].ThisCityAction || Mapcontroller._cities[ThisCity].construction.RiderConstruction) // Si action deja effectué ou batiment deja en construction
         {
-            return;
+            return false;
         }
         CityName.SetActive(false);
         Mapcontroller.TmpCityIndex = ThisCity;
         Mapcontroller.CanRaycast = true;
         Mapcontroller.Rider = true;
         Mapcontroller.TmpManageCity = this.gameObject.GetComponent<ManageCity>();
+        return true;
     }
 
 

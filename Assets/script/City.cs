@@ -5,7 +5,11 @@ using UnityEngine;
 [Serializable]
 public class City
 {
-    
+
+    public AudioSource clickSound;
+    public AudioSource buildSound;
+    public AudioSource soldierSound;
+
     public int population;
     public Waypoint position;
     public Color civColor;
@@ -403,6 +407,7 @@ public class City
                 construction.NumberOfFoodBat++;
                 construction.FoodCounter = 2;
                 construction.FoodConstruction = false;
+                buildSound.PlayOneShot(buildSound.clip);
             }
         }
 
@@ -415,6 +420,7 @@ public class City
                 construction.NumberOfProducBat++;
                 construction.ProducCounter = 2;
                 construction.ProducConstruction = false;
+                buildSound.PlayOneShot(buildSound.clip);
             }
         }
 
@@ -427,6 +433,7 @@ public class City
                 construction.NumberOfGoldBat++;
                 construction.GoldCounter = 2;
                 construction.GoldConstruction = false;
+                buildSound.PlayOneShot(buildSound.clip);
             }
         }
 
@@ -439,6 +446,7 @@ public class City
                 construction.NumberOfExtension++;
                 construction.ExtensionCounter = 2;
                 construction.ExtensionConstruction = false;
+                buildSound.PlayOneShot(buildSound.clip);
                 foreach (Waypoint w in construction.ExtensionWaypoint.Neighbors)
                 {
                     controlArea.Add(w);
@@ -471,6 +479,7 @@ public class City
                 construction.NumberOfWarrior++;
                 construction.WarriorCounter = 2;
                 construction.WarriorConstruction = false;
+                soldierSound.PlayOneShot(soldierSound.clip);
             }
         }
 
@@ -484,6 +493,7 @@ public class City
                 construction.NumberOfArcher++;
                 construction.ArcherCounter = 2;
                 construction.ArcherConstruction = false;
+                soldierSound.PlayOneShot(soldierSound.clip);
             }
         }
 
@@ -497,6 +507,8 @@ public class City
                 construction.NumberOfRider++;
                 construction.RiderCounter = 2;
                 construction.RiderConstruction = false;
+                soldierSound.PlayOneShot(soldierSound.clip);
+
             }
         }
 

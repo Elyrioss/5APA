@@ -19,7 +19,10 @@ public class MainMapControllerScript : MonoBehaviour
 
     private Transform CurrentRayCast;
     private Camera CurrentCamera;
-    
+
+    public AudioSource clickSound;
+    public AudioSource buildSound;
+    public AudioSource soldierSound;
     ///TESTSUI
     private bool StartingCity;
     public GameObject FileUI;
@@ -87,6 +90,10 @@ public class MainMapControllerScript : MonoBehaviour
                     CityObj.transform.localPosition = new Vector3(0,selectedWaypoint.elevation, 0);
                     _cities.Add(new City(selectedWaypoint, Color.red));
                     CityObj.GetComponent<ManageCity>().ThisCity = _cities.Count - 1;
+                    //Add sound elements
+                    _cities[_cities.Count - 1].buildSound = this.buildSound;
+                    _cities[_cities.Count - 1].soldierSound = this.soldierSound;
+                    _cities[_cities.Count - 1].clickSound = this.clickSound;
                     //TWIN
                     if (selectedWaypoint.AsTwin || selectedWaypoint.IsTwin)
                     {
