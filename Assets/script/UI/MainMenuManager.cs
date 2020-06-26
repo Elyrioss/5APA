@@ -23,7 +23,7 @@ public class MainMenuManager : MonoBehaviour
     private TextMeshProUGUI loadingText;
 
     private bool playClicked = false;
-
+    public AudioSource audioSource;
     void Update()
     {
         if (playClicked && !loadScene)
@@ -65,10 +65,12 @@ public class MainMenuManager : MonoBehaviour
     public void PlayButtonClicked()
     {
         playClicked = true;
+        audioSource.PlayOneShot(audioSource.clip);
     }
 
     public void QuitButtonClicked()
     {
+        audioSource.PlayOneShot(audioSource.clip);
         Debug.Log("Quit game");
         Application.Quit();
     }

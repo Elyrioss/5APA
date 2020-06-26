@@ -146,50 +146,54 @@ public class ManageCity : MonoBehaviour
         //CityMenu.SetActive(true);
     }
 
-    public void CreateFoodBat()
+    public bool CreateFoodBat()
     {
         if (Mapcontroller._cities[ThisCity].ThisCityAction || Mapcontroller._cities[ThisCity].construction.FoodConstruction) // Si action deja effectué ou batiment deja en construction
         {
-            return;
+            return false;
         }
         Mapcontroller._cities[ThisCity].construction.FoodConstruction = true;
         Mapcontroller._cities[ThisCity].ThisCityAction = true;
         FoodBatButton.GetComponent<Image>().color = Color.black;
+        return true;
     }
 
-    public void CreateProducBat()
+    public bool CreateProducBat()
     {
         if (Mapcontroller._cities[ThisCity].ThisCityAction || Mapcontroller._cities[ThisCity].construction.ProducConstruction) // Si action deja effectué ou batiment deja en construction
         {
-            return;
+            return false;
         }
         Mapcontroller._cities[ThisCity].construction.ProducConstruction = true;
         Mapcontroller._cities[ThisCity].ThisCityAction = true;
         ProducBatButton.GetComponent<Image>().color = Color.black;
+        return true;
     }
 
-    public void CreateGoldBat()
+    public bool CreateGoldBat()
     {
         if (Mapcontroller._cities[ThisCity].ThisCityAction || Mapcontroller._cities[ThisCity].construction.GoldConstruction) // Si action deja effectué ou batiment deja en construction
         {
-            return;
+            return false;
         }
         Mapcontroller._cities[ThisCity].construction.GoldConstruction = true;
         Mapcontroller._cities[ThisCity].ThisCityAction = true;
         GoldBatButton.GetComponent<Image>().color = Color.black;
+        return true;
     }
 
-    public void CreateExtensionBat()
+    public bool CreateExtensionBat()
     {
         if (Mapcontroller._cities[ThisCity].ThisCityAction || Mapcontroller._cities[ThisCity].construction.ExtensionConstruction) // Si action deja effectué ou batiment deja en construction
         {
-            return;
+            return false;
         }
         CityName.SetActive(false);
         Mapcontroller.TmpCityIndex = ThisCity;
         Mapcontroller.CanRaycast = true;
         Mapcontroller.Extension = true;
         Mapcontroller.TmpManageCity = this.gameObject.GetComponent<ManageCity>();
+        return true;
     }
 
 

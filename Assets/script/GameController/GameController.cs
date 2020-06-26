@@ -20,7 +20,9 @@ public class GameController : MonoBehaviour
 
     public MainMapControllerScript MapControllerScript;
     public ManageCity SelectedCity;
-
+    public AudioSource clickSound;
+    public AudioSource buildSound;
+    public AudioSource soldierSound;
     // Start is called before the first frame update
     void Start()
     {
@@ -40,6 +42,7 @@ public class GameController : MonoBehaviour
     //UI
     public void NextTurn()
     {
+        clickSound.PlayOneShot(clickSound.clip);
         state = TurnState.ENDTURN;
         cityMenu.SetActive(false);
         //Les ennemies ? La recolte ?
@@ -55,22 +58,23 @@ public class GameController : MonoBehaviour
 
     public void FoodBatConstruction()
     {
-        SelectedCity.CreateFoodBat();
+        
+        if(SelectedCity.CreateFoodBat()) buildSound.PlayOneShot(buildSound.clip);
     }
 
     public void ProducBatConstruction()
     {
-        SelectedCity.CreateProducBat();
+        if (SelectedCity.CreateProducBat()) buildSound.PlayOneShot(buildSound.clip);
     }
 
     public void GoldBatConstruction()
     {
-        SelectedCity.CreateGoldBat();
+        if (SelectedCity.CreateGoldBat()) buildSound.PlayOneShot(buildSound.clip);
     }
 
     public void ExtensionBatConstruction()
     {
-        SelectedCity.CreateExtensionBat();
+        if (SelectedCity.CreateExtensionBat()) buildSound.PlayOneShot(buildSound.clip);
     }
 
     public void CreateWarrior()
