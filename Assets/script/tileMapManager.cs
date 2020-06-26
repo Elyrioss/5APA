@@ -81,6 +81,8 @@ public class tileMapManager : MonoBehaviour
     public WrappingWorldGenerator Generator;
     public Tile[,] Tiles;
     public float ColdestValue, ColderValue, ColdValue;
+
+    public List<GameObject> Contents=new List<GameObject>();
     
     private void Start()
     {
