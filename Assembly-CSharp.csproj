@@ -156,6 +156,8 @@
     <Compile Include="Assets\script\ManageUnit.cs" />
     <Compile Include="Assets\script\Noise.cs" />
     <Compile Include="Assets\script\RTS_Camera.cs" />
+    <Compile Include="Assets\script\SaveGame.cs" />
+    <Compile Include="Assets\script\SaveManager.cs" />
     <Compile Include="Assets\script\TileMapPos.cs" />
     <Compile Include="Assets\script\Tmp\Astar.cs" />
     <Compile Include="Assets\script\UI\MainMenuManager.cs" />
