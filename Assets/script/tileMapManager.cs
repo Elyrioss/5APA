@@ -1235,10 +1235,7 @@ public class SavedWaypoint
         Y = w.Y;
         chunkIndex = w.Chunk.index;
 
-    }
-    
-    
-    
+    }        
 }
 
 [Serializable]
