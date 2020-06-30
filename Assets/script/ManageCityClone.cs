@@ -10,7 +10,7 @@ public class ManageCityClone : MonoBehaviour
 
     public void SelectCity()
     {
-        ManageRef.GetComponent<ManageCity>().SelectCity();
+        //ManageRef.GetComponent<ManageCity>().SelectCity();
     }
 
 

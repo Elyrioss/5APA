@@ -38,7 +38,7 @@ public class ManageCity : MonoBehaviour
     private GameObject RiderButton;
     private GameObject RiderCount;
     private GameObject RiderNumber;
-
+/*
 
     void Start()
     {
@@ -240,6 +240,6 @@ public class ManageCity : MonoBehaviour
     }
 
 
-
+*/
 
 }

@@ -19,8 +19,14 @@ public class City
     public float food = 0;
     public float production = 0;
     public float gold = 0;
+
+    private float StockFood=0;
     
-    public Construction construction = new Construction();
+    public Construction construction = null;
+    public List<Buildings> Buildings=new List<Buildings>();
+    private float currentCost=0;
+    
+    
 
     //Construction Var
     public bool ThisCityAction; // Empeche le joueur d'effectuer plus d'une action sur la ville par tour.
@@ -111,23 +117,6 @@ public class City
         
     }
 
-    public bool ExtendTown(Waypoint w)
-    {
-        if (!controlArea.Contains(w))
-        {
-            controlArea.Add(w);
-            w.CivColor = civColor;
-            w.EnableWaypoint();
-            food += w.Food;
-            production += w.Production;
-            gold += w.Gold;
-            ClearFrontiers(w);
-            w.EnableWaypoint();
-            return true;
-        }
-
-        return false;
-    }
 
     // left , leftbot , lefttop, right , rightbot, rightop
     
@@ -227,22 +216,6 @@ public class City
         }
     }
 
-    //
-
-    public bool ExtendTownClone(Waypoint w)
-    {
-        if (!controlAreaClone.Contains(w))
-        {
-            controlAreaClone.Add(w);
-            w.CivColor = civColor;
-            w.EnableWaypoint();
-            //ClearFrontiersClone(w);
-            w.EnableWaypoint();
-            return true;
-        }
-
-        return false;
-    }
 
     // left , leftbot , lefttop, right , rightbot, rightop
 
@@ -350,45 +323,9 @@ public class City
 
     public void EndOfTurn()
     {
-        //On récupère les resources naturelles
-        food += position.Food;
-        production += position.Production;
-        gold += position.Gold;
-        foreach (Waypoint w in position.Neighbors)
-        {
-            Waypoint W = w.GetComponent<Waypoint>();
-            controlArea.Add(W);
-            W.CivColor = civColor;
-            W.EnableWaypoint();
-            food += W.Food;
-            production += W.Production;
-            gold += W.Gold;
-        }
-        //Resources Batiments interieurs
-        if (construction.buildings != null)
-        {
-            foreach (Buildings b in construction.buildings)
-            {
-                if (b.BuildType == Buildings.BuildingType.Ressource)
-                {
-                    switch (b.RessourceType)
-                    {
-                        case 0:
-                            break;
-                        case 1:
-                            food += 50;
-                            break;
-                        case 2:
-                            production += 50;
-                            break;
-                        case 3:
-                            gold += 50;
-                            break;
-                    }
-                }
-            }
-        }
-
+        //On récupère les resources naturelles => LES VALEURS INDIQUE LA QUANTITE PAR TOUR 
+        StockFood += food;
+            
         //On regarde la file de construction de la ville.
         ConstructionProcess();
         ThisCityAction = false;
@@ -398,76 +335,23 @@ public class City
 
     public void ConstructionProcess()
     {
-        if (construction.FoodConstruction)
-        {
-            construction.FoodCounter--;
-            if (construction.FoodCounter == 0)
-            {
-                construction.buildings.Add(new Buildings(Buildings.BuildingType.Ressource, 1));
-                construction.NumberOfFoodBat++;
-                construction.FoodCounter = 2;
-                construction.FoodConstruction = false;
-                buildSound.PlayOneShot(buildSound.clip);
-            }
-        }
 
-        if (construction.ProducConstruction)
+        if (construction!=null)
         {
-            construction.ProducCounter--;
-            if (construction.ProducCounter == 0)
+            currentCost = currentCost - production;
+            if (currentCost <= 0)
             {
-                construction.buildings.Add(new Buildings(Buildings.BuildingType.Ressource, 2));
-                construction.NumberOfProducBat++;
-                construction.ProducCounter = 2;
-                construction.ProducConstruction = false;
-                buildSound.PlayOneShot(buildSound.clip);
+                //La construction est finis
+                construction.ConstructionFinished(this);                                             
             }
         }
+        
+        
+        // UTILSATION ILOGIQUE DE L'HERITAGE WTF
+        
 
-        if (construction.GoldConstruction)
-        {
-            construction.GoldCounter--;
-            if (construction.GoldCounter == 0)
-            {
-                construction.buildings.Add(new Buildings(Buildings.BuildingType.Ressource, 3));
-                construction.NumberOfGoldBat++;
-                construction.GoldCounter = 2;
-                construction.GoldConstruction = false;
-                buildSound.PlayOneShot(buildSound.clip);
-            }
-        }
+        /*
 
-        if (construction.ExtensionConstruction)
-        {
-            construction.ExtensionCounter--;
-            if (construction.ExtensionCounter == 0)
-            {
-                construction.buildings.Add(new Buildings(Buildings.BuildingType.Extension));
-                construction.NumberOfExtension++;
-                construction.ExtensionCounter = 2;
-                construction.ExtensionConstruction = false;
-                buildSound.PlayOneShot(buildSound.clip);
-                foreach (Waypoint w in construction.ExtensionWaypoint.Neighbors)
-                {
-                    controlArea.Add(w);
-                    w.CivColor = civColor;
-                    w.EnableWaypoint();
-                    //TWIN
-                    if (w.AsTwin || w.IsTwin)
-                    {
-                        w.Twin.CivColor = civColor;
-                        w.Twin.EnableWaypoint();
-                        controlAreaClone.Add(w.Twin);
-                    }
-                    //
-                    food += w.Food;
-                    production += w.Production;
-                    gold += w.Gold;
-                }
-                ClearFrontiers();
-                ClearFrontiersClone();
-            }
-        }
 
         if (construction.WarriorConstruction)
         {
@@ -511,10 +395,17 @@ public class City
 
             }
         }
-
+*/
     }
 
+    public void StartConstruction(Construction c)
+    {
 
+        currentCost = c.cost;
+        construction = c;
+
+    }
+    
 }
 
 public class SavedCity

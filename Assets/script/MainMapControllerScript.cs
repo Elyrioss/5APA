@@ -105,7 +105,7 @@ public class MainMapControllerScript : MonoBehaviour
                     //
                     StartingCity = true;
                     CanRaycast = false;
-                }
+                }/*
                 else if (Extension)
                 {
                     selectedWaypoint = hit.transform.parent.gameObject.GetComponent<Waypoint>();
@@ -215,7 +215,7 @@ public class MainMapControllerScript : MonoBehaviour
                         Rider = false;
                         CanRaycast = false;
                     }
-                }
+                }*/
             }
         }
     }

@@ -29,10 +29,11 @@ public class ManageUnit : MonoBehaviour
         CurrentCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
     }
 
+    /*
     // Update is called once per frame
     void Update()
     {
-        if (!CanMove || Mapcontroller._cities[ThisCity].construction.Units[ThisUnit].AsPlayed)
+       if (!CanMove || Mapcontroller._cities[ThisCity].construction.Units[ThisUnit].AsPlayed)
         {
             return;
         }
@@ -164,5 +165,5 @@ public class ManageUnit : MonoBehaviour
         CanMove = false;
         Mapcontroller._cities[ThisCity].construction.Units[ThisUnit].AsPlayed = true;
     }
-
+*/
 }

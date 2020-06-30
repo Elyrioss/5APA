@@ -7,6 +7,7 @@ public enum TurnState { START, ENDTURN } // On verra si on gère certains evenem
 public class GameController : MonoBehaviour
 {
 
+    public static GameController instance;
     public AnimationCurve foodUpgradeCurve;
     public AnimationCurve foodCostCurve;
     
@@ -19,22 +20,15 @@ public class GameController : MonoBehaviour
 
 
     public MainMapControllerScript MapControllerScript;
-    public ManageCity SelectedCity;
+    public City SelectedCity;
     public AudioSource clickSound;
     // Start is called before the first frame update
     void Start()
     {
+        instance = this;
         state = TurnState.START;
         MapControllerScript = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<MainMapControllerScript>();
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-       
-    }
-
 
 
     //UI
@@ -53,39 +47,4 @@ public class GameController : MonoBehaviour
         state = TurnState.START;
     }
 
-
-    public void FoodBatConstruction()
-    {
-
-        SelectedCity.CreateFoodBat();
-    }
-
-    public void ProducBatConstruction()
-    {
-        SelectedCity.CreateProducBat();
-    }
-
-    public void GoldBatConstruction()
-    {
-        SelectedCity.CreateGoldBat();
-    }
-
-    public void ExtensionBatConstruction()
-    {
-        SelectedCity.CreateExtensionBat();
-    }
-
-    public void CreateWarrior()
-    {
-        SelectedCity.CreateWarrior();
-    }
-
-    public void CreateArcher()
-    {
-        SelectedCity.CreateArcher();
-    }
-    public void CreateRider()
-    {
-        SelectedCity.CreateRider();
-    }
 }

@@ -1,15 +1,28 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 
 public class CityMenu : MonoBehaviour
 {
-    Animator Anim;
+    public Animator Anim;
     public GameObject FileUI;
-    private List<Unit> Units = new List<Unit>();
-    // Start is called before the first frame update
+
+    public BuildingButton pref;
+    public BuildingButton Extend;
+    public int Batnum;
+    public RectTransform Content;
+    
     void Start()
     {
-        Anim = GetComponent<Animator>();
+        
+        Extend.Setup();
+        for (int i = 0; i < Batnum; i++)
+        {
+            BuildingButton b = Instantiate(pref, Content);
+            b.index = i;
+            b.Setup();
+            b.gameObject.SetActive(true);
+        }
     }
 
 
