@@ -33,9 +33,14 @@ public class Buildings : Construction
 
 public class Grenier : Buildings
 {
-    public string index = "Grenier";
-    public string image = "Grenier.png";
-    private BuildingType BuildType = BuildingType.Ressource;
+  
+    public Grenier()
+    {
+        index = "Grenier";
+        image = "Grenier";
+        BuildType = BuildingType.Ressource;
+        cost=50;
+    }
     
     public override void ConstructionFinished(City c)
     {
@@ -47,10 +52,14 @@ public class Grenier : Buildings
 
 public class Usine : Buildings
 {
-    public string index = "Usine";
-    public string image = "Usine.png";
-    private BuildingType BuildType = BuildingType.Ressource;
 
+    public Usine()
+    {
+        index = "Usine";
+        image = "Usine";
+        BuildType = BuildingType.Ressource;
+        cost=50;
+    }
     
     public override void ConstructionFinished(City c)
     {
@@ -62,9 +71,15 @@ public class Usine : Buildings
 
 public class Marcher : Buildings
 {
-    public string index = "Marcher";
-    public string image = "Marcher.png";
-    private BuildingType BuildType = BuildingType.Ressource;
+
+    
+    public Marcher()
+    {
+        index = "Marcher";
+        image = "Marcher";
+        BuildType = BuildingType.Ressource;
+        cost=50;
+    }
     
     public override void ConstructionFinished(City c)
     {
@@ -76,9 +91,14 @@ public class Marcher : Buildings
 
 public class Extension : Buildings
 {
-    public string index = "Extension";
-    public string image = "Extension.png";
-    private BuildingType BuildType = BuildingType.Extension;
+
+    public Extension()
+    {
+        index = "Extension";
+        image = "Extension";
+        BuildType = BuildingType.Extension;
+        cost=100;    
+    }
     
     public override void ConstructionFinished(City c)
     {       

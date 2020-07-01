@@ -28,22 +28,33 @@ public class BuildingButton : MonoBehaviour
     public Image icon;
     public TextMeshProUGUI name;
     public Buildings build;
+    public CityMenu Menue;
     
-    public void Setup()
+    public void Setup(CityMenu menu)
     {    
         build = getBuildings(index);
         icon.sprite = Resources.Load<Sprite>(build.image);
         name.text = build.index;
+        Debug.Log(build.index);
+        Menue = menu;
     }
 
     public void Build()
     {
+        City c = GameController.instance.SelectedCity;
         GameController.instance.SelectedCity.StartConstruction(build);
+        Menue.CurrentConstructionTime.text = "" + Mathf.Ceil(c.construction.cost / c.production);
+        Menue.CurrentConstructionImage.sprite = icon.sprite;
+        Menue.CurrentConstructionText.text = build.index;
     }
     
     public void Extend()
     {
+        City c = GameController.instance.SelectedCity;
         GameController.instance.MapControllerScript.Extension = true;
+        Menue.CurrentConstructionTime.text = "" + Mathf.Ceil(c.construction.cost / c.production);
+        Menue.CurrentConstructionImage.sprite = icon.sprite;
+        Menue.CurrentConstructionText.text = build.index;
     }
     
 }

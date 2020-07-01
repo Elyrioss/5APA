@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 
@@ -12,15 +13,15 @@ public class GameController : MonoBehaviour
     public AnimationCurve foodCostCurve;
     
     public TurnState state;
-    [SerializeField] private Text TurnTxt;
-
+    
+    [SerializeField] private TextMeshProUGUI TurnTxt;
+    
     public int NumberOfTurn = 1;
-
-    public GameObject cityMenu;
-
-
+    public CityMenu cityMenu;
     public MainMapControllerScript MapControllerScript;
+    
     public City SelectedCity;
+    public Waypoint SelectedWaypoint;
     public AudioSource clickSound;
     // Start is called before the first frame update
     void Start()
@@ -36,7 +37,6 @@ public class GameController : MonoBehaviour
     {
         clickSound.PlayOneShot(clickSound.clip);
         state = TurnState.ENDTURN;
-        cityMenu.SetActive(false);
         //Les ennemies ? La recolte ?
         foreach (City c in MapControllerScript._cities)
         {

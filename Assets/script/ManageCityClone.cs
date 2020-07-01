@@ -5,12 +5,12 @@ using UnityEngine;
 public class ManageCityClone : MonoBehaviour
 {
 
-    public GameObject ManageRef;
+    public ManageCity ManageRef;
 
 
     public void SelectCity()
     {
-        //ManageRef.GetComponent<ManageCity>().SelectCity();
+        ManageRef.SelectCity();
     }
 
 

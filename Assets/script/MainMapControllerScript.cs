@@ -6,26 +6,22 @@ public class MainMapControllerScript : MonoBehaviour
 {
     Camera _camera = null;
     Waypoint selectedWaypoint = null;
-    public GameObject cityPref;
-    public GameObject cityClonePref;
+    public ManageCity cityPref;
+    public ManageCityClone cityClonePref;
     public GameObject ExtensionPref;
     public GameObject UnitPref;
     public List<City> _cities = new List<City>();
     public int TmpCityIndex;
     public tileMapManager Map;
     public Transform Raystarter;
-    public Transform Raystarter2;
-    public Transform Raystarter3;
 
-    private Transform CurrentRayCast;
-    private Camera CurrentCamera;
 
     public AudioSource clickSound;
     public AudioSource buildSound;
     public AudioSource soldierSound;
     ///TESTSUI
     private bool StartingCity;
-    public GameObject FileUI;
+    public CityMenu Menue;
     private Animator Anim;  
     public bool CanRaycast = true;
     public bool Extension;
@@ -42,16 +38,10 @@ public class MainMapControllerScript : MonoBehaviour
     void Start()
     {
         _camera = GetComponent<Camera>();
-        Anim = FileUI.GetComponent<Animator>();
         SetToLOD();
         
         RightLimit =  Map.LineOrder[Map.LineOrder.Count-1].transform.position.x;
         LeftLimit = -RightLimit;
-        
-        Debug.Log("Left :"+LeftLimit+", Right :"+RightLimit);
-        
-        CurrentRayCast = Raystarter;
-        CurrentCamera = _camera;
         secondCam.transform.localPosition = new Vector3(RightLimit,secondCam.transform.localPosition.y,secondCam.transform.localPosition.z);
         thirdCam.transform.localPosition = new Vector3(LeftLimit,secondCam.transform.localPosition.y,secondCam.transform.localPosition.z);
 
@@ -62,12 +52,12 @@ public class MainMapControllerScript : MonoBehaviour
     {
         RaycastHit hit;
 
-        if (CurrentRayCast.position.x < (LeftLimit/2)+40)
+        if (Raystarter.position.x < (LeftLimit/2)+40)
         {
             _camera.transform.position = secondCam.transform.position;
         }
        
-        if (CurrentRayCast.position.x > RightLimit-40)
+        if (Raystarter.position.x > RightLimit-40)
         {
             _camera.transform.position = thirdCam.transform.position;
         }
@@ -78,7 +68,7 @@ public class MainMapControllerScript : MonoBehaviour
             {
                 return;
             }
-            Ray ray = CurrentCamera.ScreenPointToRay(Input.mousePosition);
+            Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit)) // Ici on va gérer toutes les possibilités de click d'éléments
             {
                 if (!hit.transform.parent.gameObject.GetComponent<Waypoint>())
@@ -86,25 +76,29 @@ public class MainMapControllerScript : MonoBehaviour
                 if (!StartingCity) // Création de la ville du début ( et des autres villes après ?)
                 {
                     selectedWaypoint = hit.transform.parent.gameObject.GetComponent<Waypoint>();
-                    var CityObj = Instantiate(cityPref, selectedWaypoint.transform);
+                    ManageCity CityObj = Instantiate(cityPref, selectedWaypoint.transform);
                     CityObj.transform.localPosition = new Vector3(0,selectedWaypoint.elevation, 0);
                     _cities.Add(new City(selectedWaypoint, Color.red));
-                    CityObj.GetComponent<ManageCity>().ThisCity = _cities.Count - 1;
+                    
+                    CityObj.ThisCity = _cities.Count - 1;
+                    
                     //Add sound elements
+                    
                     _cities[_cities.Count - 1].buildSound = this.buildSound;
                     _cities[_cities.Count - 1].soldierSound = this.soldierSound;
                     _cities[_cities.Count - 1].clickSound = this.clickSound;
                     //TWIN
                     if (selectedWaypoint.AsTwin || selectedWaypoint.IsTwin)
                     {
-                        var CityObjC = Instantiate(cityClonePref, selectedWaypoint.Twin.transform);
+                        ManageCityClone CityObjC = Instantiate(cityClonePref, selectedWaypoint.Twin.transform);
                         CityObjC.transform.localPosition = new Vector3(0, selectedWaypoint.elevation, 0);
-                        CityObjC.GetComponent<ManageCityClone>().ManageRef = CityObj;
+                        CityObjC.ManageRef = CityObj;
 
                     }
                     //
                     StartingCity = true;
                     CanRaycast = false;
+                    Menue.ShowCity();
                 }/*
                 else if (Extension)
                 {

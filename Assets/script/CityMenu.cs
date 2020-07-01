@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CityMenu : MonoBehaviour
 {
@@ -12,37 +14,56 @@ public class CityMenu : MonoBehaviour
     public int Batnum;
     public RectTransform Content;
     
+    //UI
+
+    public TextMeshProUGUI Food;
+    public TextMeshProUGUI Production;
+    public TextMeshProUGUI Gold;
+    public TextMeshProUGUI Population;
+    public TextMeshProUGUI CityName;
+
+    public Image CurrentConstructionImage;
+    public TextMeshProUGUI CurrentConstructionText;
+    public TextMeshProUGUI CurrentConstructionTime;
+    
     void Start()
     {
         
-        Extend.Setup();
+        gameObject.SetActive(false);
+        
+        Extend.Setup(this);
         for (int i = 0; i < Batnum; i++)
         {
             BuildingButton b = Instantiate(pref, Content);
             b.index = i;
-            b.Setup();
+            b.Setup(this);
             b.gameObject.SetActive(true);
         }
     }
 
 
-    public void DeselectCity()
+    public void ShowBat()
     {
-        Anim.SetBool("OUT", false);
-        Anim.SetBool("IN", true);
-        FileUI.SetActive(false);
+        Anim.SetBool("ShowBat",true);
     }
-    public void Construct()
+    
+    public void HideBat()
     {
-        Anim.SetBool("IN", false);
-        Anim.SetBool("OUT", true);
+        Anim.SetBool("ShowBat",false);
     }
+    
+    public void ShowCity()
+    {
+        Anim.SetBool("ShowCity",true);
+    }
+    
+    public void HideCity()
+    {
+        Anim.SetBool("ShowCity",false);
+        Anim.SetBool("ShowBat",false);
+    }
+    
 
-    public void CreateWarrior()
-    {
-        Anim.SetBool("OUT", false);
-        Anim.SetBool("IN", true);
-    }
 
 
 }
