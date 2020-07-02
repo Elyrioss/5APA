@@ -13,7 +13,7 @@ public class GameController : MonoBehaviour
     public AnimationCurve foodCostCurve;
     
     public TurnState state;
-    
+        
     [SerializeField] private TextMeshProUGUI TurnTxt;
     
     public int NumberOfTurn = 1;
@@ -21,7 +21,7 @@ public class GameController : MonoBehaviour
     public MainMapControllerScript MapControllerScript;
     
     public City SelectedCity;
-    public Waypoint SelectedWaypoint;
+    public Unit SelectedUnit;
     public AudioSource clickSound;
     // Start is called before the first frame update
     void Start()

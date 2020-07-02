@@ -5,30 +5,25 @@ using System.Linq;
 
 public class ManageUnit : MonoBehaviour
 {
-    public int ThisCity; //Index of List _cities in MainMapController
-    public int ThisUnit; //Index of List _cities[ThisCity].construction.Units
-    public MainMapControllerScript Mapcontroller;
 
-    private Camera CurrentCamera;
+    public City ThisCity; //Index of List _cities in MainMapController => faire le système de civ
+    public Unit Unit;
+    
+    
     private bool CanMove;
     private Waypoint EndPos;
-    public List<Waypoint> Path = new List<Waypoint>();
+    private List<Waypoint> Path = new List<Waypoint>();
     List<Waypoint> PQueue = new List<Waypoint>();
-    public int CurrentCost = 0;
-    public int Cost = 15;
+    private int CurrentCost = 0;
+    private int Cost = 15;
     private Waypoint NewPos;
+    
 
-    public GameObject WarriorModel;
-    public GameObject ArcherModel;
-    public GameObject RiderModel;
-
-    // Start is called before the first frame update
-    void Start()
+    public void SelectUnit()
     {
-        Mapcontroller = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<MainMapControllerScript>();
-        CurrentCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+        GameController.instance.SelectedUnit = Unit;
     }
-
+    
     /*
     // Update is called once per frame
     void Update()
@@ -55,22 +50,6 @@ public class ManageUnit : MonoBehaviour
     public void SelectUnit()
     {
         CanMove = true;
-    }
-    public void ChoseUnitModel()
-    {
-        Debug.Log("OUIIII");
-        if(Mapcontroller._cities[ThisCity].construction.Units[ThisUnit].Type == Unit.UnitType.Warrior)
-        {
-            WarriorModel.SetActive(true);
-        }
-        else if (Mapcontroller._cities[ThisCity].construction.Units[ThisUnit].Type == Unit.UnitType.Archer)
-        {
-            ArcherModel.SetActive(true);
-        }
-        else if (Mapcontroller._cities[ThisCity].construction.Units[ThisUnit].Type == Unit.UnitType.Rider)
-        {
-            RiderModel.SetActive(true);
-        }
     }
 
 

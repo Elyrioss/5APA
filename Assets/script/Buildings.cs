@@ -8,19 +8,21 @@ public class Construction
 
     public float cost=0;
     public string index;
-        
+    public Waypoint Position;        
+    public GameObject prefab;
+    public GameObject Twin;    
     public virtual void ConstructionFinished(City c){}
 
+    
 }
 
 
 
 public class Buildings : Construction
 {
-    public string index;
-    public string image;
+    
     public BuildingType BuildType;
-    public Waypoint target;    
+    
     
     public enum BuildingType
     {
@@ -37,7 +39,6 @@ public class Grenier : Buildings
     public Grenier()
     {
         index = "Grenier";
-        image = "Grenier";
         BuildType = BuildingType.Ressource;
         cost=50;
     }
@@ -56,7 +57,6 @@ public class Usine : Buildings
     public Usine()
     {
         index = "Usine";
-        image = "Usine";
         BuildType = BuildingType.Ressource;
         cost=50;
     }
@@ -76,7 +76,6 @@ public class Marcher : Buildings
     public Marcher()
     {
         index = "Marcher";
-        image = "Marcher";
         BuildType = BuildingType.Ressource;
         cost=50;
     }
@@ -95,14 +94,25 @@ public class Extension : Buildings
     public Extension()
     {
         index = "Extension";
-        image = "Extension";
         BuildType = BuildingType.Extension;
         cost=100;    
     }
     
     public override void ConstructionFinished(City c)
     {       
-        foreach (Waypoint w in target.Neighbors)
+        
+        GameObject ExtObj = GameObject.Instantiate(Resources.Load("Prefabs/"+index) as GameObject, Position.transform);
+        ExtObj.transform.localPosition = new Vector3(0, Position.elevation, 0);
+        prefab = ExtObj;        
+        //TWIN
+        if (Position.AsTwin || Position.IsTwin)
+        {
+            GameObject ExtObjC = GameObject.Instantiate(Resources.Load("Prefabs/"+index) as GameObject,Position.Twin.transform);            
+            ExtObjC.transform.localPosition = new Vector3(0, Position.elevation, 0);
+            Twin = ExtObjC;
+        }
+        
+        foreach (Waypoint w in Position.Neighbors)
         {
             if(c.controlArea.Contains(w))
                 continue;

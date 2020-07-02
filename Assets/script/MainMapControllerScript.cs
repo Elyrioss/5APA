@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MainMapControllerScript : MonoBehaviour
 {
-    Camera _camera = null;
+    public Camera _camera = null;
     Waypoint selectedWaypoint = null;
     public ManageCity cityPref;
     public ManageCityClone cityClonePref;
@@ -97,47 +97,32 @@ public class MainMapControllerScript : MonoBehaviour
                     }
                     //
                     StartingCity = true;
-                    CanRaycast = false;
                     Menue.ShowCity();
-                }/*
+                }
                 else if (Extension)
                 {
+                    Debug.Log("ah");
+                    if (!hit.transform.parent.gameObject.GetComponent<Waypoint>())
+                        return;
+                    
                     selectedWaypoint = hit.transform.parent.gameObject.GetComponent<Waypoint>();
-                    if (_cities[TmpCityIndex].controlArea.Contains(selectedWaypoint))
+                    City current = GameController.instance.SelectedCity;
+                    if (current.controlArea.Contains(selectedWaypoint)||_cities[TmpCityIndex].controlAreaClone.Contains(selectedWaypoint))
                     {
-                        _cities[TmpCityIndex].construction.ExtensionWaypoint = selectedWaypoint;
-                        _cities[TmpCityIndex].construction.ExtensionConstruction = true;
-                        var ExtObj = Instantiate(ExtensionPref, selectedWaypoint.transform);
-                        ExtObj.transform.localPosition = new Vector3(0, selectedWaypoint.elevation, 0);
-                        TmpManageCity.CityName.SetActive(true);
-                        //TWIN
-                        if (selectedWaypoint.AsTwin || selectedWaypoint.IsTwin)
-                        {
-                            var ExtObjC = Instantiate(ExtensionPref, selectedWaypoint.Twin.transform);
-                            ExtObjC.transform.localPosition = new Vector3(0, selectedWaypoint.elevation, 0);
-                        }
-                        //
+                        Debug.Log("oh");
+                        Extension extension = new Extension();
+                        extension.Position = selectedWaypoint;
+                        current.StartConstruction(extension);
+                        
+                        Menue.CurrentConstructionTime.text = "" + Mathf.Ceil(current.construction.cost / current.production);
+                        Menue.CurrentConstructionImage.sprite = Menue.Extend.icon.sprite;
+                        Menue.CurrentConstructionText.text = extension.index;
+                        
                         Extension = false;
-                        CanRaycast = false;
-                    }
-                    else if (_cities[TmpCityIndex].controlAreaClone.Contains(selectedWaypoint))
-                    {
-                        _cities[TmpCityIndex].construction.ExtensionWaypoint = selectedWaypoint.Twin;
-                        _cities[TmpCityIndex].construction.ExtensionConstruction = true;
-                        var ExtObj = Instantiate(ExtensionPref, selectedWaypoint.Twin.transform);
-                        ExtObj.transform.localPosition = new Vector3(0, 0, 0);
-                        TmpManageCity.CityName.SetActive(true);
-                        //TWIN
-                        if (selectedWaypoint.Twin.AsTwin || selectedWaypoint.Twin.IsTwin)
-                        {
-                            var ExtObjC = Instantiate(ExtensionPref, selectedWaypoint.transform);
-                        }
-                        //
-                        Extension = false;
-                        CanRaycast = false;
                     }
                     
                 }
+                /*
                 else if (Warrior)
                 {
                     selectedWaypoint = hit.transform.parent.gameObject.GetComponent<Waypoint>();
