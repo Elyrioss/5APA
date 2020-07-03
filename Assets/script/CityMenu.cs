@@ -16,6 +16,7 @@ public class CityMenu : MonoBehaviour
     public int Unitnum;
     public RectTransform ContentUnit;
     
+    private List<BuildingButton> Buttons = new List<BuildingButton>();
     
     
     //UI
@@ -31,26 +32,68 @@ public class CityMenu : MonoBehaviour
     public TextMeshProUGUI CurrentConstructionText;
     public TextMeshProUGUI CurrentConstructionTime;
     
+    
+    public Buildings getBuildings(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                return new Grenier();
+            case 1:
+                return new Usine();
+            case 2:
+                return new Marcher();
+            case 3:
+                return new Extension();
+        }
+        return null;        
+    }
+
+    public Unit getUnits(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                return new Warrior();
+            case 1:
+                return new Archer();
+            case 2:
+                return new Rider();
+        }
+        return null;        
+    }
+    
     void Start()
     {
         
         gameObject.SetActive(false);
         
-        Extend.SetupBuilding(this);
         for (int i = 0; i < Batnum; i++)
         {
-            BuildingButton b = Instantiate(pref, ContentBuilding);
-            b.index = i;
-            b.SetupBuilding(this);
+            Buildings build = getBuildings(i);
+            BuildingButton b;
+            if (build.BuildType == Buildings.BuildingType.Ressource)
+            {
+                b = Instantiate(pref, ContentBuilding);
+            }
+            else
+            {
+                b = Instantiate(Extend, ContentBuilding);
+            }
+            b.build = build;
+            b.SetupBuilding();
             b.gameObject.SetActive(true);
+            Buttons.Add(b);
         }
         
         for (int i = 0; i < Unitnum; i++)
         {
+            Unit build = getUnits(i);
             BuildingButton b = Instantiate(pref, ContentUnit);
-            b.index = i;
-            b.SetupUnit(this);
+            b.build = build;
+            b.SetupUnit();
             b.gameObject.SetActive(true);
+            Buttons.Add(b);
         }
     }
 
@@ -62,6 +105,10 @@ public class CityMenu : MonoBehaviour
         if (current == null)
             return;
 
+        foreach (BuildingButton b in Buttons)
+        {
+            b.UpdateNumbers(current);
+        }
         if (current.construction == null)
         {
             CurrentConstructionTime.text = "0";
@@ -73,6 +120,7 @@ public class CityMenu : MonoBehaviour
         CurrentConstructionTime.text = "" + Mathf.Ceil(current.currentCost / current.production);
         CurrentConstructionImage.sprite = Resources.Load<Sprite>(current.construction.index);
         CurrentConstructionText.text = current.construction.index;
+        
     }
     
     public void HideBat()

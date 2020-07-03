@@ -97,8 +97,9 @@ public class Waypoint : MonoBehaviour
     [SerializeField] public Color CivColor = Color.blue;
     [SerializeField]
     Color Deactivated = Color.clear;
-    
 
+    public bool UsedTile=false;
+    
     public int mouvCost=1;
     public int MinCostToStart;
     public Waypoint NearestToStart;

@@ -2,70 +2,59 @@
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using TMPro;
+using UnityEditor.Experimental;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class BuildingButton : MonoBehaviour
 {
     
-    public Buildings getBuildings(int index)
-    {
-        switch (index)
-        {
-            case -1:
-                return new Extension();
-            case 0:
-                return new Grenier();
-            case 1:
-                return new Usine();
-            case 2:
-                return new Marcher();
-        }
-        return null;        
-    }
-
-    public Unit getUnits(int index)
-    {
-        switch (index)
-        {
-            case 0:
-                return new Warrior();
-            case 1:
-                return new Archer();
-            case 2:
-                return new Rider();
-        }
-        return null;        
-    }
-    
-    public int index=0;
     public Image icon;
     public TextMeshProUGUI name;
+    public TextMeshProUGUI Count;
     public Construction build;
     public CityMenu Menue;
+    public Color Notfinished = new Color(85,215,15);
     
-    public void SetupBuilding(CityMenu menu)
-    {    
-        build = getBuildings(index);
-        icon.sprite = Resources.Load<Sprite>(build.index);
-        name.text = build.index;
-        Debug.Log(build.index);
-        Menue = menu;
+    public void UpdateNumbers(City c)
+    {
+        if (c.Buildings.Contains(build) && !build.Redoable)
+        {
+            gameObject.SetActive(false);
+        }
+        if (build.Tempcost > 0)
+        {
+            Count.color = Notfinished;
+            Count.text= "" + Mathf.Ceil(build.Tempcost / c.production);
+        }
+        else
+        {
+            Count.text= "" + Mathf.Ceil(build.cost / c.production);
+        }
     }
 
-    public void SetupUnit(CityMenu menu)
-    {    
-        build = getUnits(index);
+    public void SetupBuilding()
+    {           
         icon.sprite = Resources.Load<Sprite>(build.index);
         name.text = build.index;
-        Debug.Log(build.index);
-        Menue = menu;
+    }
+
+    public void SetupUnit()
+    {          
+        icon.sprite = Resources.Load<Sprite>(build.index);
+        name.text = build.index;
     }
 
     
     public void Build()
     {
         City c = GameController.instance.SelectedCity;
+        if (c.construction != null)
+        {
+            c.construction.Tempcost = c.currentCost;
+        }
+        
+        build.Tempcost = -1;
         GameController.instance.SelectedCity.StartConstruction(build);
         Menue.CurrentConstructionTime.text = "" + Mathf.Ceil(c.construction.cost / c.production);
         Menue.CurrentConstructionImage.sprite = icon.sprite;
@@ -74,9 +63,17 @@ public class BuildingButton : MonoBehaviour
     
     public void Extend()
     {
+        
+        City c = GameController.instance.SelectedCity;
+        if (c.construction != null)
+        {
+            c.construction.Tempcost = c.currentCost;
+        }
+
         Menue.HideBat();
         Menue.HideCity();
-        GameController.instance.MapControllerScript.Extension = true;        
+        GameController.instance.MapControllerScript.Extension = true;
+        GameController.instance.ExtentionTemp = build;
     }
 
     

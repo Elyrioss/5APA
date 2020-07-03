@@ -23,7 +23,7 @@ public class City
     private float StockFood=0;
     
     public Construction construction = null;
-    public List<Buildings> Buildings=new List<Buildings>();
+    public List<Construction> Buildings=new List<Construction>();
     public List<Unit> Units=new List<Unit>();
 
     public float currentCost=0;

@@ -41,9 +41,9 @@ public class ManageCity : MonoBehaviour
         Production.text = "Production : " + Mapcontroller._cities[ThisCity].production;
         Or.text = "Or : " + Mapcontroller._cities[ThisCity].gold;
     }
+
     
-    /*
-    
+    /*   
     public bool CreateFoodBat()
     {
         if (Mapcontroller._cities[ThisCity].ThisCityAction || Mapcontroller._cities[ThisCity].construction.FoodConstruction) // Si action deja effectué ou batiment deja en construction

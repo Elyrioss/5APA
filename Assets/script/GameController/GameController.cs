@@ -22,6 +22,7 @@ public class GameController : MonoBehaviour
     
     public City SelectedCity;
     public Unit SelectedUnit;
+    public Construction ExtentionTemp=null;
     public AudioSource clickSound;
     // Start is called before the first frame update
     void Start()

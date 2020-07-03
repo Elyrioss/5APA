@@ -10,10 +10,21 @@ public class Construction
     public string index;
     public Waypoint Position;        
     public GameObject prefab;
-    public GameObject Twin;    
-    public virtual void ConstructionFinished(City c){}
-
+    public GameObject Twin;
+    public float Tempcost;
+    public bool Redoable;    
+    public BuildingType BuildType;
+      
+    public enum BuildingType
+    {
+        Ressource,
+        Wonder,
+        Extension,
+        Unit
+    } 
     
+    public virtual void ConstructionFinished(City c){}
+  
 }
 
 
@@ -21,15 +32,7 @@ public class Construction
 public class Buildings : Construction
 {
     
-    public BuildingType BuildType;
-    
-    
-    public enum BuildingType
-    {
-        Ressource,
-        Wonder,
-        Extension
-    }    
+  // ON SAIS JAMAIS 
 
 }
 
@@ -41,6 +44,7 @@ public class Grenier : Buildings
         index = "Grenier";
         BuildType = BuildingType.Ressource;
         cost=50;
+        Tempcost = -1;
     }
     
     public override void ConstructionFinished(City c)
@@ -59,12 +63,13 @@ public class Usine : Buildings
         index = "Usine";
         BuildType = BuildingType.Ressource;
         cost=50;
+        Tempcost = -1;
     }
     
     public override void ConstructionFinished(City c)
     {
         c.production += 10;
-        c.Buildings.Add(new Usine());
+        c.Buildings.Add(this);
         c.buildSound.PlayOneShot(c.buildSound.clip);
     }
 }
@@ -78,6 +83,7 @@ public class Marcher : Buildings
         index = "Marcher";
         BuildType = BuildingType.Ressource;
         cost=50;
+        Tempcost = -1;
     }
     
     public override void ConstructionFinished(City c)
@@ -96,20 +102,30 @@ public class Extension : Buildings
         index = "Extension";
         BuildType = BuildingType.Extension;
         cost=100;    
+        Tempcost = -1;
+        Redoable = true;
     }
     
     public override void ConstructionFinished(City c)
     {       
-        
-        GameObject ExtObj = GameObject.Instantiate(Resources.Load("Prefabs/"+index) as GameObject, Position.transform);
-        ExtObj.transform.localPosition = new Vector3(0, Position.elevation, 0);
-        prefab = ExtObj;        
+        GameObject.DestroyImmediate(prefab);
+        prefab = GameObject.Instantiate(Resources.Load("Prefabs/"+index) as GameObject, Position.transform);
+        prefab.transform.localPosition = new Vector3(0, Position.elevation, 0);
+        c.Buildings.Add(new Extension());
+        if (Position.LOD)
+        {
+            Position.LOD.SetActive(false);
+        }
         //TWIN
         if (Position.AsTwin || Position.IsTwin)
         {
-            GameObject ExtObjC = GameObject.Instantiate(Resources.Load("Prefabs/"+index) as GameObject,Position.Twin.transform);            
-            ExtObjC.transform.localPosition = new Vector3(0, Position.elevation, 0);
-            Twin = ExtObjC;
+            GameObject.DestroyImmediate(Twin);
+            Twin = GameObject.Instantiate(Resources.Load("Prefabs/"+index) as GameObject,Position.Twin.transform);            
+            Twin.transform.localPosition = new Vector3(0, Position.elevation, 0);
+            if (Position.Twin.LOD)
+            {
+                Position.Twin.LOD.SetActive(false);
+            }
         }
         
         foreach (Waypoint w in Position.Neighbors)
@@ -136,7 +152,6 @@ public class Extension : Buildings
         }
         c.ClearFrontiers();
         c.ClearFrontiersClone();
-        c.Buildings.Add(new Extension());
         c.buildSound.PlayOneShot(c.buildSound.clip);
     }
 }

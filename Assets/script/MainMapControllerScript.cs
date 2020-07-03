@@ -8,13 +8,10 @@ public class MainMapControllerScript : MonoBehaviour
     Waypoint selectedWaypoint = null;
     public ManageCity cityPref;
     public ManageCityClone cityClonePref;
-    public GameObject ExtensionPref;
-    public GameObject UnitPref;
     public List<City> _cities = new List<City>();
     public int TmpCityIndex;
     public tileMapManager Map;
     public Transform Raystarter;
-
 
     public AudioSource clickSound;
     public AudioSource buildSound;
@@ -25,10 +22,6 @@ public class MainMapControllerScript : MonoBehaviour
     private Animator Anim;  
     public bool CanRaycast = true;
     public bool Extension;
-    public bool Warrior;
-    public bool Archer;
-    public bool Rider;
-    public ManageCity TmpManageCity;
 
     public float LeftLimit;
     public float RightLimit;
@@ -101,27 +94,44 @@ public class MainMapControllerScript : MonoBehaviour
                 }
                 else if (Extension)
                 {
-                    Debug.Log("ah");
                     if (!hit.transform.parent.gameObject.GetComponent<Waypoint>())
                         return;
-                    
+
+                    Construction extention = GameController.instance.ExtentionTemp;
                     selectedWaypoint = hit.transform.parent.gameObject.GetComponent<Waypoint>();
                     City current = GameController.instance.SelectedCity;
-                    if (current.controlArea.Contains(selectedWaypoint)||_cities[TmpCityIndex].controlAreaClone.Contains(selectedWaypoint))
+                    
+                    if ((current.controlArea.Contains(selectedWaypoint)||_cities[TmpCityIndex].controlAreaClone.Contains(selectedWaypoint))&& !selectedWaypoint.UsedTile)
                     {
-                        Debug.Log("oh");
-                        Extension extension = new Extension();
-                        extension.Position = selectedWaypoint;
-                        current.StartConstruction(extension);
+                        Menue.ShowCity();
+                        Menue.ShowBat();
+                        extention.Position = selectedWaypoint;
+                        current.StartConstruction(extention);
+                        selectedWaypoint.UsedTile = true;
+                        if (selectedWaypoint.LOD)
+                        {
+                            selectedWaypoint.LOD.SetActive(false);
+                        }
+                        if (selectedWaypoint.Twin)
+                        {
+                            if (selectedWaypoint.Twin.LOD)
+                            {
+                                selectedWaypoint.Twin.LOD.SetActive(false);
+                            }
+                        }
+                        
+                        extention.prefab = GameObject.Instantiate(Resources.Load("Prefabs/"+extention.index+"Base") as GameObject, selectedWaypoint.transform);
+                        extention.prefab.transform.localPosition = new Vector3(0, selectedWaypoint.elevation, 0);
                         
                         Menue.CurrentConstructionTime.text = "" + Mathf.Ceil(current.construction.cost / current.production);
-                        Menue.CurrentConstructionImage.sprite = Menue.Extend.icon.sprite;
-                        Menue.CurrentConstructionText.text = extension.index;
+                        Menue.CurrentConstructionImage.sprite = Resources.Load<Sprite>(extention.index);
+                        Menue.CurrentConstructionText.text = extention.index;
                         
                         Extension = false;
                     }
                     
                 }
+                
                 /*
                 else if (Warrior)
                 {

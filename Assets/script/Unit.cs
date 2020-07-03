@@ -30,6 +30,7 @@ public class Warrior : Unit
         cost=20;
         mouvementPoints = 3;
         AsPlayed = false;
+        BuildType = BuildingType.Unit;
     }
 
     public override void ConstructionFinished(City c)
@@ -49,6 +50,7 @@ public class Archer : Unit
         cost=15;
         mouvementPoints = 2;
         AsPlayed = false;
+        BuildType = BuildingType.Unit;
     }
     
     public override void ConstructionFinished(City c)
@@ -68,6 +70,7 @@ public class Rider : Unit
         cost=25;
         mouvementPoints = 5;
         AsPlayed = false;
+        BuildType = BuildingType.Unit;
     }
     
     public override void ConstructionFinished(City c)
