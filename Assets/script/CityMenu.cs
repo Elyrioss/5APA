@@ -16,7 +16,7 @@ public class CityMenu : MonoBehaviour
     public int Unitnum;
     public RectTransform ContentUnit;
     
-    private List<BuildingButton> Buttons = new List<BuildingButton>();
+    public List<BuildingButton> Buttons = new List<BuildingButton>();
     
     
     //UI

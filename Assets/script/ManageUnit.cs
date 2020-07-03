@@ -12,8 +12,7 @@ public class ManageUnit : MonoBehaviour
     
     private bool CanMove;
     private Waypoint EndPos;
-    private List<Waypoint> Path = new List<Waypoint>();
-    List<Waypoint> PQueue = new List<Waypoint>();
+    
     private int CurrentCost = 0;
     private int Cost = 15;
     private Waypoint NewPos;
@@ -22,6 +21,10 @@ public class ManageUnit : MonoBehaviour
     public void SelectUnit()
     {
         GameController.instance.SelectedUnit = Unit;
+        if (!Unit.AsPlayed)
+        {
+            GameController.instance.MapControllerScript.Move = true;
+        }
     }
     
     /*

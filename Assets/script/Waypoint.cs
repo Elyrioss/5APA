@@ -125,51 +125,6 @@ public class Waypoint : MonoBehaviour
             sprite.color = CivColor;
         }
     }
-
-    public void BuildShortestPath(List<Waypoint> list, Waypoint node)
-    {
-        if (node.NearestToStart == null)
-            return;
-        list.Add(node.NearestToStart);
-        BuildShortestPath(list, node.NearestToStart);
-    }
-
-    public int Heuristic(Vector2 a,Vector2 b)
-    {
-        return (int)(Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y));
-    }
-    
-    public void DijkstraSearch(Waypoint Start,Waypoint End)
-    {
-
-        Start.MinCostToStart = 0;
-        var prioQueue = new List<Waypoint>();
-        prioQueue.Add(Start);       
-        do {
-            prioQueue = prioQueue.OrderBy(x => x.MinCostToStart).ToList();
-            var next = prioQueue.First();
-            prioQueue.Remove(next);
-            foreach (var n in next.Neighbors.OrderBy(x => x.GetComponent<Waypoint>().mouvCost))
-            {
-                var child = n;
-                if (child.visitedDijstra)
-                    continue;
-                if (next.MinCostToStart + n.mouvCost < child.MinCostToStart)
-                {
-                    child.MinCostToStart = next.MinCostToStart + n.mouvCost;
-                    child.NearestToStart = next;
-                    if (!prioQueue.Contains(child))
-                    {
-                        prioQueue.Add(child);
-                    }                  
-                }
-            }            
-            
-            next.visitedDijstra = true;
-            if (next == End)
-                return;           
-        } while (prioQueue.Any()); 
-    }
-    
+      
     
 }

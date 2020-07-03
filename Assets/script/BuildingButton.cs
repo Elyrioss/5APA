@@ -18,9 +18,18 @@ public class BuildingButton : MonoBehaviour
     
     public void UpdateNumbers(City c)
     {
-        if (c.Buildings.Contains(build) && !build.Redoable)
+        gameObject.SetActive(true);
+        if ((c.Contains(build) && !build.Redoable))
         {
             gameObject.SetActive(false);
+        }       
+        else if (c.construction != null)
+        {
+            if (c.construction.index == build.index)
+            {
+                gameObject.SetActive(false);
+            }
+                
         }
         if (build.Tempcost > 0)
         {
@@ -49,31 +58,62 @@ public class BuildingButton : MonoBehaviour
     public void Build()
     {
         City c = GameController.instance.SelectedCity;
+        Buildings b = c.Contains(build.index);
+        if (b != null)
+        {
+            build = b;
+            build.cost = build.Tempcost;
+        }
+                
         if (c.construction != null)
         {
             c.construction.Tempcost = c.currentCost;
+            
         }
-        
-        build.Tempcost = -1;
         GameController.instance.SelectedCity.StartConstruction(build);
+       
         Menue.CurrentConstructionTime.text = "" + Mathf.Ceil(c.construction.cost / c.production);
         Menue.CurrentConstructionImage.sprite = icon.sprite;
         Menue.CurrentConstructionText.text = build.index;
+        foreach (BuildingButton B in Menue.Buttons)
+        {
+            B.UpdateNumbers(c);
+        }
     }
     
     public void Extend()
     {
         
         City c = GameController.instance.SelectedCity;
+        Buildings b = c.Contains(build.index);
+        if (b != null && b.cost>0)
+        {
+            build = b;
+            build.cost = build.Tempcost;
+            
+            GameController.instance.SelectedCity.StartConstruction(build);
+            Menue.CurrentConstructionTime.text = "" + Mathf.Ceil(c.construction.cost / c.production);
+            Menue.CurrentConstructionImage.sprite = icon.sprite;
+            Menue.CurrentConstructionText.text = build.index;
+        }
+        else
+        {
+            
+            Menue.HideBat();            
+            Menue.HideCity();                                     
+            GameController.instance.MapControllerScript.Extension = true;
+            GameController.instance.ExtentionTemp = build;
+            
+        }
         if (c.construction != null)
         {
-            c.construction.Tempcost = c.currentCost;
+            c.construction.Tempcost = c.currentCost;            
         }
 
-        Menue.HideBat();
-        Menue.HideCity();
-        GameController.instance.MapControllerScript.Extension = true;
-        GameController.instance.ExtentionTemp = build;
+        foreach (BuildingButton B in Menue.Buttons)
+        {
+            B.UpdateNumbers(c);
+        }
     }
 
     

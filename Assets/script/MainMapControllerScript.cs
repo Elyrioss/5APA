@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class MainMapControllerScript : MonoBehaviour
@@ -22,11 +23,23 @@ public class MainMapControllerScript : MonoBehaviour
     private Animator Anim;  
     public bool CanRaycast = true;
     public bool Extension;
+    public bool Move;
 
+    private Waypoint Target;
+    
+    private List<Waypoint> Path = new List<Waypoint>();
+    List<Waypoint> PQueue = new List<Waypoint>();
+    private List<Waypoint> Visited = new List<Waypoint>();
+    private int CurrentCost = 0;
+    private int Cost = 15;
+    private Waypoint NewPos;
+    
     public float LeftLimit;
     public float RightLimit;
     public Camera secondCam;
     public Camera thirdCam;
+    
+    
     
     void Start()
     {
@@ -89,6 +102,17 @@ public class MainMapControllerScript : MonoBehaviour
 
                     }
                     //
+                    if (selectedWaypoint.LOD)
+                    {
+                        selectedWaypoint.LOD.SetActive(false);
+                    }
+                    if (selectedWaypoint.Twin)
+                    {
+                        if (selectedWaypoint.Twin.LOD)
+                        {
+                            selectedWaypoint.Twin.LOD.SetActive(false);
+                        }
+                    }
                     StartingCity = true;
                     Menue.ShowCity();
                 }
@@ -108,6 +132,7 @@ public class MainMapControllerScript : MonoBehaviour
                         extention.Position = selectedWaypoint;
                         current.StartConstruction(extention);
                         selectedWaypoint.UsedTile = true;
+                        current.Buildings.Add(extention);
                         if (selectedWaypoint.LOD)
                         {
                             selectedWaypoint.LOD.SetActive(false);
@@ -131,7 +156,10 @@ public class MainMapControllerScript : MonoBehaviour
                     }
                     
                 }
-                
+                else if (Move)
+                {
+                    MoveWithPath();
+                }
                 /*
                 else if (Warrior)
                 {
@@ -206,6 +234,44 @@ public class MainMapControllerScript : MonoBehaviour
                     }
                 }*/
             }
+
+            
+        }
+        if (Input.GetMouseButtonDown(1))
+        {
+            Menue.HideBat();            
+            Menue.HideCity();
+            Extension = false;
+            Move = false;
+        }
+
+        if (Move)
+        {
+            
+            Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hit)) // Ici on va gérer toutes les possibilités de click d'éléments
+            {
+                if (!hit.transform.parent.gameObject.GetComponent<Waypoint>())
+                {
+                    Target = null;
+                    return;
+                }
+                    
+                selectedWaypoint = hit.transform.parent.gameObject.GetComponent<Waypoint>();
+                if (selectedWaypoint == Target)
+                    return;
+
+                PQueue.Clear();
+                Path.Clear();
+                foreach (Waypoint w in Visited)
+                {
+                    w.visitedDijstra = false;
+                }
+                Visited.Clear();
+                Target = selectedWaypoint;
+                AStarCreate(GameController.instance.SelectedUnit.Position, Target);
+                
+            }
         }
     }
 
@@ -243,5 +309,104 @@ public class MainMapControllerScript : MonoBehaviour
         }
     }
     
+    public void AStarCreate(Waypoint Start,Waypoint End)
+    {
+        if (Start == null || End == null)
+        {
+            return;
+        }
+        Start.MinCostToStart = 0;
+        PQueue.Add(Start);
+        while (PQueue.Any())
+        {
+            Debug.Log("IN");
+            var current = PQueue.First();
+            PQueue.Remove(current);
+            if (current == End)
+            {
+                break;
+            }
+            foreach (Waypoint w in current.Neighbors.OrderBy(x => x.GetComponent<Waypoint>().mouvCost))
+            {
+                if (w.visitedDijstra)
+                {
+                    continue;
+                }
+                var nextCost = current.MinCostToStart + w.mouvCost;
+                if (nextCost < w.MinCostToStart)
+                {
+                    w.MinCostToStart = nextCost;
+                    w.NearestToStart = current;
+                    if (!PQueue.Contains(w))
+                    {
+                        PQueue.Add(w);
+                    }
+                }
+            }
+            current.visitedDijstra = true;
+            Visited.Add(current);
+            PQueue = PQueue.OrderBy(x => x.MinCostToStart).ToList();
+        }
+        
+        CreatePath(Path, End);
+        Path.Reverse();
+        Path.Add(End);
+        //DrawPath(Path);
+        //MoveWithPath(Path);      
+    }
+    
+    private void CreatePath(List<Waypoint> TmpPath, Waypoint W)
+    {
+        if (W.NearestToStart == null)
+        {
+            return;
+        }
+        TmpPath.Add(W.NearestToStart);
+        CreatePath(TmpPath, W.NearestToStart);
+    }
+    
+    private void MoveWithPath()
+    {
+        CurrentCost = 0;
+        NewPos = Path[0];
+        Unit unit = GameController.instance.SelectedUnit;
+        foreach(Waypoint w in Path)
+        {
+            CurrentCost += w.mouvCost;
+            if(CurrentCost <= unit.mouvementPoints)
+            {
+                NewPos = w;
+            }
+            else
+            {
+                break;
+            }
+        }
+        
+        unit.Position = NewPos;
+        unit.prefab.transform.position = new Vector3(NewPos.transform.position.x, NewPos.transform.position.y + NewPos.elevation, NewPos.transform.position.z);
+        if (NewPos.Twin)
+        {           
+            unit.Twin.transform.position = new Vector3(NewPos.Twin.transform.position.x, NewPos.Twin.transform.position.y + NewPos.Twin.elevation, NewPos.Twin.transform.position.z);
+            unit.Twin.SetActive(true);
+        }
+        else
+        {
+            unit.Twin.SetActive(false);   
+        }
+        
+        //clear
+        PQueue.Clear();
+        Path.Clear();
+        PQueue.Clear();
+        Path.Clear();
+        foreach (Waypoint w in Visited)
+        {
+            w.visitedDijstra = false;
+        }
+        Visited.Clear();
+        Move = false;
+        unit.AsPlayed = true;
+    }
     
 }

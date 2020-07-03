@@ -24,6 +24,7 @@ public class City
     
     public Construction construction = null;
     public List<Construction> Buildings=new List<Construction>();
+    public List<Buildings> Extensions=new List<Buildings>();
     public List<Unit> Units=new List<Unit>();
 
     public float currentCost=0;
@@ -237,6 +238,10 @@ public class City
         //On regarde la file de construction de la ville.
         ConstructionProcess();
         ThisCityAction = false;
+        foreach (Unit u in Units)
+        {
+            u.AsPlayed = false;
+        }
     }
 
 
@@ -250,6 +255,7 @@ public class City
             if (currentCost <= 0)
             {
                 //La construction est finis
+                
                 construction.ConstructionFinished(this);
                 construction = null;
             }
@@ -264,6 +270,30 @@ public class City
         currentCost = c.cost;
         construction = c;
 
+    }
+
+    public bool Contains(Construction build)
+    {
+        foreach (Buildings b in Buildings)
+        {
+            if (b.index == build.index)
+                return true;
+        }
+
+        return false;
+    }
+    
+    public Buildings Contains(string index)
+    {
+        foreach (Buildings b in Buildings)
+        {
+            if (b.index == index)
+            {
+                return b;
+            }                
+        }
+
+        return null;
     }
     
 }

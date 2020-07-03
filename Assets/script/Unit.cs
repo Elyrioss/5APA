@@ -1,5 +1,8 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using Object = UnityEngine.Object;
 
+[Serializable]
 public class Unit : Construction
 {
     public bool AsPlayed;
@@ -18,6 +21,13 @@ public class Unit : Construction
             Twin.transform.localPosition = new Vector3(0, Position.elevation, 0);    
             Twin.GetComponent<ManageUnit>().Unit = this;
         }
+        else
+        {
+            Twin = Object.Instantiate(Resources.Load("Prefabs/"+index) as GameObject,Position.transform);        
+            Twin.transform.localPosition = new Vector3(0, Position.elevation, 0);    
+            Twin.GetComponent<ManageUnit>().Unit = this;
+            Twin.SetActive(false);
+        }
         return this;
     }
 }
@@ -28,9 +38,10 @@ public class Warrior : Unit
     {
         index = "Warrior";
         cost=20;
-        mouvementPoints = 3;
-        AsPlayed = false;
+        mouvementPoints = 10;
+        AsPlayed = true;
         BuildType = BuildingType.Unit;
+        Tempcost = -1;
     }
 
     public override void ConstructionFinished(City c)
@@ -48,8 +59,8 @@ public class Archer : Unit
     {
         index = "Archer";
         cost=15;
-        mouvementPoints = 2;
-        AsPlayed = false;
+        mouvementPoints = 8;
+        AsPlayed = true;
         BuildType = BuildingType.Unit;
     }
     
@@ -68,8 +79,8 @@ public class Rider : Unit
     {
         index = "Rider";
         cost=25;
-        mouvementPoints = 5;
-        AsPlayed = false;
+        mouvementPoints = 20;
+        AsPlayed = true;
         BuildType = BuildingType.Unit;
     }
     

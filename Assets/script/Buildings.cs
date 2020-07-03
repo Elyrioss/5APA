@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+[Serializable]
 public class Construction
 {
 
@@ -12,7 +13,7 @@ public class Construction
     public GameObject prefab;
     public GameObject Twin;
     public float Tempcost;
-    public bool Redoable;    
+    public bool Redoable;
     public BuildingType BuildType;
       
     public enum BuildingType
@@ -50,7 +51,7 @@ public class Grenier : Buildings
     public override void ConstructionFinished(City c)
     {
         c.food += 10;
-        c.Buildings.Add(new Grenier());
+        c.Buildings.Add(this);
         c.buildSound.PlayOneShot(c.buildSound.clip);
     }
 }
@@ -89,7 +90,7 @@ public class Marcher : Buildings
     public override void ConstructionFinished(City c)
     {
         c.gold += 10;
-        c.Buildings.Add(new Marcher());
+        c.Buildings.Add(this);
         c.buildSound.PlayOneShot(c.buildSound.clip);
     }
 }
@@ -109,9 +110,13 @@ public class Extension : Buildings
     public override void ConstructionFinished(City c)
     {       
         GameObject.DestroyImmediate(prefab);
+        
+        Buildings b = c.Contains(index);
+        c.Buildings.Remove(b);
+        c.Extensions.Add(b);
         prefab = GameObject.Instantiate(Resources.Load("Prefabs/"+index) as GameObject, Position.transform);
         prefab.transform.localPosition = new Vector3(0, Position.elevation, 0);
-        c.Buildings.Add(new Extension());
+
         if (Position.LOD)
         {
             Position.LOD.SetActive(false);
