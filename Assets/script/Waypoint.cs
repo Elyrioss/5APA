@@ -98,15 +98,16 @@ public class Waypoint : MonoBehaviour
     [SerializeField]
     Color Deactivated = Color.clear;
     
-
     public int mouvCost=1;
     public int MinCostToStart;
     public Waypoint NearestToStart;
     public float HeuristicDist;
-    
+    public SpriteRenderer highlight;
+
     void Awake()
     {
         DisableWaypoint();
+        DisableHighlight();
     }
 
     public void DisableWaypoint() // make Waypoint unreachable
@@ -123,6 +124,16 @@ public class Waypoint : MonoBehaviour
         {
             sprite.color = CivColor;
         }
+    }
+
+    public void DisableHighlight()
+    {
+        highlight.color = Deactivated;
+    }
+
+    public void EnableHighlight() // highlight Waypoint
+    {
+        highlight.color = CivColor;
     }
 
     public void BuildShortestPath(List<Waypoint> list, Waypoint node)
