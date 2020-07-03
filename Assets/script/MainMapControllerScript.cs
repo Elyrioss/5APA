@@ -1,57 +1,53 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class MainMapControllerScript : MonoBehaviour
 {
-    Camera _camera = null;
+    public Camera _camera = null;
     Waypoint selectedWaypoint = null;
-    public GameObject cityPref;
-    public GameObject cityClonePref;
-    public GameObject ExtensionPref;
-    public GameObject UnitPref;
+    public ManageCity cityPref;
+    public ManageCityClone cityClonePref;
     public List<City> _cities = new List<City>();
     public int TmpCityIndex;
     public tileMapManager Map;
     public Transform Raystarter;
-    public Transform Raystarter2;
-    public Transform Raystarter3;
-
-    private Transform CurrentRayCast;
-    private Camera CurrentCamera;
 
     public AudioSource clickSound;
     public AudioSource buildSound;
     public AudioSource soldierSound;
     ///TESTSUI
     private bool StartingCity;
-    public GameObject FileUI;
+    public CityMenu Menue;
     private Animator Anim;  
     public bool CanRaycast = true;
     public bool Extension;
-    public bool Warrior;
-    public bool Archer;
-    public bool Rider;
-    public ManageCity TmpManageCity;
+    public bool Move;
 
+    private Waypoint Target;
+    
+    private List<Waypoint> Path = new List<Waypoint>();
+    List<Waypoint> PQueue = new List<Waypoint>();
+    private List<Waypoint> Visited = new List<Waypoint>();
+    private int CurrentCost = 0;
+    private int Cost = 15;
+    private Waypoint NewPos;
+    
     public float LeftLimit;
     public float RightLimit;
     public Camera secondCam;
     public Camera thirdCam;
     
+    
+    
     void Start()
     {
         _camera = GetComponent<Camera>();
-        Anim = FileUI.GetComponent<Animator>();
         SetToLOD();
         
         RightLimit =  Map.LineOrder[Map.LineOrder.Count-1].transform.position.x;
         LeftLimit = -RightLimit;
-        
-        Debug.Log("Left :"+LeftLimit+", Right :"+RightLimit);
-        
-        CurrentRayCast = Raystarter;
-        CurrentCamera = _camera;
         secondCam.transform.localPosition = new Vector3(RightLimit,secondCam.transform.localPosition.y,secondCam.transform.localPosition.z);
         thirdCam.transform.localPosition = new Vector3(LeftLimit,secondCam.transform.localPosition.y,secondCam.transform.localPosition.z);
 
@@ -62,12 +58,12 @@ public class MainMapControllerScript : MonoBehaviour
     {
         RaycastHit hit;
 
-        if (CurrentRayCast.position.x < (LeftLimit/2)+40)
+        if (Raystarter.position.x < (LeftLimit/2)+40)
         {
             _camera.transform.position = secondCam.transform.position;
         }
        
-        if (CurrentRayCast.position.x > RightLimit-40)
+        if (Raystarter.position.x > RightLimit-40)
         {
             _camera.transform.position = thirdCam.transform.position;
         }
@@ -78,7 +74,7 @@ public class MainMapControllerScript : MonoBehaviour
             {
                 return;
             }
-            Ray ray = CurrentCamera.ScreenPointToRay(Input.mousePosition);
+            Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit)) // Ici on va gérer toutes les possibilités de click d'éléments
             {
                 if (!hit.transform.parent.gameObject.GetComponent<Waypoint>())
@@ -86,64 +82,85 @@ public class MainMapControllerScript : MonoBehaviour
                 if (!StartingCity) // Création de la ville du début ( et des autres villes après ?)
                 {
                     selectedWaypoint = hit.transform.parent.gameObject.GetComponent<Waypoint>();
-                    var CityObj = Instantiate(cityPref, selectedWaypoint.transform);
+                    ManageCity CityObj = Instantiate(cityPref, selectedWaypoint.transform);
                     CityObj.transform.localPosition = new Vector3(0,selectedWaypoint.elevation, 0);
                     _cities.Add(new City(selectedWaypoint, Color.red));
-                    CityObj.GetComponent<ManageCity>().ThisCity = _cities.Count - 1;
+                    
+                    CityObj.ThisCity = _cities.Count - 1;
+                    
                     //Add sound elements
+                    
                     _cities[_cities.Count - 1].buildSound = this.buildSound;
                     _cities[_cities.Count - 1].soldierSound = this.soldierSound;
                     _cities[_cities.Count - 1].clickSound = this.clickSound;
                     //TWIN
                     if (selectedWaypoint.AsTwin || selectedWaypoint.IsTwin)
                     {
-                        var CityObjC = Instantiate(cityClonePref, selectedWaypoint.Twin.transform);
+                        ManageCityClone CityObjC = Instantiate(cityClonePref, selectedWaypoint.Twin.transform);
                         CityObjC.transform.localPosition = new Vector3(0, selectedWaypoint.elevation, 0);
-                        CityObjC.GetComponent<ManageCityClone>().ManageRef = CityObj;
+                        CityObjC.ManageRef = CityObj;
 
                     }
                     //
+                    if (selectedWaypoint.LOD)
+                    {
+                        selectedWaypoint.LOD.SetActive(false);
+                    }
+                    if (selectedWaypoint.Twin)
+                    {
+                        if (selectedWaypoint.Twin.LOD)
+                        {
+                            selectedWaypoint.Twin.LOD.SetActive(false);
+                        }
+                    }
                     StartingCity = true;
-                    CanRaycast = false;
+                    Menue.ShowCity();
                 }
                 else if (Extension)
                 {
+                    if (!hit.transform.parent.gameObject.GetComponent<Waypoint>())
+                        return;
+
+                    Construction extention = GameController.instance.ExtentionTemp;
                     selectedWaypoint = hit.transform.parent.gameObject.GetComponent<Waypoint>();
-                    if (_cities[TmpCityIndex].controlArea.Contains(selectedWaypoint))
+                    City current = GameController.instance.SelectedCity;
+                    
+                    if ((current.controlArea.Contains(selectedWaypoint)||_cities[TmpCityIndex].controlAreaClone.Contains(selectedWaypoint))&& !selectedWaypoint.UsedTile)
                     {
-                        _cities[TmpCityIndex].construction.ExtensionWaypoint = selectedWaypoint;
-                        _cities[TmpCityIndex].construction.ExtensionConstruction = true;
-                        var ExtObj = Instantiate(ExtensionPref, selectedWaypoint.transform);
-                        ExtObj.transform.localPosition = new Vector3(0, selectedWaypoint.elevation, 0);
-                        TmpManageCity.CityName.SetActive(true);
-                        //TWIN
-                        if (selectedWaypoint.AsTwin || selectedWaypoint.IsTwin)
+                        Menue.ShowCity();
+                        Menue.ShowBat();
+                        extention.Position = selectedWaypoint;
+                        current.StartConstruction(extention);
+                        selectedWaypoint.UsedTile = true;
+                        current.Buildings.Add(extention);
+                        if (selectedWaypoint.LOD)
                         {
-                            var ExtObjC = Instantiate(ExtensionPref, selectedWaypoint.Twin.transform);
-                            ExtObjC.transform.localPosition = new Vector3(0, selectedWaypoint.elevation, 0);
+                            selectedWaypoint.LOD.SetActive(false);
                         }
-                        //
-                        Extension = false;
-                        CanRaycast = false;
-                    }
-                    else if (_cities[TmpCityIndex].controlAreaClone.Contains(selectedWaypoint))
-                    {
-                        _cities[TmpCityIndex].construction.ExtensionWaypoint = selectedWaypoint.Twin;
-                        _cities[TmpCityIndex].construction.ExtensionConstruction = true;
-                        var ExtObj = Instantiate(ExtensionPref, selectedWaypoint.Twin.transform);
-                        ExtObj.transform.localPosition = new Vector3(0, 0, 0);
-                        TmpManageCity.CityName.SetActive(true);
-                        //TWIN
-                        if (selectedWaypoint.Twin.AsTwin || selectedWaypoint.Twin.IsTwin)
+                        if (selectedWaypoint.Twin)
                         {
-                            var ExtObjC = Instantiate(ExtensionPref, selectedWaypoint.transform);
+                            if (selectedWaypoint.Twin.LOD)
+                            {
+                                selectedWaypoint.Twin.LOD.SetActive(false);
+                            }
                         }
-                        //
+                        
+                        extention.prefab = GameObject.Instantiate(Resources.Load("Prefabs/"+extention.index+"Base") as GameObject, selectedWaypoint.transform);
+                        extention.prefab.transform.localPosition = new Vector3(0, selectedWaypoint.elevation, 0);
+                        
+                        Menue.CurrentConstructionTime.text = "" + Mathf.Ceil(current.construction.cost / current.production);
+                        Menue.CurrentConstructionImage.sprite = Resources.Load<Sprite>(extention.index);
+                        Menue.CurrentConstructionText.text = extention.index;
+                        
                         Extension = false;
-                        CanRaycast = false;
                     }
                     
                 }
+                else if (Move)
+                {
+                    MoveWithPath();
+                }
+                /*
                 else if (Warrior)
                 {
                     selectedWaypoint = hit.transform.parent.gameObject.GetComponent<Waypoint>();
@@ -215,7 +232,45 @@ public class MainMapControllerScript : MonoBehaviour
                         Rider = false;
                         CanRaycast = false;
                     }
+                }*/
+            }
+
+            
+        }
+        if (Input.GetMouseButtonDown(1))
+        {
+            Menue.HideBat();            
+            Menue.HideCity();
+            Extension = false;
+            Move = false;
+        }
+
+        if (Move)
+        {
+            
+            Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hit)) // Ici on va gérer toutes les possibilités de click d'éléments
+            {
+                if (!hit.transform.parent.gameObject.GetComponent<Waypoint>())
+                {
+                    Target = null;
+                    return;
                 }
+                    
+                selectedWaypoint = hit.transform.parent.gameObject.GetComponent<Waypoint>();
+                if (selectedWaypoint == Target)
+                    return;
+
+                PQueue.Clear();
+                Path.Clear();
+                foreach (Waypoint w in Visited)
+                {
+                    w.visitedDijstra = false;
+                }
+                Visited.Clear();
+                Target = selectedWaypoint;
+                AStarCreate(GameController.instance.SelectedUnit.Position, Target);
+                
             }
         }
     }
@@ -254,5 +309,104 @@ public class MainMapControllerScript : MonoBehaviour
         }
     }
     
+    public void AStarCreate(Waypoint Start,Waypoint End)
+    {
+        if (Start == null || End == null)
+        {
+            return;
+        }
+        Start.MinCostToStart = 0;
+        PQueue.Add(Start);
+        while (PQueue.Any())
+        {
+            Debug.Log("IN");
+            var current = PQueue.First();
+            PQueue.Remove(current);
+            if (current == End)
+            {
+                break;
+            }
+            foreach (Waypoint w in current.Neighbors.OrderBy(x => x.GetComponent<Waypoint>().mouvCost))
+            {
+                if (w.visitedDijstra)
+                {
+                    continue;
+                }
+                var nextCost = current.MinCostToStart + w.mouvCost;
+                if (nextCost < w.MinCostToStart)
+                {
+                    w.MinCostToStart = nextCost;
+                    w.NearestToStart = current;
+                    if (!PQueue.Contains(w))
+                    {
+                        PQueue.Add(w);
+                    }
+                }
+            }
+            current.visitedDijstra = true;
+            Visited.Add(current);
+            PQueue = PQueue.OrderBy(x => x.MinCostToStart).ToList();
+        }
+        
+        CreatePath(Path, End);
+        Path.Reverse();
+        Path.Add(End);
+        //DrawPath(Path);
+        //MoveWithPath(Path);      
+    }
+    
+    private void CreatePath(List<Waypoint> TmpPath, Waypoint W)
+    {
+        if (W.NearestToStart == null)
+        {
+            return;
+        }
+        TmpPath.Add(W.NearestToStart);
+        CreatePath(TmpPath, W.NearestToStart);
+    }
+    
+    private void MoveWithPath()
+    {
+        CurrentCost = 0;
+        NewPos = Path[0];
+        Unit unit = GameController.instance.SelectedUnit;
+        foreach(Waypoint w in Path)
+        {
+            CurrentCost += w.mouvCost;
+            if(CurrentCost <= unit.mouvementPoints)
+            {
+                NewPos = w;
+            }
+            else
+            {
+                break;
+            }
+        }
+        
+        unit.Position = NewPos;
+        unit.prefab.transform.position = new Vector3(NewPos.transform.position.x, NewPos.transform.position.y + NewPos.elevation, NewPos.transform.position.z);
+        if (NewPos.Twin)
+        {           
+            unit.Twin.transform.position = new Vector3(NewPos.Twin.transform.position.x, NewPos.Twin.transform.position.y + NewPos.Twin.elevation, NewPos.Twin.transform.position.z);
+            unit.Twin.SetActive(true);
+        }
+        else
+        {
+            unit.Twin.SetActive(false);   
+        }
+        
+        //clear
+        PQueue.Clear();
+        Path.Clear();
+        PQueue.Clear();
+        Path.Clear();
+        foreach (Waypoint w in Visited)
+        {
+            w.visitedDijstra = false;
+        }
+        Visited.Clear();
+        Move = false;
+        unit.AsPlayed = true;
+    }
     
 }

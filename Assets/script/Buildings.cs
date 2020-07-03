@@ -1,101 +1,162 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
+[Serializable]
 public class Construction
 {
-    //FoodBat
-    public int NumberOfFoodBat = 0;
-    public bool FoodConstruction;
-    public int FoodCounter = 2;
-    //ProductionBat
-    public int NumberOfProducBat = 0;
-    public bool ProducConstruction;
-    public int ProducCounter = 2;
-    //GoldBat
-    public int NumberOfGoldBat = 0;
-    public bool GoldConstruction;
-    public int GoldCounter = 2;
-    //Extension Bat
-    public int NumberOfExtension = 0;
-    public bool ExtensionConstruction;
-    public int ExtensionCounter = 2;
-    public Waypoint ExtensionWaypoint;
 
-    //Warrior
-    public int NumberOfWarrior = 0;
-    public bool WarriorConstruction;
-    public int WarriorCounter = 2;
-    public Waypoint WarriorWaypoint;
-    public GameObject WarriorUnit;
-
-    //Archer
-    public int NumberOfArcher = 0;
-    public bool ArcherConstruction;
-    public int ArcherCounter = 2;
-    public Waypoint ArcherWaypoint;
-    public GameObject ArcherUnit;
-    //Rider
-    public int NumberOfRider = 0;
-    public bool RiderConstruction;
-    public int RiderCounter = 2;
-    public Waypoint RiderWaypoint;
-    public GameObject RiderUnit;
-
-
-    //Liste Buildings
-    public List<Buildings> buildings = new List<Buildings>();
-
-    //Liste Unités
-    public List<Unit> Units = new List<Unit>();
-
-
-    public Construction()
+    public float cost=0;
+    public string index;
+    public Waypoint Position;        
+    public GameObject prefab;
+    public GameObject Twin;
+    public float Tempcost;
+    public bool Redoable;
+    public BuildingType BuildType;
+      
+    public enum BuildingType
     {
-        Debug.Log("File de construction");
-    }
-
+        Ressource,
+        Wonder,
+        Extension,
+        Unit
+    } 
+    
+    public virtual void ConstructionFinished(City c){}
+  
 }
-
 
 
 
 public class Buildings : Construction
 {
-    public Waypoint Position;
-    public GameObject Pref;
-    public BuildingType BuildType;
-    public int RessourceType = 0; //0 = None,1=Food,2=Product,3=Gold
-
-    public enum BuildingType
-    {
-        Ressource,
-        Unit,
-        Wonder,
-        Extension
-    }
-
-    public Buildings(BuildingType a,int TypeOfRessource)
-    {
-        BuildType = a;
-        RessourceType = TypeOfRessource;
-    }
-
-    public Buildings(BuildingType a)
-    {
-        BuildType = a;
-        RessourceType = 0;
-    }
-
-    public Buildings()
-    {
-        BuildType = BuildingType.Ressource;
-        RessourceType = 0;
-    }
+    
+  // ON SAIS JAMAIS 
 
 }
 
-public class Barracks : Buildings
+public class Grenier : Buildings
 {
-    public Unit Swordman;
+  
+    public Grenier()
+    {
+        index = "Grenier";
+        BuildType = BuildingType.Ressource;
+        cost=50;
+        Tempcost = -1;
+    }
+    
+    public override void ConstructionFinished(City c)
+    {
+        c.food += 10;
+        c.Buildings.Add(this);
+        c.buildSound.PlayOneShot(c.buildSound.clip);
+    }
+}
+
+public class Usine : Buildings
+{
+
+    public Usine()
+    {
+        index = "Usine";
+        BuildType = BuildingType.Ressource;
+        cost=50;
+        Tempcost = -1;
+    }
+    
+    public override void ConstructionFinished(City c)
+    {
+        c.production += 10;
+        c.Buildings.Add(this);
+        c.buildSound.PlayOneShot(c.buildSound.clip);
+    }
+}
+
+public class Marcher : Buildings
+{
+
+    
+    public Marcher()
+    {
+        index = "Marcher";
+        BuildType = BuildingType.Ressource;
+        cost=50;
+        Tempcost = -1;
+    }
+    
+    public override void ConstructionFinished(City c)
+    {
+        c.gold += 10;
+        c.Buildings.Add(this);
+        c.buildSound.PlayOneShot(c.buildSound.clip);
+    }
+}
+
+public class Extension : Buildings
+{
+
+    public Extension()
+    {
+        index = "Extension";
+        BuildType = BuildingType.Extension;
+        cost=100;    
+        Tempcost = -1;
+        Redoable = true;
+    }
+    
+    public override void ConstructionFinished(City c)
+    {       
+        GameObject.DestroyImmediate(prefab);
+        
+        Buildings b = c.Contains(index);
+        c.Buildings.Remove(b);
+        c.Extensions.Add(b);
+        prefab = GameObject.Instantiate(Resources.Load("Prefabs/"+index) as GameObject, Position.transform);
+        prefab.transform.localPosition = new Vector3(0, Position.elevation, 0);
+
+        if (Position.LOD)
+        {
+            Position.LOD.SetActive(false);
+        }
+        //TWIN
+        if (Position.AsTwin || Position.IsTwin)
+        {
+            GameObject.DestroyImmediate(Twin);
+            Twin = GameObject.Instantiate(Resources.Load("Prefabs/"+index) as GameObject,Position.Twin.transform);            
+            Twin.transform.localPosition = new Vector3(0, Position.elevation, 0);
+            if (Position.Twin.LOD)
+            {
+                Position.Twin.LOD.SetActive(false);
+            }
+        }
+        
+        foreach (Waypoint w in Position.Neighbors)
+        {
+            if(c.controlArea.Contains(w))
+                continue;
+            
+            c.controlArea.Add(w);
+            w.CivColor = c.civColor;
+            w.EnableWaypoint();
+            
+            //TWIN
+            
+            if (w.AsTwin || w.IsTwin)
+            {
+                w.Twin.CivColor = c.civColor;
+                w.Twin.EnableWaypoint();
+                c.controlAreaClone.Add(w.Twin);
+            }
+            //
+            c.food += w.Food;
+            c.production += w.Production;
+            c.gold += w.Gold;
+        }
+        c.ClearFrontiers();
+        c.ClearFrontiersClone();
+        c.buildSound.PlayOneShot(c.buildSound.clip);
+    }
 }

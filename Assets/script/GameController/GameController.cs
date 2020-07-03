@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 
@@ -7,34 +8,29 @@ public enum TurnState { START, ENDTURN } // On verra si on gère certains evenem
 public class GameController : MonoBehaviour
 {
 
+    public static GameController instance;
     public AnimationCurve foodUpgradeCurve;
     public AnimationCurve foodCostCurve;
     
     public TurnState state;
-    [SerializeField] private Text TurnTxt;
-
+        
+    [SerializeField] private TextMeshProUGUI TurnTxt;
+    
     public int NumberOfTurn = 1;
-
-    public GameObject cityMenu;
-
-
+    public CityMenu cityMenu;
     public MainMapControllerScript MapControllerScript;
-    public ManageCity SelectedCity;
+    
+    public City SelectedCity;
+    public Unit SelectedUnit;
+    public Construction ExtentionTemp=null;
     public AudioSource clickSound;
     // Start is called before the first frame update
     void Start()
     {
+        instance = this;
         state = TurnState.START;
         MapControllerScript = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<MainMapControllerScript>();
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-       
-    }
-
 
 
     //UI
@@ -42,7 +38,6 @@ public class GameController : MonoBehaviour
     {
         clickSound.PlayOneShot(clickSound.clip);
         state = TurnState.ENDTURN;
-        cityMenu.SetActive(false);
         //Les ennemies ? La recolte ?
         foreach (City c in MapControllerScript._cities)
         {
@@ -53,39 +48,4 @@ public class GameController : MonoBehaviour
         state = TurnState.START;
     }
 
-
-    public void FoodBatConstruction()
-    {
-
-        SelectedCity.CreateFoodBat();
-    }
-
-    public void ProducBatConstruction()
-    {
-        SelectedCity.CreateProducBat();
-    }
-
-    public void GoldBatConstruction()
-    {
-        SelectedCity.CreateGoldBat();
-    }
-
-    public void ExtensionBatConstruction()
-    {
-        SelectedCity.CreateExtensionBat();
-    }
-
-    public void CreateWarrior()
-    {
-        SelectedCity.CreateWarrior();
-    }
-
-    public void CreateArcher()
-    {
-        SelectedCity.CreateArcher();
-    }
-    public void CreateRider()
-    {
-        SelectedCity.CreateRider();
-    }
 }

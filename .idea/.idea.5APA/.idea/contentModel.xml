@@ -1,17 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="C:\Users\Esteban\.Rider2018.3\system\extResources" t="IncludeRecursive" />
-    <e p="C:\Users\Esteban\.Rider2018.3\system\resharper-host\local\Transient\ReSharperHost\v183\SolutionCaches\_5APA.-2045621238.00" t="ExcludeRecursive" />
-    <e p="C:\Users\Esteban\Desktop\PA\5APA" t="IncludeRecursive">
+    <e p="C:\Users\Esteban\.Rider2018.2\config\extensions" t="IncludeRecursive" />
+    <e p="C:\Users\Esteban\.Rider2018.2\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\Esteban\.Rider2018.2\system\resharper-host\local\Transient\ReSharperHost\v182\SolutionCaches\_5APA.1232170449.00" t="ExcludeRecursive" />
+    <e p="C:\Users\Esteban\5APA" t="IncludeRecursive">
       <e p="5APA.sln" t="IncludeFlat" />
       <e p="Assembly-CSharp-Editor.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
+        <e p="AgingAddon" t="Include">
+          <e p="Scripts" t="Include">
+            <e p="Noise.cs" t="Include" />
+            <e p="TextureModifier.cs" t="Include" />
+            <e p="TextureModifierEditor.cs" t="Include" />
+          </e>
+        </e>
         <e p="Kenney Assets" t="Include">
           <e p="UI Adventure Pack" t="Include">
             <e p="Spritesheet" t="Include">
               <e p="uipack_rpg_sheet.xml" t="Include" />
+            </e>
+          </e>
+          <e p="UI Base Pack" t="Include">
+            <e p="Spritesheet" t="Include">
+              <e p="blueSheet.xml" t="Include" />
+              <e p="greenSheet.xml" t="Include" />
+              <e p="greySheet.xml" t="Include" />
+              <e p="redSheet.xml" t="Include" />
+              <e p="yellowSheet.xml" t="Include" />
             </e>
           </e>
         </e>
@@ -63,6 +80,7 @@
             <e p="Noise.cs" t="Include" />
             <e p="NoiseLookupTable.cs" t="Include" />
           </e>
+          <e p="BuildingButton.cs" t="Include" />
           <e p="Buildings.cs" t="Include" />
           <e p="City.cs" t="Include" />
           <e p="CityMenu.cs" t="Include" />
@@ -71,7 +89,6 @@
             <e p="RTS_CameraEditor.cs" t="Include" />
             <e p="tileEditor.cs" t="Include" />
           </e>
-          <e p="FallOffMap.cs" t="Include" />
           <e p="GameController" t="Include">
             <e p="GameController.cs" t="Include" />
           </e>
@@ -88,12 +105,16 @@
           <e p="MainMapControllerScript.cs" t="Include" />
           <e p="ManageCity.cs" t="Include" />
           <e p="ManageCityClone.cs" t="Include" />
+          <e p="ManageUnit.cs" t="Include" />
           <e p="Noise.cs" t="Include" />
           <e p="RTS_Camera.cs" t="Include" />
           <e p="SaveGame.cs" t="Include" />
           <e p="SaveManager.cs" t="Include" />
           <e p="tileMapManager.cs" t="Include" />
           <e p="TileMapPos.cs" t="Include" />
+          <e p="Tmp" t="Include">
+            <e p="Astar.cs" t="Include" />
+          </e>
           <e p="UI" t="Include">
             <e p="MainMenuManager.cs" t="Include" />
           </e>

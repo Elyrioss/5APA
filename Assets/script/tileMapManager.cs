@@ -1049,27 +1049,6 @@ public class tileMapManager : MonoBehaviour
             w.visitedDijstra = false;
         }
     }
-    
-    public void ShowDijtra()
-    {
-
-        Waypoint Start = ChunkOrder[0];
-        Waypoint End = LineOrder[UnityEngine.Random.Range(0,LineOrder.Count-1)];        
-        Start.DijkstraSearch(Start,End);
-        var shortestPath = new List<Waypoint>();
-        shortestPath.Add(End);
-
-
-        if (End.NearestToStart)
-        {
-            Start.BuildShortestPath(shortestPath, End);
-            shortestPath.Reverse();
-            foreach (Waypoint path in shortestPath)
-            {
-                path.EnableWaypoint();
-            }
-        }
-    }
     public _3DtileType ClimateDiagram(BiomeType type)
     {
         foreach (_3DtileType t in _3DTiles)
