@@ -41,7 +41,6 @@ public class Warrior : Unit
         mouvementPoints = 10;
         AsPlayed = true;
         BuildType = BuildingType.Unit;
-        Tempcost = -1;
     }
 
     public override void ConstructionFinished(City c)

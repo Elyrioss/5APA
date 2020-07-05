@@ -42,7 +42,7 @@ public class City
         position.CivColor = civColor;
         position.EnableWaypoint();
         controlArea.Add(position);
-        
+        position.UsedTile = true;
         //TWIN
         if (position.AsTwin || position.IsTwin)
         {

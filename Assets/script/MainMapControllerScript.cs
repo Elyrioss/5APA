@@ -30,9 +30,6 @@ public class MainMapControllerScript : MonoBehaviour
     private List<Waypoint> Path = new List<Waypoint>();
     List<Waypoint> PQueue = new List<Waypoint>();
     private List<Waypoint> Visited = new List<Waypoint>();
-    private int CurrentCost = 0;
-    private int Cost = 15;
-    private Waypoint NewPos;
     
     public float LeftLimit;
     public float RightLimit;
@@ -157,7 +154,11 @@ public class MainMapControllerScript : MonoBehaviour
                 }
                 else if (Move)
                 {
-                    MoveWithPath();
+                    if (!hit.transform.parent.gameObject.GetComponent<Waypoint>())
+                        return;
+                    
+                    selectedWaypoint = hit.transform.parent.gameObject.GetComponent<Waypoint>();
+                    MoveWithPath(selectedWaypoint);
                 }             
             }
 
@@ -168,36 +169,15 @@ public class MainMapControllerScript : MonoBehaviour
             Menue.HideBat();            
             Menue.HideCity();
             Extension = false;
-            Move = false;
-        }
-
-        if (Move)
-        {
-            
-            Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out hit)) // Ici on va gérer toutes les possibilités de click d'éléments
+            PQueue.Clear();
+            Path.Clear();
+            foreach (Waypoint w in Visited)
             {
-                if (!hit.transform.parent.gameObject.GetComponent<Waypoint>())
-                {
-                    Target = null;
-                    return;
-                }
-                    
-                selectedWaypoint = hit.transform.parent.gameObject.GetComponent<Waypoint>();
-                if (selectedWaypoint == Target)
-                    return;
-
-                PQueue.Clear();
-                Path.Clear();
-                foreach (Waypoint w in Visited)
-                {
-                    w.visitedDijstra = false;
-                }
-                Visited.Clear();
-                Target = selectedWaypoint;
-                AStarCreate(GameController.instance.SelectedUnit.Position, Target);
-                
+                w.visitedDijstra = false;
+                w.NearestToStart = null;
+                w.MinCostToStart = int.MaxValue;
             }
+            Move = false;
         }
     }
 
@@ -235,23 +215,20 @@ public class MainMapControllerScript : MonoBehaviour
         }
     }
     
-    public void AStarCreate(Waypoint Start,Waypoint End)
+    public void AStarCreate(Waypoint Start,float cost)
     {
-        if (Start == null || End == null)
+        if (Start == null)
         {
             return;
         }
+        
         Start.MinCostToStart = 0;
         PQueue.Add(Start);
         while (PQueue.Any())
         {
-            Debug.Log("IN");
             var current = PQueue.First();
             PQueue.Remove(current);
-            if (current == End)
-            {
-                break;
-            }
+            
             foreach (Waypoint w in current.Neighbors.OrderBy(x => x.GetComponent<Waypoint>().mouvCost))
             {
                 if (w.visitedDijstra)
@@ -259,6 +236,12 @@ public class MainMapControllerScript : MonoBehaviour
                     continue;
                 }
                 var nextCost = current.MinCostToStart + w.mouvCost;
+                
+                if (nextCost > cost)
+                {
+                    continue;
+                }
+                
                 if (nextCost < w.MinCostToStart)
                 {
                     w.MinCostToStart = nextCost;
@@ -273,12 +256,7 @@ public class MainMapControllerScript : MonoBehaviour
             Visited.Add(current);
             PQueue = PQueue.OrderBy(x => x.MinCostToStart).ToList();
         }
-        
-        CreatePath(Path, End);
-        Path.Reverse();
-        Path.Add(End);
-        //DrawPath(Path);
-        //MoveWithPath(Path);      
+        ClearRange(Visited);
     }
     
     private void CreatePath(List<Waypoint> TmpPath, Waypoint W)
@@ -288,26 +266,19 @@ public class MainMapControllerScript : MonoBehaviour
             return;
         }
         TmpPath.Add(W.NearestToStart);
+        W.EnableTrail(W.NearestToStart,0);
         CreatePath(TmpPath, W.NearestToStart);
     }
     
-    private void MoveWithPath()
+    private void MoveWithPath(Waypoint NewPos)
     {
-        CurrentCost = 0;
-        NewPos = Path[0];
+        Debug.Log(Visited.Count);
+        if(!Visited.Contains(NewPos))
+            return;
+        
+        Debug.Log(Visited.Count);
         Unit unit = GameController.instance.SelectedUnit;
-        foreach(Waypoint w in Path)
-        {
-            CurrentCost += w.mouvCost;
-            if(CurrentCost <= unit.mouvementPoints)
-            {
-                NewPos = w;
-            }
-            else
-            {
-                break;
-            }
-        }
+        
         
         unit.Position = NewPos;
         unit.prefab.transform.position = new Vector3(NewPos.transform.position.x, NewPos.transform.position.y + NewPos.elevation, NewPos.transform.position.z);
@@ -321,9 +292,6 @@ public class MainMapControllerScript : MonoBehaviour
             unit.Twin.SetActive(false);   
         }
         
-        //clear
-        PQueue.Clear();
-        Path.Clear();
         PQueue.Clear();
         Path.Clear();
         foreach (Waypoint w in Visited)
@@ -331,10 +299,63 @@ public class MainMapControllerScript : MonoBehaviour
             w.visitedDijstra = false;
             w.NearestToStart = null;
             w.MinCostToStart = int.MaxValue;
+            w.ResetRange();
         }
         Visited.Clear();
+        
         Move = false;
         unit.AsPlayed = true;
+    }
+    
+    public void ClearRange(List<Waypoint> list)
+    {
+        foreach (Waypoint waypoint in list)
+        {
+            if (waypoint.left)
+            {
+                if (list.Contains(waypoint.left.GetComponent<Waypoint>()))
+                {
+                    waypoint.RangeRenderer[0].gameObject.SetActive(false);
+                }
+            }
+            if (waypoint.right)
+            {
+                if (list.Contains(waypoint.right.GetComponent<Waypoint>()))
+                {
+                    waypoint.RangeRenderer[3].gameObject.SetActive(false);
+                }
+            }
+            if (waypoint.leftTop)
+            {
+                if (list.Contains(waypoint.leftTop.GetComponent<Waypoint>()))
+                {
+                    waypoint.RangeRenderer[2].gameObject.SetActive(false);
+                }
+            }
+            if (waypoint.rightTop)
+            {
+                if (list.Contains(waypoint.rightTop.GetComponent<Waypoint>()))
+                {
+                    waypoint.RangeRenderer[5].gameObject.SetActive(false);
+                }
+            }
+            if (waypoint.leftBot)
+            {
+                if (list.Contains(waypoint.leftBot.GetComponent<Waypoint>()))
+                {
+                    waypoint.RangeRenderer[1].gameObject.SetActive(false);
+                }
+            }
+            if (waypoint.rightBot)
+            {
+                if (list.Contains(waypoint.rightBot.GetComponent<Waypoint>()))
+                {
+                    waypoint.RangeRenderer[4].gameObject.SetActive(false);
+                }
+            }
+            
+           waypoint.RangeContainer.SetActive(true);
+        }
     }
     
 }

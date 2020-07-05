@@ -25,10 +25,8 @@ public class BuildingButton : MonoBehaviour
         }       
         else if (c.construction != null)
         {
-            Debug.Log(c.construction.index +" "+ build.index);
             if (c.construction.index == build.index)
             {
-                Debug.Log(build.index);
                 gameObject.SetActive(false);
             }
                 

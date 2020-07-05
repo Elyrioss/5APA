@@ -24,6 +24,7 @@ public class ManageUnit : MonoBehaviour
         if (!Unit.AsPlayed)
         {
             GameController.instance.MapControllerScript.Move = true;
+            GameController.instance.MapControllerScript.AStarCreate(Unit.Position,Unit.mouvementPoints);
         }
     }
     
