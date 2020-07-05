@@ -13,8 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-
+using TMPro;
 
 [RequireComponent(typeof(BoxCollider))]
 public class Waypoint : MonoBehaviour
@@ -77,8 +76,7 @@ public class Waypoint : MonoBehaviour
     public HeightType HeightType;
     public HeatType HeatType;
     public MoistureType MoistureType;
-
-    public Animator Animator;
+    
     
     public float Food;
     public float Production;
@@ -105,12 +103,20 @@ public class Waypoint : MonoBehaviour
     public int MinCostToStart;
     public Waypoint NearestToStart;
     public float HeuristicDist;
+
+    [Header("Highlight"), Space(5)]
     public SpriteRenderer highlight;
+
+    [Header("Trails"), Space(5)]
+    public SpriteRenderer[] trailsList; // left , leftbot , lefttop, right , rightbot, rightop
+    public TextMeshProUGUI numberTxt;
+    public SpriteRenderer circleNumber;
 
     void Awake()
     {
         DisableWaypoint();
         DisableHighlight();
+        DisableTrail();
     }
 
     public void DisableWaypoint() // make Waypoint unreachable
@@ -119,7 +125,6 @@ public class Waypoint : MonoBehaviour
         {
             sprite.color = Deactivated;
         }
-        highlight.color = Deactivated;
     }
 
     public void EnableWaypoint() // make Waypoint reachable
@@ -130,17 +135,49 @@ public class Waypoint : MonoBehaviour
         }
     }
 
-    public void DisableHighlight()
+    public void DisableHighlight() //Disable highlight Waypoint
     {
         highlight.color = Deactivated;
-        Animator.SetBool("shine",false);
     }
 
-    public void EnableHighlight() // highlight Waypoint
+    public void EnableHighlight() //Enable highlight Waypoint
     {
         highlight.color = CivColor;
-        Animator.SetBool("shine",true);
     }
 
-    
+    public void EnableTrail(Waypoint startWp, Waypoint endWp, int index)
+    {
+        //Determinate neighbor
+        for (int i = 0; i < Neighbors.Count; i++)
+        {
+            if(endWp == Neighbors[i])
+            {
+                trailsList[i].color = Color.black;
+                break;
+            }
+        }
+        
+        //Symmetry
+        for (int i = 0; i < endWp.Neighbors.Count; i++)
+        {
+            if (this == endWp.Neighbors[i])
+            {
+                endWp.trailsList[i].color = Color.black;
+                break;
+            }
+        }
+
+        endWp.circleNumber.color = Color.white;
+        endWp.numberTxt.text = index.ToString();
+    }
+
+    public void DisableTrail()
+    {
+        for (int i = 0; i < trailsList.Length; i++)
+        {
+            trailsList[i].color = Deactivated;
+        }
+        circleNumber.color = Deactivated;
+        numberTxt.text = "";
+    }
 }
