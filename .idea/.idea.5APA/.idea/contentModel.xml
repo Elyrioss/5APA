@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="C:\Users\Esteban\.Rider2018.2\config\extensions" t="IncludeRecursive" />
-    <e p="C:\Users\Esteban\.Rider2018.2\system\extResources" t="IncludeRecursive" />
-    <e p="C:\Users\Esteban\.Rider2018.2\system\resharper-host\local\Transient\ReSharperHost\v182\SolutionCaches\_5APA.1232170449.00" t="ExcludeRecursive" />
-    <e p="C:\Users\Esteban\5APA" t="IncludeRecursive">
+    <e p="C:\Users\Esteban\.Rider2018.3\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\Esteban\.Rider2018.3\system\resharper-host\local\Transient\ReSharperHost\v183\SolutionCaches\_5APA.-150854639.00" t="ExcludeRecursive" />
+    <e p="C:\Users\Esteban\Desktop\5APA" t="IncludeRecursive">
       <e p="5APA.sln" t="IncludeFlat" />
       <e p="Assembly-CSharp-Editor.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
@@ -29,6 +28,11 @@
               <e p="greySheet.xml" t="Include" />
               <e p="redSheet.xml" t="Include" />
               <e p="yellowSheet.xml" t="Include" />
+            </e>
+          </e>
+          <e p="UI Space Pack" t="Include">
+            <e p="Spritesheet" t="Include">
+              <e p="uipackSpace_sheet.xml" t="Include" />
             </e>
           </e>
         </e>

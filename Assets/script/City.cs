@@ -120,7 +120,36 @@ public class City
         
     }
 
-
+    public void ShowAvailable()
+    {
+        foreach (Waypoint w in controlArea)
+        {
+            if(!w.UsedTile)
+                w.EnableHighlight();
+        }
+        
+        foreach (Waypoint w in controlAreaClone)
+        {
+            if(!w.UsedTile)
+                w.EnableHighlight();
+        }
+        
+    }
+    
+    public void HideAvailable()
+    {
+        foreach (Waypoint w in controlArea)
+        {
+            w.DisableHighlight();
+        }
+        
+        foreach (Waypoint w in controlAreaClone)
+        {
+            w.DisableHighlight();
+        }
+        
+    }
+    
     // left , leftbot , lefttop, right , rightbot, rightop
     
     public void ClearFrontiers()

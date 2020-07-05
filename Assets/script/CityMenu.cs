@@ -24,6 +24,7 @@ public class CityMenu : MonoBehaviour
     public TextMeshProUGUI Food;
     public TextMeshProUGUI Production;
     public TextMeshProUGUI Gold;
+    public TextMeshProUGUI Science;
     public TextMeshProUGUI Population;
     public TextMeshProUGUI CityName;
 
@@ -31,6 +32,15 @@ public class CityMenu : MonoBehaviour
     public Image CurrentConstructionImage;
     public TextMeshProUGUI CurrentConstructionText;
     public TextMeshProUGUI CurrentConstructionTime;
+
+    public Image CivColor;
+    
+    public Slider PopulationSlide;
+    public Slider ProductionSlide;
+
+    public TextMeshProUGUI Construct;
+    public TextMeshProUGUI NumConstruct;
+    public TextMeshProUGUI NumPop;
     
     
     public Buildings getBuildings(int index)
@@ -110,16 +120,13 @@ public class CityMenu : MonoBehaviour
             b.UpdateNumbers(current);
         }
         if (current.construction == null)
-        {
-            CurrentConstructionTime.text = "0";
-            CurrentConstructionImage.sprite = DefaultConstruction;
-            CurrentConstructionText.text = "None";
+        {           
+            SetCurrentBuild("0",DefaultConstruction,"None");
             return;
         }
-                   
-        CurrentConstructionTime.text = "" + Mathf.Ceil(current.currentCost / current.production);
-        CurrentConstructionImage.sprite = Resources.Load<Sprite>(current.construction.index);
-        CurrentConstructionText.text = current.construction.index;
+        
+        
+        SetCurrentBuild("" + Mathf.Ceil(current.currentCost / current.production),Resources.Load<Sprite>(current.construction.index),current.construction.index);
         
     }
     
@@ -132,6 +139,16 @@ public class CityMenu : MonoBehaviour
     {
         Anim.SetBool("ShowBat",false);
         Anim.SetBool("ShowCity",true);
+        City current = GameController.instance.SelectedCity;
+        if (current == null)
+            return;
+        if (current.construction == null)
+        {           
+            SetCurrentBuild("0",DefaultConstruction,"None");
+            return;
+        }
+        SetCurrentBuild("" + Mathf.Ceil(current.currentCost / current.production),Resources.Load<Sprite>(current.construction.index),current.construction.index);
+
     }
     
     public void HideCity()
@@ -139,8 +156,29 @@ public class CityMenu : MonoBehaviour
         Anim.SetBool("ShowCity",false);
         
     }
-    
 
+    public void SetCurrentBuild(string time, Sprite image, string name)
+    {
+        CurrentConstructionTime.text = time;
+        CurrentConstructionImage.sprite = image;
+        CurrentConstructionText.text = name;
+
+        if (time != "0")
+        {
+            ProductionSlide.maxValue = GameController.instance.SelectedCity.construction.cost;
+            ProductionSlide.value = GameController.instance.SelectedCity.construction.cost-GameController.instance.SelectedCity.currentCost;
+            Construct.text = name;
+            NumConstruct.text = time;
+        }
+        else
+        {
+            ProductionSlide.maxValue = 1;
+            ProductionSlide.value = 0;
+            Construct.text = name;
+            NumConstruct.text = time;
+        }
+        
+    }
 
 
 }

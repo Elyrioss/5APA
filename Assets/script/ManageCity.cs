@@ -33,13 +33,14 @@ public class ManageCity : MonoBehaviour
     public void SelectCity()
     {
         Controller.SelectedCity = Mapcontroller._cities[ThisCity];
+        CityMenu.CivColor.color = Mapcontroller._cities[ThisCity].civColor;
         CityMenu.ShowCity();
         CityMenu.gameObject.SetActive(true);   
         //CityPannel
-        Population.text = "Population : " + Mapcontroller._cities[ThisCity].population;
-        Nourriture.text = "Nourriture : " + Mapcontroller._cities[ThisCity].food;
-        Production.text = "Production : " + Mapcontroller._cities[ThisCity].production;
-        Or.text = "Or : " + Mapcontroller._cities[ThisCity].gold;
+        Population.text = "" + Mapcontroller._cities[ThisCity].population;
+        Nourriture.text = "" + Mapcontroller._cities[ThisCity].food;
+        Production.text = "" + Mapcontroller._cities[ThisCity].production;
+        Or.text = "" + Mapcontroller._cities[ThisCity].gold;
     }
 
     

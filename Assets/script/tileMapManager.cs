@@ -246,7 +246,6 @@ public class tileMapManager : MonoBehaviour
     public void CreateWaypoint(List<SavedWaypoint> SW,int _seed)
     {
         
-        Debug.Log(SW.Count);
         seed = _seed;
         UnityEngine.Random.InitState(seed);
         ChunkOrder = new List<Waypoint>();

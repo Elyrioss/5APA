@@ -127,8 +127,7 @@ public class MainMapControllerScript : MonoBehaviour
                     
                     if ((current.controlArea.Contains(selectedWaypoint)||_cities[TmpCityIndex].controlAreaClone.Contains(selectedWaypoint))&& !selectedWaypoint.UsedTile)
                     {
-                        Menue.ShowCity();
-                        Menue.ShowBat();
+                        
                         extention.Position = selectedWaypoint;
                         current.StartConstruction(extention);
                         selectedWaypoint.UsedTile = true;
@@ -148,91 +147,18 @@ public class MainMapControllerScript : MonoBehaviour
                         extention.prefab = GameObject.Instantiate(Resources.Load("Prefabs/"+extention.index+"Base") as GameObject, selectedWaypoint.transform);
                         extention.prefab.transform.localPosition = new Vector3(0, selectedWaypoint.elevation, 0);
                         
-                        Menue.CurrentConstructionTime.text = "" + Mathf.Ceil(current.construction.cost / current.production);
-                        Menue.CurrentConstructionImage.sprite = Resources.Load<Sprite>(extention.index);
-                        Menue.CurrentConstructionText.text = extention.index;
-                        
+                        Menue.SetCurrentBuild("" + Mathf.Ceil(current.currentCost / current.production),Resources.Load<Sprite>(extention.index),extention.index);
+                        current.HideAvailable();
                         Extension = false;
+                        Menue.ShowCity();
+                        Menue.ShowBat();
                     }
                     
                 }
                 else if (Move)
                 {
                     MoveWithPath();
-                }
-                /*
-                else if (Warrior)
-                {
-                    selectedWaypoint = hit.transform.parent.gameObject.GetComponent<Waypoint>();
-                    if (_cities[TmpCityIndex].controlArea.Contains(selectedWaypoint))
-                    {
-                        _cities[TmpCityIndex].construction.WarriorWaypoint = selectedWaypoint;
-                        _cities[TmpCityIndex].construction.WarriorConstruction = true;
-                        var Obj = Instantiate(UnitPref, selectedWaypoint.transform);
-                        Obj.transform.localPosition = new Vector3(0, selectedWaypoint.elevation, 0);
-                        _cities[TmpCityIndex].construction.WarriorUnit = Obj;
-                        Obj.GetComponent<ManageUnit>().ThisCity = TmpCityIndex;
-                        Obj.GetComponent<ManageUnit>().ThisUnit = _cities[TmpCityIndex].construction.Units.Count;
-                        TmpManageCity.CityName.SetActive(true);
-                        //TWIN
-                        if (selectedWaypoint.AsTwin || selectedWaypoint.IsTwin)
-                        {
-                            var ObjC = Instantiate(UnitPref, selectedWaypoint.Twin.transform);
-                            ObjC.transform.localPosition = new Vector3(0, selectedWaypoint.elevation, 0);
-                        }
-                        //
-                        Warrior = false;
-                        CanRaycast = false;
-                    }
-                }
-                else if (Archer)
-                {
-                    selectedWaypoint = hit.transform.parent.gameObject.GetComponent<Waypoint>();
-                    if (_cities[TmpCityIndex].controlArea.Contains(selectedWaypoint))
-                    {
-                        _cities[TmpCityIndex].construction.ArcherWaypoint = selectedWaypoint;
-                        _cities[TmpCityIndex].construction.ArcherConstruction = true;
-                        var Obj = Instantiate(UnitPref, selectedWaypoint.transform);
-                        Obj.transform.localPosition = new Vector3(0, selectedWaypoint.elevation, 0);
-                        _cities[TmpCityIndex].construction.ArcherUnit = Obj;
-                        Obj.GetComponent<ManageUnit>().ThisCity = TmpCityIndex;
-                        Obj.GetComponent<ManageUnit>().ThisUnit = _cities[TmpCityIndex].construction.Units.Count; 
-                        TmpManageCity.CityName.SetActive(true);
-                        //TWIN
-                        if (selectedWaypoint.AsTwin || selectedWaypoint.IsTwin)
-                        {
-                            var ObjC = Instantiate(UnitPref, selectedWaypoint.Twin.transform);
-                            ObjC.transform.localPosition = new Vector3(0, selectedWaypoint.elevation, 0);
-                        }
-                        //
-                        Archer = false;
-                        CanRaycast = false;
-                    }
-                }
-                else if (Rider)
-                {
-                    selectedWaypoint = hit.transform.parent.gameObject.GetComponent<Waypoint>();
-                    if (_cities[TmpCityIndex].controlArea.Contains(selectedWaypoint))
-                    {
-                        _cities[TmpCityIndex].construction.RiderWaypoint = selectedWaypoint;
-                        _cities[TmpCityIndex].construction.RiderConstruction = true;
-                        var Obj = Instantiate(UnitPref, selectedWaypoint.transform);
-                        Obj.transform.localPosition = new Vector3(0, selectedWaypoint.elevation, 0);
-                        _cities[TmpCityIndex].construction.RiderUnit = Obj;
-                        Obj.GetComponent<ManageUnit>().ThisCity = TmpCityIndex;
-                        Obj.GetComponent<ManageUnit>().ThisUnit = _cities[TmpCityIndex].construction.Units.Count;
-                        TmpManageCity.CityName.SetActive(true);
-                        //TWIN
-                        if (selectedWaypoint.AsTwin || selectedWaypoint.IsTwin)
-                        {
-                            var ObjC = Instantiate(UnitPref, selectedWaypoint.Twin.transform);
-                            ObjC.transform.localPosition = new Vector3(0, selectedWaypoint.elevation, 0);
-                        }
-                        //
-                        Rider = false;
-                        CanRaycast = false;
-                    }
-                }*/
+                }             
             }
 
             
@@ -403,6 +329,8 @@ public class MainMapControllerScript : MonoBehaviour
         foreach (Waypoint w in Visited)
         {
             w.visitedDijstra = false;
+            w.NearestToStart = null;
+            w.MinCostToStart = int.MaxValue;
         }
         Visited.Clear();
         Move = false;

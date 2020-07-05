@@ -77,7 +77,8 @@ public class Waypoint : MonoBehaviour
     public HeightType HeightType;
     public HeatType HeatType;
     public MoistureType MoistureType;
-    
+
+    public Animator Animator;
     
     public float Food;
     public float Production;
@@ -118,6 +119,7 @@ public class Waypoint : MonoBehaviour
         {
             sprite.color = Deactivated;
         }
+        highlight.color = Deactivated;
     }
 
     public void EnableWaypoint() // make Waypoint reachable
@@ -131,11 +133,13 @@ public class Waypoint : MonoBehaviour
     public void DisableHighlight()
     {
         highlight.color = Deactivated;
+        Animator.SetBool("shine",false);
     }
 
     public void EnableHighlight() // highlight Waypoint
     {
         highlight.color = CivColor;
+        Animator.SetBool("shine",true);
     }
 
     

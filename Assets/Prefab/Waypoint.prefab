@@ -453,6 +453,7 @@ GameObject:
   - component: {fileID: 6190173964002749482}
   - component: {fileID: 3554336249829749253}
   - component: {fileID: 357240163}
+  - component: {fileID: 3293073624458837348}
   m_Layer: 0
   m_Name: Waypoint
   m_TagString: Untagged
@@ -530,6 +531,7 @@ MonoBehaviour:
   HeightType: 0
   HeatType: 0
   MoistureType: 0
+  Animator: {fileID: 3293073624458837348}
   Food: 0
   Production: 0
   Gold: 0
@@ -540,11 +542,31 @@ MonoBehaviour:
   mat: {fileID: 0}
   CivColor: {r: 1, g: 0, b: 0, a: 1}
   Deactivated: {r: 0, g: 0, b: 0, a: 0}
+  UsedTile: 0
   mouvCost: 1
   MinCostToStart: 30000
   NearestToStart: {fileID: 0}
   HeuristicDist: 0
   highlight: {fileID: 8611602233919676002}
+--- !u!95 &3293073624458837348
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4910466266208343414}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: ef9b108936c9eb845a0e0713b605a39f, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &5013324998064619087
 GameObject:
   m_ObjectHideFlags: 0
@@ -555,6 +577,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7084638079679890549}
   - component: {fileID: 8611602233919676002}
+  - component: {fileID: 7477126305938546699}
   m_Layer: 5
   m_Name: highlight
   m_TagString: Untagged
@@ -571,7 +594,7 @@ Transform:
   m_GameObject: {fileID: 5013324998064619087}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.42, y: 0.42000005, z: 0.8400001}
+  m_LocalScale: {x: 0.38, y: 0.38, z: 0.8400001}
   m_Children: []
   m_Father: {fileID: 24940553505900073}
   m_RootOrder: 6
@@ -626,6 +649,25 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &7477126305938546699
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5013324998064619087}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &5561777476817752055
 GameObject:
   m_ObjectHideFlags: 0

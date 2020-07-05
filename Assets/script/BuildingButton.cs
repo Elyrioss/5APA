@@ -25,8 +25,10 @@ public class BuildingButton : MonoBehaviour
         }       
         else if (c.construction != null)
         {
+            Debug.Log(c.construction.index +" "+ build.index);
             if (c.construction.index == build.index)
             {
+                Debug.Log(build.index);
                 gameObject.SetActive(false);
             }
                 
@@ -72,9 +74,7 @@ public class BuildingButton : MonoBehaviour
         }
         GameController.instance.SelectedCity.StartConstruction(build);
        
-        Menue.CurrentConstructionTime.text = "" + Mathf.Ceil(c.construction.cost / c.production);
-        Menue.CurrentConstructionImage.sprite = icon.sprite;
-        Menue.CurrentConstructionText.text = build.index;
+        Menue.SetCurrentBuild("" + Mathf.Ceil(c.currentCost / c.production),Resources.Load<Sprite>(c.construction.index),c.construction.index);
         foreach (BuildingButton B in Menue.Buttons)
         {
             B.UpdateNumbers(c);
@@ -92,13 +92,11 @@ public class BuildingButton : MonoBehaviour
             build.cost = build.Tempcost;
             
             GameController.instance.SelectedCity.StartConstruction(build);
-            Menue.CurrentConstructionTime.text = "" + Mathf.Ceil(c.construction.cost / c.production);
-            Menue.CurrentConstructionImage.sprite = icon.sprite;
-            Menue.CurrentConstructionText.text = build.index;
+            Menue.SetCurrentBuild("" + Mathf.Ceil(c.currentCost / c.production),Resources.Load<Sprite>(c.construction.index),c.construction.index);
         }
         else
         {
-            
+            c.ShowAvailable();
             Menue.HideBat();            
             Menue.HideCity();                                     
             GameController.instance.MapControllerScript.Extension = true;
