@@ -1,58 +1,43 @@
-﻿//Florent WASSEN
-/**
- * Représente les lieux sur la carte.
- */
-
+﻿
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.Events;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using TMPro;
 
 [RequireComponent(typeof(BoxCollider))]
 public class Waypoint : MonoBehaviour
 {
+    public Animator _animator;
     [HideInInspector]
-    public List<Waypoint> Neighbors = new List<Waypoint>(6){null,null,null,null,null,null};
-    
+    public List<Waypoint> Neighbors = new List<Waypoint>(6){null,null,null,null,null,null};    
     [HideInInspector]
-
     public Waypoint left = null;
-
     [HideInInspector]
-
     public Waypoint right = null;
-
     [HideInInspector]
-
     public Waypoint leftBot = null;
-
+    [HideInInspector]   
+    public Waypoint rightBot = null;  
     [HideInInspector]
-    
-    public Waypoint rightBot = null;
-   
+    public Waypoint leftTop = null;   
     [HideInInspector]
-
-    public Waypoint leftTop = null;
-    
-    [HideInInspector]
-    public Waypoint rightTop = null;
-    
-    public GameObject spriteContainer;
-    
-    [HideInInspector]
+    public Waypoint rightTop = null;    
+        
     public bool visitedDijstra = false;
     [HideInInspector]
-    public bool visited = false;
+    public bool visited = false;   
     
+    [Header("Sprites Frontière"), Space(5)]
+    public GameObject spriteContainer;
     [SerializeField]
     public SpriteRenderer[] spriteRenderer;// left , leftbot , lefttop, right , rightbot, rightop
+   
+    [Header("Sprites Frontière"), Space(5)]
+    public GameObject RangeContainer;
+    [SerializeField]
+    public SpriteRenderer[] RangeRenderer;// left , leftbot , lefttop, right , rightbot, rightop
+    
     [HideInInspector]
     public int X;
     [HideInInspector]
@@ -61,8 +46,10 @@ public class Waypoint : MonoBehaviour
     [HideInInspector]
     public bool odd;
  
+    [HideInInspector]
     public TileMapPos Chunk;
    
+    [HideInInspector]
     public Waypoint Twin;
     [HideInInspector]
     public bool AsTwin=false;
@@ -71,39 +58,53 @@ public class Waypoint : MonoBehaviour
     [HideInInspector]
     public float noiseValue;
     
+    [HideInInspector]
     public float elevation=0;
+    [HideInInspector]
     public BiomeType BiomeType;
+    [HideInInspector]
     public HeightType HeightType;
+    [HideInInspector]
     public HeatType HeatType;
+    [HideInInspector]
     public MoistureType MoistureType;
     
-    
+    [HideInInspector]
     public float Food;
+    [HideInInspector]
     public float Production;
+    [HideInInspector]
     public float Gold;
 
+    [HideInInspector]
     public GameObject LOD;
-
+    [HideInInspector]
     public GameObject prop;
-
+    [HideInInspector]
     public string Prop;
     
-
+    [HideInInspector]
     public MeshFilter TileFilter;
     [HideInInspector]
-
     public Material mat;
-    [SerializeField] public Color CivColor = Color.blue;
-    [SerializeField]
-    Color Deactivated = Color.clear;
-
-    public bool UsedTile=false;
     
+    [Header("Colors"), Space(5)]
+    [SerializeField] public Color CivColor = Color.blue;
+    [SerializeField] public Color Deactivated = Color.clear;
+
+
+    public bool UsedTile=false;//For buildings
+    public bool Occupied;//For Units
+    public bool Controled;//For cities
+    [HideInInspector]
     public int mouvCost=1;
+    [HideInInspector]
     public int MinCostToStart;
     public Waypoint NearestToStart;
+    [HideInInspector]
     public float HeuristicDist;
 
+    
     [Header("Highlight"), Space(5)]
     public SpriteRenderer highlight;
 
@@ -112,12 +113,6 @@ public class Waypoint : MonoBehaviour
     public TextMeshProUGUI numberTxt;
     public SpriteRenderer circleNumber;
 
-    void Awake()
-    {
-        DisableWaypoint();
-        DisableHighlight();
-        DisableTrail();
-    }
 
     public void DisableWaypoint() // make Waypoint unreachable
     {
@@ -125,6 +120,9 @@ public class Waypoint : MonoBehaviour
         {
             sprite.color = Deactivated;
         }
+        highlight.color = Deactivated;
+        _animator.SetBool("shine",false);
+        DisableTrail();
     }
 
     public void EnableWaypoint() // make Waypoint reachable
@@ -137,38 +135,27 @@ public class Waypoint : MonoBehaviour
 
     public void DisableHighlight() //Disable highlight Waypoint
     {
+        
         highlight.color = Deactivated;
+        _animator.SetBool("shine",false);
     }
 
     public void EnableHighlight() //Enable highlight Waypoint
     {
         highlight.color = CivColor;
+        _animator.SetBool("shine",true);
     }
 
-    public void EnableTrail(Waypoint startWp, Waypoint endWp, int index)
+    public void EnableTrail(Waypoint endWp)
     {
         //Determinate neighbor
-        for (int i = 0; i < Neighbors.Count; i++)
-        {
-            if(endWp == Neighbors[i])
-            {
-                trailsList[i].color = Color.black;
-                break;
-            }
-        }
-        
-        //Symmetry
-        for (int i = 0; i < endWp.Neighbors.Count; i++)
-        {
-            if (this == endWp.Neighbors[i])
-            {
-                endWp.trailsList[i].color = Color.black;
-                break;
-            }
-        }
+        SetTrail(this,endWp);     
+    }
 
-        endWp.circleNumber.color = Color.white;
-        endWp.numberTxt.text = index.ToString();
+    public void SetIndexTrail(int index)
+    {
+        circleNumber.color = Color.white;
+        numberTxt.text = index.ToString();
     }
 
     public void DisableTrail()
@@ -180,4 +167,77 @@ public class Waypoint : MonoBehaviour
         circleNumber.color = Deactivated;
         numberTxt.text = "";
     }
+
+    public void ResetRange()
+    {
+        RangeContainer.SetActive(false);
+        
+        RangeRenderer[0].gameObject.SetActive(true);
+        RangeRenderer[3].gameObject.SetActive(true);
+        RangeRenderer[2].gameObject.SetActive(true);
+        
+        RangeRenderer[5].gameObject.SetActive(true);
+        RangeRenderer[1].gameObject.SetActive(true);
+        RangeRenderer[4].gameObject.SetActive(true);
+    }
+    
+    public void SetTrail(Waypoint w,Waypoint W)
+    {
+        List<Waypoint> list = w.Neighbors;
+        if (w.left)
+        {
+            if (w.left == W)
+            {
+                w.trailsList[0].color = Color.black;
+                W.trailsList[3].color = Color.black;
+                return;               
+            }
+        }
+        if (w.right)
+        {
+            if (w.right == W)
+            {
+                w.trailsList[3].color = Color.black;
+                W.trailsList[0].color = Color.black;
+                return;  
+            }
+        }
+        if (w.leftTop)
+        {
+            if (w.leftTop==W)
+            {
+                w.trailsList[2].color = Color.black;
+                W.trailsList[4].color = Color.black;
+                return;  
+            }
+        }
+        if (w.rightTop)
+        {
+            if (w.rightTop==W)
+            {
+                w.trailsList[5].color = Color.black;
+                W.trailsList[1].color = Color.black;
+                return;  
+            }
+        }
+        if (w.leftBot)
+        {
+            if (w.leftBot==W)
+            {
+                W.trailsList[5].color = Color.black;
+                w.trailsList[1].color = Color.black;
+                return;  
+            }
+        }
+        if (w.rightBot)
+        {
+            if (w.rightBot==W)
+            {
+                w.trailsList[4].color = Color.black;
+                W.trailsList[2].color = Color.black;
+            }
+        }
+    }
+    
+    
 }

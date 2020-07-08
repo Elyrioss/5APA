@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 [Serializable]
 public class City
 {
 
+    public string NameCity;
     public AudioSource clickSound;
     public AudioSource buildSound;
     public AudioSource soldierSound;
@@ -21,11 +23,11 @@ public class City
     public float gold = 0;
 
     private float StockFood=0;
-    
+
+    public Civilisation civ;
     public Construction construction = null;
     public List<Construction> Buildings=new List<Construction>();
     public List<Buildings> Extensions=new List<Buildings>();
-    public List<Unit> Units=new List<Unit>();
 
     public float currentCost=0;
     
@@ -36,19 +38,25 @@ public class City
        
     public City(Waypoint pos,SavedCity city)
     {
-
+        string name = GameController.instance.Names[Random.Range(0, GameController.instance.Names.Count)];
+        GameController.instance.Names.Remove(name);
+        NameCity = name;
+        
         civColor = new Color(city.r,city.g,city.b);
         position = pos;
         position.CivColor = civColor;
         position.EnableWaypoint();
         controlArea.Add(position);
         position.UsedTile = true;
+        position.Controled = true;
         //TWIN
         if (position.AsTwin || position.IsTwin)
         {
             position.Twin.CivColor = civColor;
             position.Twin.EnableWaypoint();
             controlAreaClone.Add(position.Twin);
+            position.Twin.UsedTile = true;
+            position.Twin.Controled = true;
         }
         //
 
@@ -58,14 +66,19 @@ public class City
         
         foreach (Waypoint w in position.Neighbors)
         {
+            if(w.Controled)
+                continue;
+            
             controlArea.Add(w);
             w.CivColor = civColor;
             w.EnableWaypoint();
+            w.Controled = true;
             //TWIN
             if (w.AsTwin || w.IsTwin)
             {
                 w.Twin.CivColor = civColor;
                 w.Twin.EnableWaypoint();
+                w.Twin.Controled = true;
                 controlAreaClone.Add(w.Twin);
             }
         }
@@ -78,6 +91,10 @@ public class City
     public City(Waypoint pos,Color color)
     {
 
+        string name = GameController.instance.Names[Random.Range(0, GameController.instance.Names.Count)];
+        GameController.instance.Names.Remove(name);
+        NameCity = name;
+        
         civColor = color;
         position = pos;
         position.CivColor = civColor;
@@ -266,11 +283,7 @@ public class City
             
         //On regarde la file de construction de la ville.
         ConstructionProcess();
-        ThisCityAction = false;
-        foreach (Unit u in Units)
-        {
-            u.AsPlayed = false;
-        }
+        ThisCityAction = false;       
     }
 
 

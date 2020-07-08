@@ -6,11 +6,12 @@ public class ManageCity : MonoBehaviour
 {
     // Start is called before the first frame update
 
-    public int ThisCity; //Index of List _cities in MainMapController
+    public City ThisCity; //Index of List _cities in MainMapController
     public MainMapControllerScript Mapcontroller;
     public GameController Controller;
     public CityMenu CityMenu;
 
+    public TextMeshPro NameCity;
     private TextMeshProUGUI Population;
     private TextMeshProUGUI Nourriture;
     private TextMeshProUGUI Production;
@@ -21,7 +22,6 @@ public class ManageCity : MonoBehaviour
     {
         Controller = GameController.instance;
         CityMenu = Controller.cityMenu;
-        
         Mapcontroller = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<MainMapControllerScript>();
         Population = CityMenu.Population;
         Nourriture = CityMenu.Food;
@@ -32,15 +32,16 @@ public class ManageCity : MonoBehaviour
 
     public void SelectCity()
     {
-        Controller.SelectedCity = Mapcontroller._cities[ThisCity];
-        CityMenu.CivColor.color = Mapcontroller._cities[ThisCity].civColor;
+        Controller.SelectedCity = ThisCity;
+        CityMenu.CivColor.color = ThisCity.civColor;
         CityMenu.ShowCity();
-        CityMenu.gameObject.SetActive(true);   
+        CityMenu.gameObject.SetActive(true);
+        CityMenu.CityName.text = ThisCity.NameCity;
         //CityPannel
-        Population.text = "" + Mapcontroller._cities[ThisCity].population;
-        Nourriture.text = "" + Mapcontroller._cities[ThisCity].food;
-        Production.text = "" + Mapcontroller._cities[ThisCity].production;
-        Or.text = "" + Mapcontroller._cities[ThisCity].gold;
+        Population.text = "" + ThisCity.population;
+        Nourriture.text = "" + ThisCity.food;
+        Production.text = "" + ThisCity.production;
+        Or.text = "" + ThisCity.gold;
     }
 
     

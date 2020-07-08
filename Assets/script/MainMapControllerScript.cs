@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class MainMapControllerScript : MonoBehaviour
@@ -9,7 +10,6 @@ public class MainMapControllerScript : MonoBehaviour
     Waypoint selectedWaypoint = null;
     public ManageCity cityPref;
     public ManageCityClone cityClonePref;
-    public List<City> _cities = new List<City>();
     public int TmpCityIndex;
     public tileMapManager Map;
     public Transform Raystarter;
@@ -29,13 +29,12 @@ public class MainMapControllerScript : MonoBehaviour
     
     private List<Waypoint> Path = new List<Waypoint>();
     List<Waypoint> PQueue = new List<Waypoint>();
-    private List<Waypoint> Visited = new List<Waypoint>();
+    public List<Waypoint> Visited = new List<Waypoint>();
     
     public float LeftLimit;
     public float RightLimit;
     public Camera secondCam;
     public Camera thirdCam;
-    
     
     
     void Start()
@@ -79,37 +78,7 @@ public class MainMapControllerScript : MonoBehaviour
                 if (!StartingCity) // Création de la ville du début ( et des autres villes après ?)
                 {
                     selectedWaypoint = hit.transform.parent.gameObject.GetComponent<Waypoint>();
-                    ManageCity CityObj = Instantiate(cityPref, selectedWaypoint.transform);
-                    CityObj.transform.localPosition = new Vector3(0,selectedWaypoint.elevation, 0);
-                    _cities.Add(new City(selectedWaypoint, Color.red));
-                    
-                    CityObj.ThisCity = _cities.Count - 1;
-                    
-                    //Add sound elements
-                    
-                    _cities[_cities.Count - 1].buildSound = this.buildSound;
-                    _cities[_cities.Count - 1].soldierSound = this.soldierSound;
-                    _cities[_cities.Count - 1].clickSound = this.clickSound;
-                    //TWIN
-                    if (selectedWaypoint.AsTwin || selectedWaypoint.IsTwin)
-                    {
-                        ManageCityClone CityObjC = Instantiate(cityClonePref, selectedWaypoint.Twin.transform);
-                        CityObjC.transform.localPosition = new Vector3(0, selectedWaypoint.elevation, 0);
-                        CityObjC.ManageRef = CityObj;
-
-                    }
-                    //
-                    if (selectedWaypoint.LOD)
-                    {
-                        selectedWaypoint.LOD.SetActive(false);
-                    }
-                    if (selectedWaypoint.Twin)
-                    {
-                        if (selectedWaypoint.Twin.LOD)
-                        {
-                            selectedWaypoint.Twin.LOD.SetActive(false);
-                        }
-                    }
+                    CreateCity(selectedWaypoint);
                     StartingCity = true;
                     Menue.ShowCity();
                 }
@@ -122,7 +91,7 @@ public class MainMapControllerScript : MonoBehaviour
                     selectedWaypoint = hit.transform.parent.gameObject.GetComponent<Waypoint>();
                     City current = GameController.instance.SelectedCity;
                     
-                    if ((current.controlArea.Contains(selectedWaypoint)||_cities[TmpCityIndex].controlAreaClone.Contains(selectedWaypoint))&& !selectedWaypoint.UsedTile)
+                    if ((current.controlArea.Contains(selectedWaypoint) || current.controlAreaClone.Contains(selectedWaypoint))&& !selectedWaypoint.UsedTile)
                     {
                         
                         extention.Position = selectedWaypoint;
@@ -158,7 +127,7 @@ public class MainMapControllerScript : MonoBehaviour
                         return;
                     
                     selectedWaypoint = hit.transform.parent.gameObject.GetComponent<Waypoint>();
-                    MoveWithPath(selectedWaypoint);
+                    MoveWithPath(selectedWaypoint);                  
                 }             
             }
 
@@ -169,15 +138,48 @@ public class MainMapControllerScript : MonoBehaviour
             Menue.HideBat();            
             Menue.HideCity();
             Extension = false;
-            PQueue.Clear();
-            Path.Clear();
-            foreach (Waypoint w in Visited)
-            {
-                w.visitedDijstra = false;
-                w.NearestToStart = null;
-                w.MinCostToStart = int.MaxValue;
-            }
+            ClearPath();
             Move = false;
+        }
+
+        if (Move)
+        {
+            Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hit))
+            {
+
+                if (!hit.transform.parent.gameObject.GetComponent<Waypoint>())
+                {
+                    Target = null;
+                    return;
+                }                
+                selectedWaypoint = hit.transform.parent.gameObject.GetComponent<Waypoint>();
+                if (Target == selectedWaypoint)
+                    return;
+
+                foreach (Waypoint p in Path)
+                {
+                    p.DisableTrail();
+                }
+                
+                Target = selectedWaypoint;
+                if (Visited.Contains(selectedWaypoint))
+                {         
+                    //ClearPath();
+                    //AStarCreate(GameController.instance.SelectedUnit.Position,GameController.instance.SelectedUnit.mouvementPoints);                   
+                    selectedWaypoint.SetIndexTrail(1);
+                    CreatePath(Path, selectedWaypoint);
+                    Path.Reverse();
+                    Path.Add(selectedWaypoint);
+                }
+                else
+                {   
+                    /*
+                    Debug.Log("OUTOOOOO");
+                    ClearPath();
+                    AStarCreate(GameController.instance.SelectedUnit.Position,selectedWaypoint);*/
+                }
+            }
         }
     }
 
@@ -259,6 +261,60 @@ public class MainMapControllerScript : MonoBehaviour
         ClearRange(Visited);
     }
     
+    public void AStarCreate(Waypoint Start,Waypoint End)
+    {
+        if (Start == null || End == null)
+        {
+            return;
+        }
+        Start.MinCostToStart = 0;
+        PQueue.Add(Start);
+        while (PQueue.Any())
+        {
+            var current = PQueue.First();
+            PQueue.Remove(current);
+            
+            if (current == End)
+            {
+                break;
+            }
+            
+            current.Neighbors.OrderBy(x => x.GetComponent<Waypoint>().mouvCost);
+            foreach (Waypoint w in current.Neighbors)
+            {
+                if(w==null)
+                    continue;
+                
+                if (w.visitedDijstra)
+                {
+                    continue;
+                }
+                var nextCost = current.MinCostToStart + w.mouvCost;
+                if (nextCost < w.MinCostToStart)
+                {
+                    w.MinCostToStart = nextCost;
+                    w.NearestToStart = current;
+                    if (!PQueue.Contains(w))
+                    {
+                        PQueue.Add(w);
+                    }
+                }
+                else
+                {
+                    Debug.Log(current.name+" "+nextCost+" "+w.MinCostToStart);
+                }
+            }
+            current.visitedDijstra = true;
+            PQueue = PQueue.OrderBy(x => x.MinCostToStart).ToList();
+        }
+        
+        End.SetIndexTrail(1);
+        CreatePath(Path, End);
+        Path.Reverse();
+        Path.Add(End);     
+
+    }
+    
     private void CreatePath(List<Waypoint> TmpPath, Waypoint W)
     {
         if (W.NearestToStart == null)
@@ -266,20 +322,19 @@ public class MainMapControllerScript : MonoBehaviour
             return;
         }
         TmpPath.Add(W.NearestToStart);
-        W.EnableTrail(W.NearestToStart,0);
+        W.EnableTrail(W.NearestToStart);
         CreatePath(TmpPath, W.NearestToStart);
     }
     
     private void MoveWithPath(Waypoint NewPos)
     {
-        Debug.Log(Visited.Count);
-        if(!Visited.Contains(NewPos))
+        if(!Visited.Contains(NewPos) || NewPos.Occupied)
             return;
         
-        Debug.Log(Visited.Count);
         Unit unit = GameController.instance.SelectedUnit;
-        
-        
+
+        unit.Position.Occupied = false;
+        NewPos.Occupied = true;
         unit.Position = NewPos;
         unit.prefab.transform.position = new Vector3(NewPos.transform.position.x, NewPos.transform.position.y + NewPos.elevation, NewPos.transform.position.z);
         if (NewPos.Twin)
@@ -290,19 +345,9 @@ public class MainMapControllerScript : MonoBehaviour
         else
         {
             unit.Twin.SetActive(false);   
-        }
-        
-        PQueue.Clear();
-        Path.Clear();
-        foreach (Waypoint w in Visited)
-        {
-            w.visitedDijstra = false;
-            w.NearestToStart = null;
-            w.MinCostToStart = int.MaxValue;
-            w.ResetRange();
-        }
+        }        
+        ClearPath();   
         Visited.Clear();
-        
         Move = false;
         unit.AsPlayed = true;
     }
@@ -355,6 +400,58 @@ public class MainMapControllerScript : MonoBehaviour
             }
             
            waypoint.RangeContainer.SetActive(true);
+        }
+    }
+
+    public void ClearPath(){
+        PQueue.Clear();
+        Path.Clear();
+        foreach (Waypoint w in Visited)
+        {
+            w.visitedDijstra = false;
+            w.NearestToStart = null;
+            w.MinCostToStart = int.MaxValue;
+            w.ResetRange();
+        }
+        foreach (Waypoint p in Visited)
+        {
+            p.DisableTrail();
+        }
+    }
+
+    public void CreateCity(Waypoint position)
+    {
+        ManageCity CityObj = Instantiate(cityPref, position.transform);
+        CityObj.transform.localPosition = new Vector3(0,position.elevation, 0);
+        City newCity = GameController.instance.PlayerCiv.CreateCity(position);
+                  
+        CityObj.ThisCity = newCity;
+        CityObj.NameCity.text = newCity.NameCity;            
+        //Add sound elements
+                    
+        newCity.buildSound = this.buildSound;
+        newCity.soldierSound = this.soldierSound;
+        newCity.clickSound = this.clickSound;
+        //TWIN
+        if (position.AsTwin || position.IsTwin)
+        {
+            ManageCityClone CityObjC = Instantiate(cityClonePref, position.Twin.transform);
+            CityObjC.transform.localPosition = new Vector3(0, position.elevation, 0);
+            CityObjC.ManageRef = CityObj;
+            CityObjC.NameCity.text = newCity.NameCity;
+
+        }
+        //
+        if (position.LOD)
+        {
+            position.LOD.SetActive(false);
+        }
+        if (position.Twin)
+        {
+            if (position.Twin.LOD)
+            {
+                position.Twin.LOD.SetActive(false);
+            }
         }
     }
     

@@ -41,8 +41,14 @@ public class CityMenu : MonoBehaviour
     public TextMeshProUGUI Construct;
     public TextMeshProUGUI NumConstruct;
     public TextMeshProUGUI NumPop;
-    
-    
+
+    public TextMeshProUGUI NameUnit;
+    public Image UnitCivColor;
+    public Slider life;
+    public TextMeshProUGUI lifeNum;
+
+    public GameObject Unit;
+    public GameObject City;
     public Buildings getBuildings(int index)
     {
         switch (index)
@@ -69,6 +75,8 @@ public class CityMenu : MonoBehaviour
                 return new Archer();
             case 2:
                 return new Rider();
+            case 3:
+                return new Colon();
         }
         return null;        
     }
@@ -139,6 +147,11 @@ public class CityMenu : MonoBehaviour
     {
         Anim.SetBool("ShowBat",false);
         Anim.SetBool("ShowCity",true);
+
+        Unit.SetActive(false);
+        City.SetActive(true);
+        
+        
         City current = GameController.instance.SelectedCity;
         if (current == null)
             return;
@@ -150,11 +163,24 @@ public class CityMenu : MonoBehaviour
         SetCurrentBuild("" + Mathf.Ceil(current.currentCost / current.production),Resources.Load<Sprite>(current.construction.index),current.construction.index);
 
     }
+
+    public void ShowUnit(Unit unit)
+    {       
+        Anim.SetBool("ShowBat",false);
+        Anim.SetBool("ShowCity",true);
+
+        Unit.SetActive(true);
+        City.SetActive(false);
+        
+        NameUnit.text = unit.index;
+        life.value = (float)unit.HP / unit.MAXHP;
+        lifeNum.text = ((float) unit.HP / unit.MAXHP) * 100 + "%";
+        UnitCivColor.color = Color.red; //CIV COLOR  
+    }
     
     public void HideCity()
     {
         Anim.SetBool("ShowCity",false);
-        
     }
 
     public void SetCurrentBuild(string time, Sprite image, string name)
@@ -180,5 +206,10 @@ public class CityMenu : MonoBehaviour
         
     }
 
-
+    public void UsePower()
+    {
+        GameController.instance.SelectedUnit.UnitPower();
+    }
+    
+    
 }

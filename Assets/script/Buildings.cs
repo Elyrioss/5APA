@@ -135,9 +135,10 @@ public class Extension : Buildings
         
         foreach (Waypoint w in Position.Neighbors)
         {
-            if(c.controlArea.Contains(w))
+            if(w.Controled)
                 continue;
-            
+
+            w.Controled = true;
             c.controlArea.Add(w);
             w.CivColor = c.civColor;
             w.EnableWaypoint();
@@ -148,6 +149,7 @@ public class Extension : Buildings
             {
                 w.Twin.CivColor = c.civColor;
                 w.Twin.EnableWaypoint();
+                w.Twin.Controled = true;
                 c.controlAreaClone.Add(w.Twin);
             }
             //

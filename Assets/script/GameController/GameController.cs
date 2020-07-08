@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +9,25 @@ public enum TurnState { START, ENDTURN } // On verra si on gère certains evenem
 public class GameController : MonoBehaviour
 {
 
+    public List<string> Names = new List<string>()
+    {
+        "RATAGOU",
+        "WASTITU",
+        "ZEDIBAG",
+        "QUEZACO",
+        "MASCADU",
+        "LABSTIT",
+        "WALALOO",
+        "RYUJOMA",
+        "MASAKA?",
+        "NANIKOR",
+        "WOUPTID",
+        "STALINGRAD",
+        "ICICPARI",
+        "KRTKIWI",
+        "SHOKDART",
+        "DAMEDANE"
+    };
     public static GameController instance;
     public AnimationCurve foodUpgradeCurve;
     public AnimationCurve foodCostCurve;
@@ -24,9 +44,13 @@ public class GameController : MonoBehaviour
     public Unit SelectedUnit;
     public Construction ExtentionTemp=null;
     public AudioSource clickSound;
+    
+    public Civilisation PlayerCiv;
+
     // Start is called before the first frame update
     void Start()
     {
+        PlayerCiv = new Civilisation(Color.red);
         instance = this;
         state = TurnState.START;
         MapControllerScript = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<MainMapControllerScript>();
@@ -39,9 +63,13 @@ public class GameController : MonoBehaviour
         clickSound.PlayOneShot(clickSound.clip);
         state = TurnState.ENDTURN;
         //Les ennemies ? La recolte ?
-        foreach (City c in MapControllerScript._cities)
+        foreach (City c in PlayerCiv.Cities)
         {
             c.EndOfTurn();
+        }
+        foreach (Unit u in PlayerCiv.Units)
+        {
+            u.AsPlayed = false;
         }
         NumberOfTurn++;
         TurnTxt.text = "Turn : " + NumberOfTurn;

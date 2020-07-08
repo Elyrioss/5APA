@@ -6,9 +6,7 @@ using System.Linq;
 public class ManageUnit : MonoBehaviour
 {
 
-    public City ThisCity; //Index of List _cities in MainMapController => faire le système de civ
     public Unit Unit;
-    
     
     private bool CanMove;
     private Waypoint EndPos;
@@ -20,11 +18,16 @@ public class ManageUnit : MonoBehaviour
 
     public void SelectUnit()
     {
+        GameController GC = GameController.instance;
         GameController.instance.SelectedUnit = Unit;
+        GC.cityMenu.ShowUnit(Unit);
+
         if (!Unit.AsPlayed)
         {
-            GameController.instance.MapControllerScript.Move = true;
-            GameController.instance.MapControllerScript.AStarCreate(Unit.Position,Unit.mouvementPoints);
+            GC.MapControllerScript.ClearPath();
+            GC.MapControllerScript.Visited.Clear();
+            GC.MapControllerScript.Move = true;
+            GC.MapControllerScript.AStarCreate(Unit.Position,Unit.mouvementPoints);          
         }
     }
     
@@ -98,10 +101,7 @@ public class ManageUnit : MonoBehaviour
         Debug.Log("OUUUUUUT");
         CreatePath(Path, End);
         Path.Reverse();
-        Path.Add(End);
-        //DrawPath(Path);
-        MoveWithPath(Path);
-        
+        Path.Add(End);       
     }
 
 

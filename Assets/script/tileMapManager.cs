@@ -130,7 +130,7 @@ public class tileMapManager : MonoBehaviour
                                 Quaternion.Euler(0, 0, 0));                                                                                
                             w.odd = false;                                                
                         }
-                        
+                        w.MinCostToStart=Int32.MaxValue;
                         var position = w.transform.position;
                         w.X = i;
                         w.Y = j;
@@ -175,7 +175,7 @@ public class tileMapManager : MonoBehaviour
                                 Quaternion.Euler(0, 0, 0));                                                                                
                             w.odd = false;                                                
                         }
-                        
+                        w.MinCostToStart=Int32.MaxValue;
                         var position = w.transform.position;
                         w.X = i;
                         w.Y = j;
@@ -281,7 +281,7 @@ public class tileMapManager : MonoBehaviour
                     Quaternion.Euler(0, 0, 0));                                                                                
                 w.odd = false;                                                
             }
-                        
+            w.MinCostToStart=Int32.MaxValue;     
             w.X = sw.X;
             w.Y = sw.Y;
             TileMapPos t = Chunks[sw.chunkIndex];
@@ -328,6 +328,7 @@ public class tileMapManager : MonoBehaviour
                             w.odd = false;                                                
                         }
                         
+                        w.MinCostToStart=Int32.MaxValue;
                         w.X = i;
                         w.Y = j;
                         w.transform.SetParent(t.transform);
@@ -969,7 +970,6 @@ public class tileMapManager : MonoBehaviour
             do {
                 if(CurrentBiome.Waypoints.Count>1000)
                     break;
-                prioQueue = prioQueue.OrderBy(x => x.MinCostToStart).ToList();
                 var node = prioQueue.First();
                 prioQueue.Remove(node);
                 if(node.BiomeType !=w.BiomeType)

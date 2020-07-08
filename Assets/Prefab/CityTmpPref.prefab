@@ -337,10 +337,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c183714732cc4d04d93eb71acebff0a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ThisCity: 0
+  ThisCity:
+    NameCity: 
+    clickSound: {fileID: 0}
+    buildSound: {fileID: 0}
+    soldierSound: {fileID: 0}
+    population: 0
+    position: {fileID: 0}
+    civColor: {r: 0, g: 0, b: 0, a: 0}
+    controlArea: []
+    controlAreaClone: []
+    food: 0
+    production: 0
+    gold: 0
+    construction:
+      cost: 0
+      index: 
+      Position: {fileID: 0}
+      prefab: {fileID: 0}
+      Twin: {fileID: 0}
+      Tempcost: 0
+      Redoable: 0
+      BuildType: 0
+    Buildings: []
+    currentCost: 0
+    ThisCityAction: 0
   Mapcontroller: {fileID: 0}
   Controller: {fileID: 0}
   CityMenu: {fileID: 0}
+  NameCity: {fileID: 2347076266793713771}
 --- !u!1 &2977826693606835187
 GameObject:
   m_ObjectHideFlags: 0
