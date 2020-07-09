@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEditor;
+using UnityEditor.Experimental;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshRenderer))]
@@ -20,6 +22,8 @@ public class TextureModifier : MonoBehaviour
     public Material previousMat;
 
     //Params
+    public string newNameText;
+
     public int age;
     public float agingValue = 0.05f;
 
@@ -47,15 +51,31 @@ public class TextureModifier : MonoBehaviour
         
         Texture2D texTest = new Texture2D(newMat.mainTexture.width, newMat.mainTexture.height, TextureFormat.RGBA32, true);
         texTest.Apply();
+
         Graphics.CopyTexture(newMat.mainTexture, texTest);
         texTest.Apply();
 
         //CopyTextures(newMat.mainTexture as Texture2D, ref texTest);
+        
+        texTest = newMat.mainTexture as Texture2D;
+        byte[] bytes = texTest.EncodeToPNG();
 
+        File.WriteAllBytes("Assets/AgingAddon/Textures/NewTexture" + newNameText + ".png", bytes);
+
+        AssetDatabase.Refresh();
+
+        //texTest = Resources.Load("Assets/AgingAddon/Textures/NewTexture" + texTest.name + ".png") as Texture2D;
+
+        //texTest.LoadImage((byte[])bytes);
+        //texTest.filterMode = FilterMode.Point;
+
+        texTest = EditorGUIUtility.Load("Assets/AgingAddon/Textures/NewTexture" + newNameText + ".png") as Texture2D;
+        texTest.Apply();
+        
         newMat.mainTexture = texTest;
-
-        AssetDatabase.CreateAsset(texTest, "Assets/AgingAddon/Textures/NewTexture.png");
-        AssetDatabase.CreateAsset(newMat, "Assets/AgingAddon/Materials/NewSword.mat");
+        
+        //AssetDatabase.CreateAsset(texTest, "Assets/AgingAddon/Textures/NewTexture.png");
+        AssetDatabase.CreateAsset(newMat, "Assets/AgingAddon/Materials/NewSword" + newNameText + ".mat");
 
         GetComponent<Renderer>().sharedMaterial = newMat;
 
@@ -160,6 +180,9 @@ public class TextureModifier : MonoBehaviour
     public void RestoreMaterial()
     {
         GetComponent<MeshRenderer>().sharedMaterial = previousMat;
+
+        Debug.Log("Material saved");
+
         /*mats = GetComponent<MeshRenderer>().sharedMaterials;
 
         Debug.Log("Texture restored");
@@ -285,10 +308,10 @@ public class TextureModifier : MonoBehaviour
 
     public void Init(int width, int height)
     {
-        Debug.Log(texture);
+        //Debug.Log(texture);
         //if (texture == null)
         //{
-            Debug.Log("Texture est null : " + texture);
+            //Debug.Log("Texture est null : " + texture);
             texture = new Texture2D(width, height, TextureFormat.RGB24, true);
             texture.name = "Procedural Texture";
             texture.wrapMode = TextureWrapMode.Clamp;
@@ -350,8 +373,8 @@ public class TextureModifier : MonoBehaviour
 
         coloring.SetKeys(colorKey, alphaKey);
 
-        Debug.Log("Res x : " + resolutionX);
-        Debug.Log("Res y : " + resolutionY);
+        //Debug.Log("Res x : " + resolutionX);
+        //Debug.Log("Res y : " + resolutionY);
 
         for (int y = 0; y < resolutionY; y++)
         {
