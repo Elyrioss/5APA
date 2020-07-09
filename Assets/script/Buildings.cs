@@ -42,7 +42,7 @@ public class Buildings : Construction
 {
 
 
-    public override void ConstructionFinished(City c)
+    public void ConstructionFinishedInstantiate(City c)
     {
         GameObject.DestroyImmediate(prefab);
 
@@ -173,6 +173,12 @@ public class Extension : Buildings
         Redoable = true;
     }
 
+    public override void ConstructionFinished(City c)
+    {
+        c.CanExtend--;
+        ConstructionFinishedInstantiate(c);
+    }
+
     public override bool CheckForConditions(Waypoint w)
     {
         if (w.HeightType == HeightType.River || w.HeightType == HeightType.DeepWater ||
@@ -198,6 +204,12 @@ public class Port : Buildings
         if (w.HeightType == HeightType.River || w.HeightType == HeightType.ShallowWater)
             return true;
         return false;
+    }
+
+    public override void ConstructionFinished(City c)
+    {
+        c.gold += 10;
+        ConstructionFinishedInstantiate(c);
     }
 
     public override void VisualSteps()

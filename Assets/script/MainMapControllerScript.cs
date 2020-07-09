@@ -154,6 +154,8 @@ public class MainMapControllerScript : MonoBehaviour
                 foreach (Waypoint p in Path)
                 {
                     p.DisableTrail();
+                    if(p.Twin)
+                        p.Twin.DisableTrail();
                 }
                 
                 Target = selectedWaypoint;
@@ -165,7 +167,20 @@ public class MainMapControllerScript : MonoBehaviour
                     CreatePath(Path, selectedWaypoint);
                     Path.Reverse();
                     Path.Add(selectedWaypoint);
+                    
                 }
+                if (selectedWaypoint.Twin)
+                {
+                    if (Visited.Contains(selectedWaypoint.Twin))
+                    {
+                        selectedWaypoint.SetIndexTrail(1);
+                        CreatePath(Path, selectedWaypoint);
+                        Path.Reverse();
+                        Path.Add(selectedWaypoint);
+                        selectedWaypoint.Twin.SetIndexTrail(1);
+                   }
+                }
+                
                 else
                 {   
                     /*
@@ -174,6 +189,11 @@ public class MainMapControllerScript : MonoBehaviour
                     AStarCreate(GameController.instance.SelectedUnit.Position,selectedWaypoint);*/
                 }
             }
+        }
+        else
+        {
+            ClearPath();
+            Visited.Clear();
         }
     }
 
@@ -319,37 +339,49 @@ public class MainMapControllerScript : MonoBehaviour
         TmpPath.Add(W.NearestToStart);
         W.EnableTrail(W.NearestToStart);
         CreatePath(TmpPath, W.NearestToStart);
+        if (W.NearestToStart.Twin)
+        {
+            CreatePath(TmpPath, W.NearestToStart.Twin);
+        }
     }
+
+    
     
     private void MoveWithPath(Waypoint NewPos)
     {
-        if (!Visited.Contains(NewPos) || NewPos.Occupied)
+        if (!NewPos.Occupied)
         {
-            Debug.Log("Nah");
-            return;
-        }
+            
+            if(!Visited.Contains(NewPos))
+            {
+                if (!Visited.Contains(NewPos.Twin))
+                {
+                    return;
+                }
+            }
+            
+            Unit unit = GameController.instance.SelectedUnit;
+            Debug.Log("movin");
+            unit.Position.Occupied = false;
+            NewPos.Occupied = true;
+            unit.Position = NewPos;
+            unit.prefab.transform.position = new Vector3(NewPos.transform.position.x,
+                NewPos.transform.position.y + NewPos.elevation, NewPos.transform.position.z);
+            if (NewPos.Twin)
+            {
+                unit.Twin.transform.position = new Vector3(NewPos.Twin.transform.position.x,
+                    NewPos.Twin.transform.position.y + NewPos.Twin.elevation, NewPos.Twin.transform.position.z);
+                unit.Twin.SetActive(true);
+            }
+            else
+            {
+                unit.Twin.SetActive(false);
+            }
 
             
-        
-        Unit unit = GameController.instance.SelectedUnit;
-        Debug.Log("movin");
-        unit.Position.Occupied = false;
-        NewPos.Occupied = true;
-        unit.Position = NewPos;
-        unit.prefab.transform.position = new Vector3(NewPos.transform.position.x, NewPos.transform.position.y + NewPos.elevation, NewPos.transform.position.z);
-        if (NewPos.Twin)
-        {           
-            unit.Twin.transform.position = new Vector3(NewPos.Twin.transform.position.x, NewPos.Twin.transform.position.y + NewPos.Twin.elevation, NewPos.Twin.transform.position.z);
-            unit.Twin.SetActive(true);
+            Move = false;
+            unit.AsPlayed = true;
         }
-        else
-        {
-            unit.Twin.SetActive(false);   
-        }        
-        ClearPath();   
-        Visited.Clear();
-        Move = false;
-        unit.AsPlayed = true;
     }
     
     public void ClearRange(List<Waypoint> list)
@@ -361,6 +393,8 @@ public class MainMapControllerScript : MonoBehaviour
                 if (list.Contains(waypoint.left.GetComponent<Waypoint>()))
                 {
                     waypoint.RangeRenderer[0].gameObject.SetActive(false);
+                    if(waypoint.Twin)
+                        waypoint.Twin.RangeRenderer[0].gameObject.SetActive(false);
                 }
             }
             if (waypoint.right)
@@ -368,6 +402,8 @@ public class MainMapControllerScript : MonoBehaviour
                 if (list.Contains(waypoint.right.GetComponent<Waypoint>()))
                 {
                     waypoint.RangeRenderer[3].gameObject.SetActive(false);
+                    if(waypoint.Twin)
+                        waypoint.Twin.RangeRenderer[3].gameObject.SetActive(false);
                 }
             }
             if (waypoint.leftTop)
@@ -375,6 +411,8 @@ public class MainMapControllerScript : MonoBehaviour
                 if (list.Contains(waypoint.leftTop.GetComponent<Waypoint>()))
                 {
                     waypoint.RangeRenderer[2].gameObject.SetActive(false);
+                    if(waypoint.Twin)
+                        waypoint.Twin.RangeRenderer[2].gameObject.SetActive(false);
                 }
             }
             if (waypoint.rightTop)
@@ -382,6 +420,8 @@ public class MainMapControllerScript : MonoBehaviour
                 if (list.Contains(waypoint.rightTop.GetComponent<Waypoint>()))
                 {
                     waypoint.RangeRenderer[5].gameObject.SetActive(false);
+                    if(waypoint.Twin)
+                        waypoint.Twin.RangeRenderer[5].gameObject.SetActive(false);
                 }
             }
             if (waypoint.leftBot)
@@ -389,6 +429,8 @@ public class MainMapControllerScript : MonoBehaviour
                 if (list.Contains(waypoint.leftBot.GetComponent<Waypoint>()))
                 {
                     waypoint.RangeRenderer[1].gameObject.SetActive(false);
+                    if(waypoint.Twin)
+                        waypoint.Twin.RangeRenderer[1].gameObject.SetActive(false);
                 }
             }
             if (waypoint.rightBot)
@@ -396,10 +438,14 @@ public class MainMapControllerScript : MonoBehaviour
                 if (list.Contains(waypoint.rightBot.GetComponent<Waypoint>()))
                 {
                     waypoint.RangeRenderer[4].gameObject.SetActive(false);
+                    if(waypoint.Twin)
+                        waypoint.Twin.RangeRenderer[4].gameObject.SetActive(false);
                 }
             }
             
            waypoint.RangeContainer.SetActive(true);
+           if(waypoint.Twin)
+               waypoint.Twin.RangeContainer.SetActive(true);
         }
     }
 
@@ -412,10 +458,20 @@ public class MainMapControllerScript : MonoBehaviour
             w.NearestToStart = null;
             w.MinCostToStart = int.MaxValue;
             w.ResetRange();
+            if (w.Twin)
+            {
+                Waypoint W = w.Twin;
+                W.visitedDijstra = false;
+                W.NearestToStart = null;
+                W.MinCostToStart = int.MaxValue;
+                W.ResetRange();
+            }
         }
         foreach (Waypoint p in Visited)
         {
             p.DisableTrail();
+            if(p.Twin)
+                p.Twin.DisableTrail(); 
         }
     }
 

@@ -53,7 +53,12 @@ public class GameController : MonoBehaviour
     public Civilisation CurrentCiv;
     public Material Civ1;
     public Material Civ2;
-    
+
+    public Image Coin;
+    public TextMeshProUGUI Money;
+
+    public Image Winner;
+    public GameObject WinScreen;
     
     // Start is called before the first frame update
     void Start()
@@ -80,7 +85,7 @@ public class GameController : MonoBehaviour
 
         Colon c = new Colon();
         c.ConstructionFinished(w,PlayerCiv);
-        c.AsPlayed = true;
+        PlayerCiv.Units[0].AsPlayed = false;
         
         w = null;
         do
@@ -92,7 +97,7 @@ public class GameController : MonoBehaviour
         c = new Colon();
         
         c.ConstructionFinished(w,PlayerCiv2);
-        c.AsPlayed = true;
+        PlayerCiv2.Units[0].AsPlayed = false;
     }
     
     
@@ -112,6 +117,13 @@ public class GameController : MonoBehaviour
         {
             u.AsPlayed = false;
         }
+
+        if (CurrentCiv.Gold > 1500)
+        {
+            Winner.color = CurrentCiv.CivilisationColor;
+            WinScreen.SetActive(true);
+            return;
+        }
         NumberOfTurn++;
         TurnTxt.text = "Turn : " + NumberOfTurn;
         state = TurnState.START;
@@ -124,7 +136,11 @@ public class GameController : MonoBehaviour
             CurrentCiv = PlayerCiv;
         }
 
+        
+
+        Coin.color = CurrentCiv.CivilisationColor;
         TurnColor.color = CurrentCiv.CivilisationColor;
+        Money.text =""+ CurrentCiv.Gold;
     }
 
 }

@@ -19,6 +19,17 @@ public class BuildingButton : MonoBehaviour
     public void UpdateNumbers(City c)
     {
         gameObject.SetActive(true);
+            
+        bool checker = false;
+        foreach (Waypoint w in c.controlArea)
+        {
+            if (build.CheckForConditions(w))
+            {
+                checker = true;
+            }
+        }
+        gameObject.SetActive(checker);
+        
         if ((c.Contains(build) && !build.Redoable))
         {
             gameObject.SetActive(false);
@@ -39,6 +50,14 @@ public class BuildingButton : MonoBehaviour
         else
         {
             Count.text= "" + Mathf.Ceil(build.cost / c.production);
+        }
+        
+        if (build.index == "Extension")
+        {
+            if (c.CanExtend == 0)
+            {
+                gameObject.SetActive(false);
+            }    
         }
     }
 
@@ -83,6 +102,7 @@ public class BuildingButton : MonoBehaviour
     {
         
         City c = GameController.instance.SelectedCity;
+        
         Construction b = c.Contains(build.index);
         if (b != null && b.cost>0)
         {

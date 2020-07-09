@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1522737619492211851}
   m_Layer: 0
-  m_Name: portBase
+  m_Name: PortBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47,7 +47,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: bda41e48d7425514988070a69ab1bdb4,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.301
+      value: -0.042000026
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: bda41e48d7425514988070a69ab1bdb4,
         type: 3}
@@ -794,7 +794,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: edc3ed847388bb348b975dff882a9fab,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.302
+      value: -0.043
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: edc3ed847388bb348b975dff882a9fab,
         type: 3}

@@ -171,8 +171,7 @@ public class Colon : Unit
         
         GC.CurrentCiv.Units.Remove(this);
         GC.MapControllerScript.Move = false;
-        GC.cityMenu.ShowCity();
-        
+        GC.cityMenu.HideCity();
 
     }
 }

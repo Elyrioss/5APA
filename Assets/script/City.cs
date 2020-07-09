@@ -22,7 +22,7 @@ public class City
     public float production = 0;
     public float gold = 0;
 
-    private float StockFood=0;
+    public float StockFood=0;
 
     public Civilisation civ;
     public Construction construction = null;
@@ -30,9 +30,9 @@ public class City
     public List<Construction> Extensions=new List<Construction>();
 
     public float currentCost=0;
+    public float FoodMultiplier = 1;
+    public int CanExtend;
     
-    
-
     //Construction Var
     public bool ThisCityAction; // Empeche le joueur d'effectuer plus d'une action sur la ville par tour.
        
@@ -41,7 +41,8 @@ public class City
         string name = GameController.instance.Names[Random.Range(0, GameController.instance.Names.Count)];
         GameController.instance.Names.Remove(name);
         NameCity = name;
-        
+        FoodMultiplier = 1;
+        CanExtend = 0;
         civColor = new Color(city.r,city.g,city.b);
         position = pos;
         position.CivColor = civColor;
@@ -94,8 +95,9 @@ public class City
         string name = GameController.instance.Names[Random.Range(0, GameController.instance.Names.Count)];
         GameController.instance.Names.Remove(name);
         NameCity = name;
-        
+        FoodMultiplier = 1;
         civColor = color;
+        CanExtend = 0;
         position = pos;
         position.CivColor = civColor;
         position.EnableWaypoint();
@@ -178,44 +180,69 @@ public class City
         {
             if (waypoint.left)
             {
-                if (controlArea.Contains(waypoint.left.GetComponent<Waypoint>()))
+                if (controlArea.Contains(waypoint.left))
                 {
                     waypoint.spriteRenderer[0].gameObject.SetActive(false);
+                    if (waypoint.Twin)
+                    {
+                        waypoint.Twin.spriteRenderer[0].gameObject.SetActive(false);
+                    }
                 }
+                
             }
             if (waypoint.right)
             {
-                if (controlArea.Contains(waypoint.right.GetComponent<Waypoint>()))
+                if (controlArea.Contains(waypoint.right))
                 {
                     waypoint.spriteRenderer[3].gameObject.SetActive(false);
+                    if (waypoint.Twin)
+                    {
+                        waypoint.Twin.spriteRenderer[3].gameObject.SetActive(false);
+                    }
                 }
             }
             if (waypoint.leftTop)
             {
-                if (controlArea.Contains(waypoint.leftTop.GetComponent<Waypoint>()))
+                if (controlArea.Contains(waypoint.leftTop))
                 {
                     waypoint.spriteRenderer[2].gameObject.SetActive(false);
+                    if (waypoint.Twin)
+                    {
+                        waypoint.Twin.spriteRenderer[2].gameObject.SetActive(false);
+                    }
                 }
             }
             if (waypoint.rightTop)
             {
-                if (controlArea.Contains(waypoint.rightTop.GetComponent<Waypoint>()))
+                if (controlArea.Contains(waypoint.rightTop))
                 {
                     waypoint.spriteRenderer[5].gameObject.SetActive(false);
+                    if (waypoint.Twin)
+                    {
+                        waypoint.Twin.spriteRenderer[5].gameObject.SetActive(false);
+                    }
                 }
             }
             if (waypoint.leftBot)
             {
-                if (controlArea.Contains(waypoint.leftBot.GetComponent<Waypoint>()))
+                if (controlArea.Contains(waypoint.leftBot))
                 {
                     waypoint.spriteRenderer[1].gameObject.SetActive(false);
+                    if (waypoint.Twin)
+                    {
+                        waypoint.Twin.spriteRenderer[1].gameObject.SetActive(false);
+                    }
                 }
             }
             if (waypoint.rightBot)
             {
-                if (controlArea.Contains(waypoint.rightBot.GetComponent<Waypoint>()))
+                if (controlArea.Contains(waypoint.rightBot))
                 {
                     waypoint.spriteRenderer[4].gameObject.SetActive(false);
+                    if (waypoint.Twin)
+                    {
+                        waypoint.Twin.spriteRenderer[4].gameObject.SetActive(false);
+                    }
                 }
             }
             
@@ -283,7 +310,20 @@ public class City
     {
         //On récupère les resources naturelles => LES VALEURS INDIQUE LA QUANTITE PAR TOUR 
         StockFood += food;
-            
+        if (StockFood > 30 * FoodMultiplier)
+        {
+            Debug.Log(StockFood+" for "+30*FoodMultiplier);
+            population++;
+            StockFood = 0;
+            FoodMultiplier = FoodMultiplier * 1.5f;
+            if (population % 2 == 0)
+            {
+                CanExtend ++;
+            }
+        }
+
+        
+        civ.Gold += gold + population;
         //On regarde la file de construction de la ville.
         ConstructionProcess();
         ThisCityAction = false;       
@@ -319,7 +359,7 @@ public class City
 
     public bool Contains(Construction build)
     {
-        foreach (Buildings b in Buildings)
+        foreach (Construction b in Buildings)
         {
             if (b.index == build.index)
                 return true;

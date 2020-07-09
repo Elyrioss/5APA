@@ -155,15 +155,21 @@ public class CityMenu : MonoBehaviour
         City current = GameController.instance.SelectedCity;
         if (current == null)
             return;
-        if (current.construction == null)
-        {           
-            SetCurrentBuild("0",DefaultConstruction,"None");
-            return;
-        }
+        
         current.HideAvailable();
         GameController.instance.MapControllerScript.Extension = false;
         GameController.instance.MapControllerScript.Move = false;
-        SetCurrentBuild("" + Mathf.Ceil(current.currentCost / current.production),Resources.Load<Sprite>(current.construction.index),current.construction.index);
+        PopulationSlide.value = current.StockFood/(30 * current.FoodMultiplier);
+        NumPop.text = Mathf.Ceil((30 * current.FoodMultiplier)/current.food)+"";
+        
+        if (current.construction == null)
+        {           
+            SetCurrentBuild("0",DefaultConstruction,"None");
+        }
+        else
+        {
+            SetCurrentBuild("" + Mathf.Ceil(current.currentCost / current.production),Resources.Load<Sprite>(current.construction.index),current.construction.index);
+        }                   
 
     }
 
