@@ -209,6 +209,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ManageRef: {fileID: 0}
   NameCity: {fileID: 3888701723880948006}
+  Colors: {fileID: 5030026493119774743}
 --- !u!1 &1350719545662728703
 GameObject:
   m_ObjectHideFlags: 0
@@ -270,12 +271,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: d1462431a92116a45bde675eb3b30ebc, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 064db62f9aadd2242b358ec520369097, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -328,7 +329,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 5307572782512399765}
         m_MethodName: SelectCity
         m_Mode: 1
         m_Arguments:

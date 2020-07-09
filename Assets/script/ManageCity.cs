@@ -11,12 +11,14 @@ public class ManageCity : MonoBehaviour
     public GameController Controller;
     public CityMenu CityMenu;
 
+    public Image Colors;
     public TextMeshPro NameCity;
     private TextMeshProUGUI Population;
     private TextMeshProUGUI Nourriture;
     private TextMeshProUGUI Production;
     private TextMeshProUGUI Or;
 
+    public Civilisation owner;
 
     void Start()
     {
@@ -26,12 +28,18 @@ public class ManageCity : MonoBehaviour
         Population = CityMenu.Population;
         Nourriture = CityMenu.Food;
         Production = CityMenu.Production;
-        Or = CityMenu.Gold;
+        Or = CityMenu.Gold;        
     }
 
 
     public void SelectCity()
     {
+        if (owner != Controller.CurrentCiv)
+        {
+            Debug.Log("pas ton tour");
+            return;
+        }
+                 
         Controller.SelectedCity = ThisCity;
         CityMenu.CivColor.color = ThisCity.civColor;
         CityMenu.ShowCity();

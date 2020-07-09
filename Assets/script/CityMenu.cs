@@ -49,7 +49,7 @@ public class CityMenu : MonoBehaviour
 
     public GameObject Unit;
     public GameObject City;
-    public Buildings getBuildings(int index)
+    public Construction getBuildings(int index)
     {
         switch (index)
         {
@@ -61,6 +61,8 @@ public class CityMenu : MonoBehaviour
                 return new Marcher();
             case 3:
                 return new Extension();
+            case 4:
+                return new Port();
         }
         return null;        
     }
@@ -83,12 +85,10 @@ public class CityMenu : MonoBehaviour
     
     void Start()
     {
-        
-        gameObject.SetActive(false);
-        
+                
         for (int i = 0; i < Batnum; i++)
         {
-            Buildings build = getBuildings(i);
+            Construction build = getBuildings(i);
             BuildingButton b;
             if (build.BuildType == Buildings.BuildingType.Ressource)
             {
@@ -160,6 +160,9 @@ public class CityMenu : MonoBehaviour
             SetCurrentBuild("0",DefaultConstruction,"None");
             return;
         }
+        current.HideAvailable();
+        GameController.instance.MapControllerScript.Extension = false;
+        GameController.instance.MapControllerScript.Move = false;
         SetCurrentBuild("" + Mathf.Ceil(current.currentCost / current.production),Resources.Load<Sprite>(current.construction.index),current.construction.index);
 
     }

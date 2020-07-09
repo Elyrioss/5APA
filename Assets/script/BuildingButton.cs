@@ -58,7 +58,7 @@ public class BuildingButton : MonoBehaviour
     public void Build()
     {
         City c = GameController.instance.SelectedCity;
-        Buildings b = c.Contains(build.index);
+        Construction b = c.Contains(build.index);
         if (b != null)
         {
             build = b;
@@ -83,7 +83,7 @@ public class BuildingButton : MonoBehaviour
     {
         
         City c = GameController.instance.SelectedCity;
-        Buildings b = c.Contains(build.index);
+        Construction b = c.Contains(build.index);
         if (b != null && b.cost>0)
         {
             build = b;
@@ -94,7 +94,7 @@ public class BuildingButton : MonoBehaviour
         }
         else
         {
-            c.ShowAvailable();
+            c.ShowAvailable(build);
             Menue.HideBat();            
             Menue.HideCity();                                     
             GameController.instance.MapControllerScript.Extension = true;

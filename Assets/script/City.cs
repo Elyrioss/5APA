@@ -27,7 +27,7 @@ public class City
     public Civilisation civ;
     public Construction construction = null;
     public List<Construction> Buildings=new List<Construction>();
-    public List<Buildings> Extensions=new List<Buildings>();
+    public List<Construction> Extensions=new List<Construction>();
 
     public float currentCost=0;
     
@@ -100,13 +100,16 @@ public class City
         position.CivColor = civColor;
         position.EnableWaypoint();
         controlArea.Add(position);
-        
+        position.UsedTile = true;
+        position.Controled = true;
         //TWIN
         if (position.AsTwin || position.IsTwin)
         {
             position.Twin.CivColor = civColor;
             position.Twin.EnableWaypoint();
             controlAreaClone.Add(position.Twin);
+            position.Twin.UsedTile = true;
+            position.Twin.Controled = true;
         }
         //
 
@@ -137,17 +140,17 @@ public class City
         
     }
 
-    public void ShowAvailable()
+    public void ShowAvailable(Construction c)
     {
         foreach (Waypoint w in controlArea)
         {
-            if(!w.UsedTile)
+            if(!w.UsedTile && c.CheckForConditions(w))
                 w.EnableHighlight();
         }
         
         foreach (Waypoint w in controlAreaClone)
         {
-            if(!w.UsedTile)
+            if(!w.UsedTile && c.CheckForConditions(w))
                 w.EnableHighlight();
         }
         
@@ -325,9 +328,9 @@ public class City
         return false;
     }
     
-    public Buildings Contains(string index)
+    public Construction Contains(string index)
     {
-        foreach (Buildings b in Buildings)
+        foreach (Construction b in Buildings)
         {
             if (b.index == index)
             {

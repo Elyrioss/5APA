@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.UI;
 
 public class ManageUnit : MonoBehaviour
 {
@@ -10,18 +11,18 @@ public class ManageUnit : MonoBehaviour
     
     private bool CanMove;
     private Waypoint EndPos;
+    public Image Colors;
+    public Civilisation Owner;
     
-    private int CurrentCost = 0;
-    private int Cost = 15;
-    private Waypoint NewPos;
-    
-
     public void SelectUnit()
     {
         GameController GC = GameController.instance;
+        if(Owner!=GC.CurrentCiv)
+            return;
+        
         GameController.instance.SelectedUnit = Unit;
         GC.cityMenu.ShowUnit(Unit);
-
+        
         if (!Unit.AsPlayed)
         {
             GC.MapControllerScript.ClearPath();

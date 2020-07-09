@@ -15,7 +15,7 @@ public class Construction
     public float Tempcost;
     public bool Redoable;
     public BuildingType BuildType;
-      
+    
     public enum BuildingType
     {
         Ressource,
@@ -25,19 +25,85 @@ public class Construction
     } 
     
     public virtual void ConstructionFinished(City c){}
-  
+
+    public virtual bool CheckForConditions(Waypoint w)
+    {
+        return true;
+    }
+
+    public virtual void VisualSteps()
+    {
+    }
 }
 
 
 
 public class Buildings : Construction
 {
-    
-  // ON SAIS JAMAIS 
+
+
+    public override void ConstructionFinished(City c)
+    {
+        GameObject.DestroyImmediate(prefab);
+
+        Construction b = c.Contains(index);
+        c.Buildings.Remove(b);
+        c.Extensions.Add(b);
+        prefab = GameObject.Instantiate(Resources.Load("Prefabs/" + index) as GameObject, Position.transform);
+        prefab.transform.localPosition = new Vector3(0, Position.elevation, 0);
+
+        if (Position.LOD)
+        {
+            Position.LOD.SetActive(false);
+        }
+
+        //TWIN
+        if (Position.AsTwin || Position.IsTwin)
+        {
+            GameObject.DestroyImmediate(Twin);
+            Twin = GameObject.Instantiate(Resources.Load("Prefabs/" + index) as GameObject, Position.Twin.transform);
+            Twin.transform.localPosition = new Vector3(0, Position.elevation, 0);
+            if (Position.Twin.LOD)
+            {
+                Position.Twin.LOD.SetActive(false);
+            }
+        }
+
+        foreach (Waypoint w in Position.Neighbors)
+        {
+            if (w.Controled)
+                continue;
+
+            w.Controled = true;
+            c.controlArea.Add(w);
+            w.CivColor = c.civColor;
+            w.EnableWaypoint();
+
+            //TWIN
+
+            if (w.AsTwin || w.IsTwin)
+            {
+                w.Twin.CivColor = c.civColor;
+                w.Twin.EnableWaypoint();
+                w.Twin.Controled = true;
+                c.controlAreaClone.Add(w.Twin);
+            }
+
+            //
+            c.food += w.Food;
+            c.production += w.Production;
+            c.gold += w.Gold;
+        }
+
+        c.ClearFrontiers();
+        c.ClearFrontiersClone();
+        c.buildSound.PlayOneShot(c.buildSound.clip);
+        VisualSteps();
+    }
 
 }
 
-public class Grenier : Buildings
+public class Grenier : Construction
 {
   
     public Grenier()
@@ -56,7 +122,7 @@ public class Grenier : Buildings
     }
 }
 
-public class Usine : Buildings
+public class Usine : Construction
 {
 
     public Usine()
@@ -75,7 +141,7 @@ public class Usine : Buildings
     }
 }
 
-public class Marcher : Buildings
+public class Marcher : Construction
 {
 
     
@@ -102,63 +168,88 @@ public class Extension : Buildings
     {
         index = "Extension";
         BuildType = BuildingType.Extension;
-        cost=100;    
+        cost = 100;
         Tempcost = -1;
         Redoable = true;
     }
-    
-    public override void ConstructionFinished(City c)
-    {       
-        GameObject.DestroyImmediate(prefab);
-        
-        Buildings b = c.Contains(index);
-        c.Buildings.Remove(b);
-        c.Extensions.Add(b);
-        prefab = GameObject.Instantiate(Resources.Load("Prefabs/"+index) as GameObject, Position.transform);
-        prefab.transform.localPosition = new Vector3(0, Position.elevation, 0);
 
-        if (Position.LOD)
-        {
-            Position.LOD.SetActive(false);
-        }
-        //TWIN
-        if (Position.AsTwin || Position.IsTwin)
-        {
-            GameObject.DestroyImmediate(Twin);
-            Twin = GameObject.Instantiate(Resources.Load("Prefabs/"+index) as GameObject,Position.Twin.transform);            
-            Twin.transform.localPosition = new Vector3(0, Position.elevation, 0);
-            if (Position.Twin.LOD)
-            {
-                Position.Twin.LOD.SetActive(false);
-            }
-        }
-        
-        foreach (Waypoint w in Position.Neighbors)
-        {
-            if(w.Controled)
-                continue;
+    public override bool CheckForConditions(Waypoint w)
+    {
+        if (w.HeightType == HeightType.River || w.HeightType == HeightType.DeepWater ||
+            w.HeightType == HeightType.ShallowWater)
+            return false;
+        return true;
+    }
 
-            w.Controled = true;
-            c.controlArea.Add(w);
-            w.CivColor = c.civColor;
-            w.EnableWaypoint();
-            
-            //TWIN
-            
-            if (w.AsTwin || w.IsTwin)
-            {
-                w.Twin.CivColor = c.civColor;
-                w.Twin.EnableWaypoint();
-                w.Twin.Controled = true;
-                c.controlAreaClone.Add(w.Twin);
-            }
-            //
-            c.food += w.Food;
-            c.production += w.Production;
-            c.gold += w.Gold;
+}
+
+public class Port : Buildings
+{
+    public Port()
+    {
+        index = "Port";
+        BuildType = BuildingType.Extension;
+        cost=150;    
+        Tempcost = -1;
+    }
+
+    public override bool CheckForConditions(Waypoint w)
+    {
+        if (w.HeightType == HeightType.River || w.HeightType == HeightType.ShallowWater)
+            return true;
+        return false;
+    }
+
+    public override void VisualSteps()
+    {
+        Debug.Log("port");
+        if (Position.leftTop.UsedTile)
+        {
+            prefab.transform.Rotate(0,60,0);
+            if(Twin)
+                Twin.transform.Rotate(0,60,0);
+        }          
+        else if (Position.rightTop.UsedTile)
+        {
+            prefab.transform.Rotate(0,120,0);
+            if(Twin)
+                Twin.transform.Rotate(0,120,0);
         }
-        c.ClearFrontiers();
-        c.ClearFrontiersClone();
-        c.buildSound.PlayOneShot(c.buildSound.clip);
+        if (Position.right.UsedTile)
+        {
+            prefab.transform.Rotate(0,180,0);
+            if(Twin)
+                Twin.transform.Rotate(0,180,0);
+
+        }          
+        else if (Position.rightBot.UsedTile)
+        {
+            prefab.transform.Rotate(0,240,0);
+            if(Twin)
+                Twin.transform.Rotate(0,240,0);
+        }
+        else if (Position.leftBot.UsedTile)
+        {
+            prefab.transform.Rotate(0,300,0);
+            if(Twin)
+                Twin.transform.Rotate(0,300,0);
+
+        }
+
+        if (prefab.GetComponent<MatTochange>())
+        {
+            Debug.Log("change");
+            MatTochange prefChange = prefab.GetComponent<MatTochange>();
+            Material[] array;
+            
+            array = prefChange.MatsTochange[0].materials;
+            array[1]=GameController.instance.CurrentCiv.MAT;
+            prefChange.MatsTochange[0].materials = array;
+            
+            array = prefChange.MatsTochange[1].materials;
+            array[0]=GameController.instance.CurrentCiv.MAT;
+            array[2]=GameController.instance.CurrentCiv.MAT;
+            prefChange.MatsTochange[1].materials = array;
+        }
     }
 }

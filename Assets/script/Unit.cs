@@ -10,14 +10,16 @@ public class Unit : Construction
     public int mouvementPoints;
     public int HP;
     public int MAXHP;
-    public Unit Instantiation(Waypoint w)
+    public Unit Instantiation(Waypoint w,Civilisation civ)
     {
         Position = w;
         prefab = Object.Instantiate(Resources.Load("Prefabs/"+index) as GameObject,Position.transform);
         prefab.transform.localPosition = new Vector3(0, Position.elevation, 0);   
         prefab.GetComponent<ManageUnit>().Unit = this;            
         Position.Occupied = true;
-
+        
+        
+        
         if (Position.AsTwin || Position.IsTwin)
         {
             Twin = Object.Instantiate(Resources.Load("Prefabs/"+index) as GameObject,Position.Twin.transform);        
@@ -32,6 +34,12 @@ public class Unit : Construction
             Twin.GetComponent<ManageUnit>().Unit = this;
             Twin.SetActive(false);
         }
+
+        Twin.GetComponent<ManageUnit>().Owner = civ;
+        Twin.GetComponent<ManageUnit>().Colors.color = civ.CivilisationColor;
+        
+        prefab.GetComponent<ManageUnit>().Owner = civ;
+        prefab.GetComponent<ManageUnit>().Colors.color = civ.CivilisationColor;
         return this;
     }
     
@@ -54,9 +62,10 @@ public class Warrior : Unit
     public override void ConstructionFinished(City c)
     {
         Warrior w = new Warrior();
-        w.Instantiation(c.position);
+        w.Instantiation(c.position,c.civ);
         c.civ.Units.Add(w);
         c.soldierSound.PlayOneShot(c.soldierSound.clip);
+        
     }
     
     public override void UnitPower()
@@ -81,7 +90,7 @@ public class Archer : Unit
     public override void ConstructionFinished(City c)
     {
         Archer w = new Archer();
-        w.Instantiation(c.position);
+        w.Instantiation(c.position,c.civ);
         c.civ.Units.Add(w);
         c.soldierSound.PlayOneShot(c.soldierSound.clip);
     }
@@ -108,7 +117,7 @@ public class Rider : Unit
     public override void ConstructionFinished(City c)
     {
         Rider w = new Rider();
-        w.Instantiation(c.position);
+        w.Instantiation(c.position,c.civ);
         c.civ.Units.Add(w);
         c.soldierSound.PlayOneShot(c.soldierSound.clip);
     }
@@ -135,9 +144,16 @@ public class Colon : Unit
     public override void ConstructionFinished(City c)
     {
         Colon w = new Colon();
-        w.Instantiation(c.position);
+        w.Instantiation(c.position,c.civ);
         c.civ.Units.Add(w);
         c.soldierSound.PlayOneShot(c.soldierSound.clip);
+    }
+    
+    public void ConstructionFinished(Waypoint w,Civilisation c)
+    {
+        Colon Colon = new Colon();
+        Colon.Instantiation(w,c);
+        c.Units.Add(Colon);
     }
     
     public override void UnitPower()
@@ -148,11 +164,15 @@ public class Colon : Unit
         GameController GC = GameController.instance;
         
         GC.MapControllerScript.CreateCity(Position);
-        
+
+        Position.Occupied = false;
         GameObject.DestroyImmediate(prefab);
         GameObject.DestroyImmediate(Twin);
-
-        GC.PlayerCiv.Units.Remove(this);
+        
+        GC.CurrentCiv.Units.Remove(this);
+        GC.MapControllerScript.Move = false;
+        GC.cityMenu.ShowCity();
+        
 
     }
 }

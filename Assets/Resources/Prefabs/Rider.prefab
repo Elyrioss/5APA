@@ -382,30 +382,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30d7e8c7b887e804f94b98d8178551dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ThisCity:
-    clickSound: {fileID: 0}
-    buildSound: {fileID: 0}
-    soldierSound: {fileID: 0}
-    population: 0
-    position: {fileID: 0}
-    civColor: {r: 0, g: 0, b: 0, a: 0}
-    controlArea: []
-    controlAreaClone: []
-    food: 0
-    production: 0
-    gold: 0
-    construction:
-      cost: 0
-      index: 
-      Position: {fileID: 0}
-      prefab: {fileID: 0}
-      Twin: {fileID: 0}
-      Tempcost: 0
-      Redoable: 0
-      BuildType: 0
-    Buildings: []
-    currentCost: 0
-    ThisCityAction: 0
+  Unit:
+    cost: 0
+    index: 
+    Position: {fileID: 0}
+    prefab: {fileID: 0}
+    Twin: {fileID: 0}
+    Tempcost: 0
+    Redoable: 0
+    BuildType: 0
+    AsPlayed: 0
+    mouvementPoints: 0
+    HP: 0
+    MAXHP: 0
+  Colors: {fileID: 7829057202489435385}
 --- !u!1 &6935011485874453838
 GameObject:
   m_ObjectHideFlags: 0
@@ -684,11 +674,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1943914002234671457}
     m_Modifications:
-    - target: {fileID: -927199367670048503, guid: 43f7d34f4e6082e4bb95353b52e6eabc,
-        type: 3}
-      propertyPath: m_Name
-      value: 3D_Horse_fbx
-      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 43f7d34f4e6082e4bb95353b52e6eabc,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -758,6 +743,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.z
       value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 43f7d34f4e6082e4bb95353b52e6eabc,
+        type: 3}
+      propertyPath: m_Name
+      value: 3D_Horse_fbx
       objectReference: {fileID: 0}
     - target: {fileID: 938352467775007587, guid: 43f7d34f4e6082e4bb95353b52e6eabc,
         type: 3}
