@@ -223,7 +223,7 @@ public class CityMenu : MonoBehaviour
 
     public void UsePower()
     {
-        GameController.instance.SelectedUnit.UnitPower();
+        GameController.instance.SelectedUnit.UnitPower(GameController.instance.CurrentCiv);
     }
     
     public void Sleep()

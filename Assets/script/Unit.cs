@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
+using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
 [Serializable]
@@ -43,7 +45,7 @@ public class Unit : Construction
         return this;
     }
     
-    public virtual void UnitPower(){}
+    public virtual void UnitPower(Civilisation currentCivilisation){}
 }
 
 public class Warrior : Unit
@@ -74,9 +76,11 @@ public class Warrior : Unit
         
     }
     
-    public override void UnitPower()
+    public override void UnitPower(Civilisation currentCivilisation)
     {
-        Debug.Log("SCOOPBIPOUGABOUGADOO");
+        GameController GC = GameController.instance;
+
+        GC.MapControllerScript.Attacking(this);
     }
 }
 
@@ -106,9 +110,11 @@ public class Archer : Unit
         c.soldierSound.PlayOneShot(c.soldierSound.clip);
     }
     
-    public override void UnitPower()
+    public override void UnitPower(Civilisation currentCivilisation)
     {
-        Debug.Log("SCOOPBIPOUGABOUGADOO");
+        GameController GC = GameController.instance;
+
+        GC.MapControllerScript.Attacking(this);
     }
 }
 
@@ -139,9 +145,11 @@ public class Rider : Unit
         c.soldierSound.PlayOneShot(c.soldierSound.clip);
     }
 
-    public override void UnitPower()
+    public override void UnitPower(Civilisation currentCivilisation)
     {
-        Debug.Log("SCOOPBIPOUGABOUGADOO");
+        GameController GC = GameController.instance;
+
+        GC.MapControllerScript.Attacking(this);
     }
 }
 
@@ -180,7 +188,7 @@ public class Colon : Unit
         c.Units.Add(Colon);
     }
     
-    public override void UnitPower()
+    public override void UnitPower(Civilisation currentCivilisation)
     {
         if(Position.Controled)
             return;

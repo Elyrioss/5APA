@@ -123,8 +123,19 @@ public class GameController : MonoBehaviour
         c.ConstructionFinished(w,PlayerCiv2);
         PlayerCiv2.Units[0].AsPlayed = false;
     }
-    
-    
+
+    public Civilisation GetOtherCivilisation()
+    {
+        if (PlayerCiv == CurrentCiv)
+        {
+            return PlayerCiv2;
+        }
+        else
+        {
+            return PlayerCiv;
+        }
+    }
+
     //UI
     public void NextTurn()
     {
