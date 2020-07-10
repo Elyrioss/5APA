@@ -61,21 +61,24 @@ public class TextureModifier : MonoBehaviour
         byte[] bytes = texTest.EncodeToPNG();
 
         File.WriteAllBytes("Assets/AgingAddon/Textures/NewTexture" + newNameText + ".png", bytes);
-
+#if UNITY_EDITOR
         AssetDatabase.Refresh();
-
+#endif
         //texTest = Resources.Load("Assets/AgingAddon/Textures/NewTexture" + texTest.name + ".png") as Texture2D;
 
         //texTest.LoadImage((byte[])bytes);
         //texTest.filterMode = FilterMode.Point;
-
+#if UNITY_EDITOR
         texTest = EditorGUIUtility.Load("Assets/AgingAddon/Textures/NewTexture" + newNameText + ".png") as Texture2D;
+#endif
         texTest.Apply();
         
         newMat.mainTexture = texTest;
-        
+
+#if UNITY_EDITOR
         //AssetDatabase.CreateAsset(texTest, "Assets/AgingAddon/Textures/NewTexture.png");
         AssetDatabase.CreateAsset(newMat, "Assets/AgingAddon/Materials/NewSword" + newNameText + ".mat");
+#endif
 
         GetComponent<Renderer>().sharedMaterial = newMat;
 

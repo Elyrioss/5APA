@@ -37,8 +37,11 @@ public class MainMapControllerScript : MonoBehaviour
     public float RightLimit;
     public Camera secondCam;
     public Camera thirdCam;
-    
-    
+
+    public bool attackAvailable = false;
+
+    public List<Waypoint> highlightedWayPoint = new List<Waypoint>();
+
     void Start()
     {
         _camera = GetComponent<Camera>();
@@ -130,7 +133,36 @@ public class MainMapControllerScript : MonoBehaviour
                     selectedWaypoint = hit.transform.parent.gameObject.GetComponent<Waypoint>();
                     MoveWithPath(selectedWaypoint);  
                     Menue.HideCity();
-                }             
+                }
+
+                if (attackAvailable)
+                {
+                    if (!hit.transform.parent.gameObject.GetComponent<Waypoint>())
+                        return;
+
+                    selectedWaypoint = hit.transform.parent.gameObject.GetComponent<Waypoint>();
+
+                    GameController GC = GameController.instance;
+
+                    foreach (Waypoint wp in highlightedWayPoint)
+                    {
+                        if (wp == selectedWaypoint)
+                        {
+                            Civilisation enemyCiv = GC.GetOtherCivilisation();
+                            
+                            foreach (Unit enemyUnit in enemyCiv.Units)
+                            {
+                                if(enemyUnit.Position == wp)
+                                {
+                                    DoAttack(GC.SelectedUnit, enemyUnit);
+                                    break;
+                                }
+                            }
+                        }
+
+                        wp.DisableHighlight();
+                    }
+                }
             }
 
             
@@ -400,6 +432,184 @@ public class MainMapControllerScript : MonoBehaviour
         }
     }
     
+    public void Attacking(Unit attacker)
+    {
+        GameController GC = GameController.instance;
+
+        //List<Unit> enemyUnitList = new List<Unit>();
+
+        foreach (Waypoint wp in GC.SelectedUnit.Position.Neighbors)
+        {
+            if (wp.Occupied)
+            {
+                Civilisation enemyCiv = GC.GetOtherCivilisation();
+                
+                foreach (Unit enemyUnit in enemyCiv.Units)
+                {
+                    if (enemyUnit.Position == wp)
+                    {
+                        //enemyUnitList.Add(enemyUnit);
+                        enemyUnit.Position.EnableHighlight();
+                        highlightedWayPoint.Add(enemyUnit.Position);
+
+                        attackAvailable = true;
+                        Move = false;
+                    }
+                }
+            }
+        }
+    }
+
+    public void DoAttack(Unit attackingUnit, Unit defendingUnit)
+    {
+        GameController GC = GameController.instance;
+        Civilisation enemyCiv = GC.GetOtherCivilisation();
+
+        if (attackingUnit.index == "Warrior" && defendingUnit.index == "Archer")
+        {
+            //Damage
+            defendingUnit.HP -= 2 / 2;
+            attackingUnit.HP -= 2 * 2;
+
+            attackingUnit.AsPlayed = true;
+
+            CheckHP(attackingUnit, defendingUnit);
+
+            Debug.Log("Warrior contre Archer");
+            
+        }
+        if (attackingUnit.index == "Warrior" && defendingUnit.index == "Warrior")
+        {
+            //Damage
+            attackingUnit.HP -= 2;
+            defendingUnit.HP -= 2;
+
+            attackingUnit.AsPlayed = true;
+
+            CheckHP(attackingUnit, defendingUnit);
+
+            Debug.Log("Warrior contre Warrior");
+        }
+        if (attackingUnit.index == "Warrior" && defendingUnit.index == "Rider")
+        {
+            //Damage
+            defendingUnit.HP -= 2 * 2;
+            attackingUnit.HP -= 2 / 2;
+
+            attackingUnit.AsPlayed = true;
+
+            CheckHP(attackingUnit, defendingUnit);
+
+
+            Debug.Log("Warrior contre Rider");
+
+        }
+
+
+        if (attackingUnit.index == "Archer" && defendingUnit.index == "Archer")
+        {
+            //Damage
+            defendingUnit.HP -= 2;
+            attackingUnit.HP -= 2;
+
+            attackingUnit.AsPlayed = true;
+
+            CheckHP(attackingUnit, defendingUnit);
+
+            Debug.Log("Archer contre Archer");
+        }
+        if (attackingUnit.index == "Archer" && defendingUnit.index == "Warrior")
+        {
+            //Damage
+            defendingUnit.HP -= 2 * 2;
+            attackingUnit.HP -= 2 / 2;
+
+            attackingUnit.AsPlayed = true;
+
+            CheckHP(attackingUnit, defendingUnit);
+
+            Debug.Log("Archer contre Warrior");
+        }
+        if (attackingUnit.index == "Archer" && defendingUnit.index == "Rider")
+        {
+            //Damage
+            defendingUnit.HP -= 2 / 2;
+            attackingUnit.HP -= 2 * 2;
+
+            attackingUnit.AsPlayed = true;
+
+            CheckHP(attackingUnit, defendingUnit);
+
+            Debug.Log("Archer contre Rider");
+        }
+
+        
+        if (attackingUnit.index == "Rider" && defendingUnit.index == "Archer")
+        {
+            //Damage
+            defendingUnit.HP -= 2 * 2;
+            attackingUnit.HP -= 2 / 2;
+
+            attackingUnit.AsPlayed = true;
+
+            CheckHP(attackingUnit, defendingUnit);
+
+            Debug.Log("Rider contre Archer");
+        }
+        if (attackingUnit.index == "Rider" && defendingUnit.index == "Warrior")
+        {
+            //Damage
+            defendingUnit.HP -= 2 / 2;
+            attackingUnit.HP -= 2 * 2;
+
+            attackingUnit.AsPlayed = true;
+
+            CheckHP(attackingUnit, defendingUnit);
+
+            Debug.Log("Rider contre Warrior");
+        }
+        if (attackingUnit.index == "Rider" && defendingUnit.index == "Rider")
+        {
+            //Damage
+            defendingUnit.HP -= 2;
+            attackingUnit.HP -= 2;
+
+            attackingUnit.AsPlayed = true;
+
+            CheckHP(attackingUnit, defendingUnit);
+
+            Debug.Log("Rider contre Rider");
+        }
+    }
+    
+    public void CheckHP(Unit attackingUnit, Unit defendingUnit)
+    {
+        GameController GC = GameController.instance;
+        Civilisation enemyCiv = GC.GetOtherCivilisation();
+
+        if (defendingUnit.HP <= 0)
+        {
+            enemyCiv.Units.Remove(defendingUnit);
+
+            if (defendingUnit.Twin != null)
+            {
+                DestroyImmediate(defendingUnit.Twin);
+            }
+            DestroyImmediate(defendingUnit.prefab);
+        }
+
+        if (attackingUnit.HP <= 0)
+        {
+            GC.CurrentCiv.Units.Remove(attackingUnit);
+
+            if (attackingUnit.Twin != null)
+            {
+                DestroyImmediate(attackingUnit.Twin);
+            }
+            DestroyImmediate(attackingUnit.prefab);
+        }
+    }
+
     public void ClearRange(List<Waypoint> list)
     {
         foreach (Waypoint waypoint in list)
