@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
+using RTS_Cam;
 using TMPro;
+using TMPro.Examples;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -59,7 +62,8 @@ public class GameController : MonoBehaviour
 
     public Image Winner;
     public GameObject WinScreen;
-    
+
+    private RTS_Camera Camera;
     // Start is called before the first frame update
     void Start()
     {
@@ -72,8 +76,16 @@ public class GameController : MonoBehaviour
         state = TurnState.START;
         MapControllerScript = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<MainMapControllerScript>();
         TurnColor.color = CurrentCiv.CivilisationColor;
+        Camera = UnityEngine.Camera.main.GetComponent<RTS_Camera>();
+        Camera.targetFollow = PlayerCiv.Units[0].prefab.transform;
+        StartCoroutine(ResetCam());
     }
 
+    public IEnumerator ResetCam(){
+        yield return new WaitForSeconds(4f);
+        Camera.targetFollow = null;
+    }
+    
     public void setStarts()
     {
         Waypoint w = null;
@@ -110,14 +122,51 @@ public class GameController : MonoBehaviour
         
         foreach (City c in CurrentCiv.Cities)
         {
-            c.EndOfTurn();
+            if (c.construction == null)
+            {
+                SelectedCity = c;
+                if (c.position.transform.position.x > MapControllerScript.RightLimit-40)
+                {
+                    Camera.targetFollow = c.position.Twin.transform;
+                }
+                else
+                {
+                    Camera.targetFollow = c.position.transform;
+                }
+                StartCoroutine(ResetCam());
+                cityMenu.ShowCity();
+                return;
+            }
+        }
+           
+        foreach (Unit u in CurrentCiv.Units)
+        {
+            if (!u.AsPlayed)
+            {
+                SelectedUnit = u;
+                if (u.prefab.transform.position.x > MapControllerScript.RightLimit-40)
+                {
+                    Camera.targetFollow = u.Twin.transform;
+                }
+                else
+                {
+                    Camera.targetFollow = u.prefab.transform;
+                }
+                StartCoroutine(ResetCam());
+                cityMenu.ShowUnit(u);
+                return;
+            }
         }
         
         foreach (Unit u in CurrentCiv.Units)
         {
             u.AsPlayed = false;
         }
-
+        foreach (City c in CurrentCiv.Cities)
+        {
+            c.EndOfTurn();
+        }
+        
         if (CurrentCiv.Gold > 1500)
         {
             Winner.color = CurrentCiv.CivilisationColor;
@@ -136,8 +185,33 @@ public class GameController : MonoBehaviour
             CurrentCiv = PlayerCiv;
         }
 
+        if (CurrentCiv.Cities.Count > 0)
+        {
+            if (CurrentCiv.Cities[0].position.transform.position.x > MapControllerScript.RightLimit-40)
+            {
+                Camera.targetFollow = CurrentCiv.Cities[0].position.Twin.transform;
+            }
+            else
+            {
+                Camera.targetFollow = CurrentCiv.Cities[0].position.transform;
+            }
+            SelectedCity = CurrentCiv.Cities[0];
+            StartCoroutine(ResetCam());
+        }
+        else
+        {
+            if (CurrentCiv.Units[0].Position.transform.position.x > MapControllerScript.RightLimit-40)
+            {
+                Camera.targetFollow = CurrentCiv.Units[0].Twin.transform;
+            }
+            else
+            {
+                Camera.targetFollow = CurrentCiv.Units[0].prefab.transform;
+            }
+            SelectedUnit = CurrentCiv.Units[0];
+            StartCoroutine(ResetCam());
+        }
         
-
         Coin.color = CurrentCiv.CivilisationColor;
         TurnColor.color = CurrentCiv.CivilisationColor;
         Money.text =""+ CurrentCiv.Gold;

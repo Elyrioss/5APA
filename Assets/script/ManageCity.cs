@@ -42,14 +42,7 @@ public class ManageCity : MonoBehaviour
                  
         Controller.SelectedCity = ThisCity;
         CityMenu.CivColor.color = ThisCity.civColor;
-        CityMenu.ShowCity();
-        CityMenu.gameObject.SetActive(true);
-        CityMenu.CityName.text = ThisCity.NameCity;
-        //CityPannel
-        Population.text = "" + ThisCity.population;
-        Nourriture.text = "" + ThisCity.food;
-        Production.text = "" + ThisCity.production;
-        Or.text = "" + ThisCity.gold;
+        CityMenu.ShowCity();          
     }
 
     

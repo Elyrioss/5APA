@@ -190,6 +190,11 @@ public class Waypoint : MonoBehaviour
             {
                 w.trailsList[0].color = Color.black;
                 W.trailsList[3].color = Color.black;
+                if (w.Twin)
+                {
+                    w.Twin.trailsList[0].color = Color.black;
+                    w.Twin.left.trailsList[3].color = Color.black;
+                }
                 return;               
             }
         }
@@ -199,6 +204,11 @@ public class Waypoint : MonoBehaviour
             {
                 w.trailsList[3].color = Color.black;
                 W.trailsList[0].color = Color.black;
+                if (w.Twin)
+                {
+                    w.Twin.trailsList[3].color = Color.black;
+                    w.Twin.right.trailsList[0].color = Color.black;
+                }
                 return;  
             }
         }
@@ -208,6 +218,11 @@ public class Waypoint : MonoBehaviour
             {
                 w.trailsList[2].color = Color.black;
                 W.trailsList[4].color = Color.black;
+                if (w.Twin)
+                {
+                    w.Twin.trailsList[2].color = Color.black;
+                    w.Twin.leftTop.trailsList[2].color = Color.black;
+                }
                 return;  
             }
         }
@@ -217,6 +232,11 @@ public class Waypoint : MonoBehaviour
             {
                 w.trailsList[5].color = Color.black;
                 W.trailsList[1].color = Color.black;
+                if (w.Twin)
+                {
+                    w.Twin.trailsList[5].color = Color.black;
+                    w.Twin.rightTop.trailsList[1].color = Color.black;
+                }
                 return;  
             }
         }
@@ -224,8 +244,14 @@ public class Waypoint : MonoBehaviour
         {
             if (w.leftBot==W)
             {
-                W.trailsList[5].color = Color.black;
                 w.trailsList[1].color = Color.black;
+                W.trailsList[5].color = Color.black;
+                
+                if (w.Twin)
+                {
+                    w.Twin.trailsList[1].color = Color.black;
+                    w.Twin.leftBot.trailsList[5].color = Color.black;
+                }
                 return;  
             }
         }
@@ -235,6 +261,11 @@ public class Waypoint : MonoBehaviour
             {
                 w.trailsList[4].color = Color.black;
                 W.trailsList[2].color = Color.black;
+                if (w.Twin)
+                {
+                    w.Twin.trailsList[4].color = Color.black;
+                    w.Twin.rightBot.trailsList[2].color = Color.black;
+                }
             }
         }
     }

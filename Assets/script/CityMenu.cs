@@ -156,11 +156,17 @@ public class CityMenu : MonoBehaviour
         if (current == null)
             return;
         
+        CityName.text = current.NameCity;
+        Population.text = "" + current.population;
+        Food.text = "" + current.food;
+        Production.text = "" + current.production;
+        Gold.text = "" + current.gold;
+        
         current.HideAvailable();
         GameController.instance.MapControllerScript.Extension = false;
         GameController.instance.MapControllerScript.Move = false;
         PopulationSlide.value = current.StockFood/(30 * current.FoodMultiplier);
-        NumPop.text = Mathf.Ceil((30 * current.FoodMultiplier)/current.food)+"";
+        NumPop.text = Mathf.Ceil(((30 * current.FoodMultiplier)-current.StockFood)/current.food)+"";
         
         if (current.construction == null)
         {           
@@ -184,7 +190,7 @@ public class CityMenu : MonoBehaviour
         NameUnit.text = unit.index;
         life.value = (float)unit.HP / unit.MAXHP;
         lifeNum.text = ((float) unit.HP / unit.MAXHP) * 100 + "%";
-        UnitCivColor.color = Color.red; //CIV COLOR  
+        UnitCivColor.color = GameController.instance.CurrentCiv.CivilisationColor; 
     }
     
     public void HideCity()
@@ -218,6 +224,12 @@ public class CityMenu : MonoBehaviour
     public void UsePower()
     {
         GameController.instance.SelectedUnit.UnitPower();
+    }
+    
+    public void Sleep()
+    {
+        GameController.instance.SelectedUnit.AsPlayed=true;
+        GameController.instance.MapControllerScript.Move=false;
     }
     
     

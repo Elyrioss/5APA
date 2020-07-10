@@ -91,7 +91,7 @@ public class City
     
     public City(Waypoint pos,Color color)
     {
-
+        
         string name = GameController.instance.Names[Random.Range(0, GameController.instance.Names.Count)];
         GameController.instance.Names.Remove(name);
         NameCity = name;
@@ -104,6 +104,7 @@ public class City
         controlArea.Add(position);
         position.UsedTile = true;
         position.Controled = true;
+        construction = null;
         //TWIN
         if (position.AsTwin || position.IsTwin)
         {
@@ -312,7 +313,6 @@ public class City
         StockFood += food;
         if (StockFood > 30 * FoodMultiplier)
         {
-            Debug.Log(StockFood+" for "+30*FoodMultiplier);
             population++;
             StockFood = 0;
             FoodMultiplier = FoodMultiplier * 1.5f;
@@ -364,7 +364,15 @@ public class City
             if (b.index == build.index)
                 return true;
         }
-
+        
+        foreach (Construction b in Extensions)
+        {
+            if (b.index == build.index)
+            {
+                return true;
+            }                
+        }
+        
         return false;
     }
     
@@ -378,6 +386,14 @@ public class City
             }                
         }
 
+        foreach (Construction b in Extensions)
+        {
+            if (b.index == index)
+            {
+                return b;
+            }                
+        }
+        
         return null;
     }
     

@@ -48,6 +48,12 @@ public class Unit : Construction
 
 public class Warrior : Unit
 {
+    
+    public override Construction Copy()
+    {
+        Warrior g = new Warrior();
+        return g;
+    }
     public Warrior()
     {
         index = "Warrior";
@@ -76,6 +82,11 @@ public class Warrior : Unit
 
 public class Archer : Unit
 {
+    public override Construction Copy()
+    {
+        Archer g = new Archer();
+        return g;
+    }
     public Archer()
     {
         index = "Archer";
@@ -103,6 +114,12 @@ public class Archer : Unit
 
 public class Rider : Unit
 {
+    
+    public override Construction Copy()
+    {
+        Rider g = new Rider();
+        return g;
+    }
     public Rider()
     {
         index = "Rider";
@@ -130,6 +147,13 @@ public class Rider : Unit
 
 public class Colon : Unit
 {
+    
+    public override Construction Copy()
+    {
+        Colon g = new Colon();
+        return g;
+    }
+    
     public Colon()
     {
         index = "Colon";

@@ -26,8 +26,7 @@ public class ManageUnit : MonoBehaviour
         if (!Unit.AsPlayed)
         {
             GC.MapControllerScript.ClearPath();
-            GC.MapControllerScript.Visited.Clear();
-            GC.MapControllerScript.Move = true;
+            GC.MapControllerScript.Visited.Clear();           
             GC.MapControllerScript.AStarCreate(Unit.Position,Unit.mouvementPoints);          
         }
     }

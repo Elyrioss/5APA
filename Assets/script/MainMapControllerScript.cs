@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class MainMapControllerScript : MonoBehaviour
 {
+    public GameController GameController;
     public Camera _camera = null;
     Waypoint selectedWaypoint = null;
     public ManageCity cityPref;
@@ -41,7 +43,7 @@ public class MainMapControllerScript : MonoBehaviour
     {
         _camera = GetComponent<Camera>();
         SetToLOD();
-        
+        GameController = global::GameController.instance;
         RightLimit =  Map.LineOrder[Map.LineOrder.Count-1].transform.position.x;
         LeftLimit = -RightLimit;
         secondCam.transform.localPosition = new Vector3(RightLimit,secondCam.transform.localPosition.y,secondCam.transform.localPosition.z);
@@ -63,8 +65,11 @@ public class MainMapControllerScript : MonoBehaviour
             _camera.transform.position = thirdCam.transform.position;
         }
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButton(0))
         {
+            if(IsPointerOverUI())
+                return;
+            
             Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit)) // Ici on va gérer toutes les possibilités de click d'éléments
             {
@@ -76,9 +81,9 @@ public class MainMapControllerScript : MonoBehaviour
                     if (!hit.transform.parent.gameObject.GetComponent<Waypoint>())
                         return;
 
-                    Construction extention = GameController.instance.ExtentionTemp;
+                    Construction extention = GameController.ExtentionTemp;
                     selectedWaypoint = hit.transform.parent.gameObject.GetComponent<Waypoint>();
-                    City current = GameController.instance.SelectedCity;
+                    City current = GameController.SelectedCity;
                     
                     if ((current.controlArea.Contains(selectedWaypoint) || current.controlAreaClone.Contains(selectedWaypoint))&& !selectedWaypoint.UsedTile && extention.CheckForConditions(selectedWaypoint))
                     {
@@ -101,10 +106,16 @@ public class MainMapControllerScript : MonoBehaviour
                         
                         extention.prefab = GameObject.Instantiate(Resources.Load("Prefabs/"+extention.index+"Base") as GameObject, selectedWaypoint.transform);
                         extention.prefab.transform.localPosition = new Vector3(0, selectedWaypoint.elevation, 0);
+                        if (selectedWaypoint.Twin)
+                        {
+                            extention.Twin = GameObject.Instantiate(Resources.Load("Prefabs/"+extention.index+"Base") as GameObject, selectedWaypoint.Twin.transform);
+                            extention.Twin.transform.localPosition = new Vector3(0, selectedWaypoint.elevation, 0);
+                        }
                         
                         Menue.SetCurrentBuild("" + Mathf.Ceil(current.currentCost / current.production),Resources.Load<Sprite>(extention.index),extention.index);
                         current.HideAvailable();
-                        extention.VisualSteps();
+                        extention.VisualSteps();                 
+                        
                         Extension = false;
                         Menue.ShowCity();
                         Menue.ShowBat();
@@ -129,15 +140,15 @@ public class MainMapControllerScript : MonoBehaviour
             Menue.HideBat();            
             Menue.HideCity();
             Extension = false;
-            if(GameController.instance.SelectedCity!=null)
-                GameController.instance.SelectedCity.HideAvailable();
+            if(GameController.SelectedCity!=null)
+                GameController.SelectedCity.HideAvailable();
 
             ClearPath();
             Move = false;
         }
 
         if (Move)
-        {
+        {            
             Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit))
             {
@@ -189,11 +200,20 @@ public class MainMapControllerScript : MonoBehaviour
                     AStarCreate(GameController.instance.SelectedUnit.Position,selectedWaypoint);*/
                 }
             }
+            
         }
         else
         {
             ClearPath();
             Visited.Clear();
+        }
+
+        if (GameController.SelectedUnit != null)
+        {
+            if (!GameController.SelectedUnit.AsPlayed)
+            {
+                Move = true;
+            }
         }
     }
 
@@ -339,10 +359,7 @@ public class MainMapControllerScript : MonoBehaviour
         TmpPath.Add(W.NearestToStart);
         W.EnableTrail(W.NearestToStart);
         CreatePath(TmpPath, W.NearestToStart);
-        if (W.NearestToStart.Twin)
-        {
-            CreatePath(TmpPath, W.NearestToStart.Twin);
-        }
+        
     }
 
     
@@ -360,8 +377,7 @@ public class MainMapControllerScript : MonoBehaviour
                 }
             }
             
-            Unit unit = GameController.instance.SelectedUnit;
-            Debug.Log("movin");
+            Unit unit = GameController.SelectedUnit;
             unit.Position.Occupied = false;
             NewPos.Occupied = true;
             unit.Position = NewPos;
@@ -481,11 +497,11 @@ public class MainMapControllerScript : MonoBehaviour
             return;
         ManageCity CityObj = Instantiate(cityPref, position.transform);
         CityObj.transform.localPosition = new Vector3(0,position.elevation, 0);
-        City newCity = GameController.instance.CurrentCiv.CreateCity(position);
+        City newCity = GameController.CurrentCiv.CreateCity(position);
         CityObj.Colors.color = newCity.civColor; 
         CityObj.ThisCity = newCity;
         CityObj.NameCity.text = newCity.NameCity;
-        CityObj.owner = GameController.instance.CurrentCiv;
+        CityObj.owner = GameController.CurrentCiv;
         //Add sound elements
                     
         newCity.buildSound = this.buildSound;
@@ -514,8 +530,17 @@ public class MainMapControllerScript : MonoBehaviour
             }
         }
 
-        GameController.instance.SelectedCity = newCity;
+        GameController.SelectedCity = newCity;
 
+    }
+
+    private bool IsPointerOverUI()
+    {
+        PointerEventData eventDataCurrent = new PointerEventData(EventSystem.current);
+        eventDataCurrent.position = new Vector2(Input.mousePosition.x,Input.mousePosition.y);
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventDataCurrent,results);
+        return results.Count > 0;
     }
     
 }

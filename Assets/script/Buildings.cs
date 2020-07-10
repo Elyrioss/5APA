@@ -15,7 +15,10 @@ public class Construction
     public float Tempcost;
     public bool Redoable;
     public BuildingType BuildType;
-    
+
+    public virtual Construction Copy()
+    {
+        return null;} 
     public enum BuildingType
     {
         Ressource,
@@ -105,7 +108,13 @@ public class Buildings : Construction
 
 public class Grenier : Construction
 {
-  
+    public override Construction Copy()
+    {      
+        Grenier g = new Grenier();
+        g.Tempcost = Tempcost;      
+        return g;
+    }
+
     public Grenier()
     {
         index = "Grenier";
@@ -124,6 +133,12 @@ public class Grenier : Construction
 
 public class Usine : Construction
 {
+    public override Construction Copy()
+    {
+        Usine g = new Usine();
+        g.Tempcost = Tempcost;      
+        return g;
+    }
 
     public Usine()
     {
@@ -145,6 +160,13 @@ public class Marcher : Construction
 {
 
     
+    public override Construction Copy()
+    {
+        Marcher g = new Marcher();
+        g.Tempcost = Tempcost;      
+        return g;
+    }
+    
     public Marcher()
     {
         index = "Marcher";
@@ -163,7 +185,15 @@ public class Marcher : Construction
 
 public class Extension : Buildings
 {
-
+    
+    public override Construction Copy()
+    {
+        Extension g = new Extension();
+        g.Tempcost = Tempcost;
+        g.Position = Position;
+        
+        return g;
+    }
     public Extension()
     {
         index = "Extension";
@@ -198,6 +228,15 @@ public class Port : Buildings
         cost=150;    
         Tempcost = -1;
     }
+    
+    public override Construction Copy()
+    {
+        Port g = new Port();
+        g.Tempcost = Tempcost;
+        g.Position = Position;
+        
+        return g;
+    }
 
     public override bool CheckForConditions(Waypoint w)
     {
@@ -214,7 +253,6 @@ public class Port : Buildings
 
     public override void VisualSteps()
     {
-        Debug.Log("port");
         if (Position.leftTop.UsedTile)
         {
             prefab.transform.Rotate(0,60,0);
@@ -250,7 +288,6 @@ public class Port : Buildings
 
         if (prefab.GetComponent<MatTochange>())
         {
-            Debug.Log("change");
             MatTochange prefChange = prefab.GetComponent<MatTochange>();
             Material[] array;
             
