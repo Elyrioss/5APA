@@ -13,6 +13,7 @@ public class ManageUnit : MonoBehaviour
     private Waypoint EndPos;
     public Image Colors;
     public Civilisation Owner;
+    public Slider Hp;
     
     public void SelectUnit()
     {
@@ -30,7 +31,15 @@ public class ManageUnit : MonoBehaviour
             GC.MapControllerScript.AStarCreate(Unit.Position,Unit.mouvementPoints);          
         }
     }
-    
+
+    private void Update()
+    {
+        if (Unit != null)
+        {
+            Hp.value = (float)Unit.HP / Unit.MAXHP;
+        }
+    }
+
     /*
     // Update is called once per frame
     void Update()

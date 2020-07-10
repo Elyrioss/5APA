@@ -223,7 +223,6 @@ public class GameController : MonoBehaviour
         }
         else
         {
-            Debug.Log((CurrentCiv.Units[0].Position.transform.position.x) +" "+(MapControllerScript.RightLimit-40));
             if (CurrentCiv.Units[0].Position.transform.position.x > MapControllerScript.RightLimit-40)
             {
                 Camera.targetFollow = CurrentCiv.Units[0].Twin.transform;

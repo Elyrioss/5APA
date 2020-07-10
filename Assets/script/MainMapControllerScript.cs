@@ -296,7 +296,7 @@ public class MainMapControllerScript : MonoBehaviour
             
             foreach (Waypoint w in current.Neighbors.OrderBy(x => x.GetComponent<Waypoint>().mouvCost))
             {
-                if (w.visitedDijstra || w.HeightType == HeightType.River || w.HeightType == HeightType.DeepWater || w.HeightType == HeightType.ShallowWater)
+                if (w.visitedDijstra || w.HeightType == HeightType.River || w.HeightType == HeightType.DeepWater || w.HeightType == HeightType.ShallowWater || w.Occupied)
                 {
                     continue;
                 }
@@ -381,7 +381,6 @@ public class MainMapControllerScript : MonoBehaviour
     
     private void CreatePath(List<Waypoint> TmpPath, Waypoint W)
     {
-        Debug.Log(W);
         if (W.NearestToStart == null)
         {
             Debug.Log("STAPH");
