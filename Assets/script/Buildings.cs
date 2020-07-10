@@ -49,8 +49,7 @@ public class Buildings : Construction
     {
         GameObject.DestroyImmediate(prefab);
 
-        Construction b = c.Contains(index);
-        c.Buildings.Remove(b);
+        Construction b = c.construction;
         c.Extensions.Add(b);
         prefab = GameObject.Instantiate(Resources.Load("Prefabs/" + index) as GameObject, Position.transform);
         prefab.transform.localPosition = new Vector3(0, Position.elevation, 0);

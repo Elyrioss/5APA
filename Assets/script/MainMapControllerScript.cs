@@ -48,7 +48,7 @@ public class MainMapControllerScript : MonoBehaviour
         LeftLimit = -RightLimit;
         secondCam.transform.localPosition = new Vector3(RightLimit,secondCam.transform.localPosition.y,secondCam.transform.localPosition.z);
         thirdCam.transform.localPosition = new Vector3(LeftLimit,secondCam.transform.localPosition.y,secondCam.transform.localPosition.z);
-
+        GameController.instance.StartPos();
     }
 
     // Update is called once per frame
@@ -91,7 +91,6 @@ public class MainMapControllerScript : MonoBehaviour
                         extention.Position = selectedWaypoint;
                         current.StartConstruction(extention);
                         selectedWaypoint.UsedTile = true;
-                        current.Buildings.Add(extention);
                         if (selectedWaypoint.LOD)
                         {
                             selectedWaypoint.LOD.SetActive(false);
@@ -171,9 +170,7 @@ public class MainMapControllerScript : MonoBehaviour
                 
                 Target = selectedWaypoint;
                 if (Visited.Contains(selectedWaypoint))
-                {         
-                    //ClearPath();
-                    //AStarCreate(GameController.instance.SelectedUnit.Position,GameController.instance.SelectedUnit.mouvementPoints);                   
+                {                         
                     selectedWaypoint.SetIndexTrail(1);
                     CreatePath(Path, selectedWaypoint);
                     Path.Reverse();
@@ -185,7 +182,7 @@ public class MainMapControllerScript : MonoBehaviour
                     if (Visited.Contains(selectedWaypoint.Twin))
                     {
                         selectedWaypoint.SetIndexTrail(1);
-                        CreatePath(Path, selectedWaypoint);
+                        CreatePath(Path, selectedWaypoint.Twin);
                         Path.Reverse();
                         Path.Add(selectedWaypoint);
                         selectedWaypoint.Twin.SetIndexTrail(1);
@@ -352,11 +349,14 @@ public class MainMapControllerScript : MonoBehaviour
     
     private void CreatePath(List<Waypoint> TmpPath, Waypoint W)
     {
+        Debug.Log(W);
         if (W.NearestToStart == null)
         {
+            Debug.Log("STAPH");
             return;
         }
         TmpPath.Add(W.NearestToStart);
+        
         W.EnableTrail(W.NearestToStart);
         CreatePath(TmpPath, W.NearestToStart);
         

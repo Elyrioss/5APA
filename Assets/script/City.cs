@@ -27,6 +27,7 @@ public class City
     public Civilisation civ;
     public Construction construction = null;
     public List<Construction> Buildings=new List<Construction>();
+    public List<Construction> Unfinished=new List<Construction>();
     public List<Construction> Extensions=new List<Construction>();
 
     public float currentCost=0;
@@ -342,6 +343,11 @@ public class City
                 //La construction est finis
                 
                 construction.ConstructionFinished(this);
+                Construction c= ContainsUnfinished(construction.index);
+                if (c != null)
+                {
+                    Unfinished.Remove(c);
+                }
                 construction = null;
             }
         }
@@ -351,7 +357,6 @@ public class City
 
     public void StartConstruction(Construction c)
     {
-
         currentCost = c.cost;
         construction = c;
 
@@ -376,17 +381,10 @@ public class City
         return false;
     }
     
-    public Construction Contains(string index)
+    
+    public Construction ContainsUnfinished(string index)
     {
-        foreach (Construction b in Buildings)
-        {
-            if (b.index == index)
-            {
-                return b;
-            }                
-        }
-
-        foreach (Construction b in Extensions)
+        foreach (Construction b in Unfinished)
         {
             if (b.index == index)
             {

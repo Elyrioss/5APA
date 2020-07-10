@@ -77,10 +77,22 @@ public class GameController : MonoBehaviour
         MapControllerScript = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<MainMapControllerScript>();
         TurnColor.color = CurrentCiv.CivilisationColor;
         Camera = UnityEngine.Camera.main.GetComponent<RTS_Camera>();
-        Camera.targetFollow = PlayerCiv.Units[0].prefab.transform;
-        StartCoroutine(ResetCam());
+        Debug.Log((PlayerCiv.Units[0].Position.transform.position.x) +" "+(MapControllerScript.RightLimit-40));
+        
     }
 
+    public void StartPos()
+    {
+        if (PlayerCiv.Units[0].Position.transform.position.x > MapControllerScript.RightLimit-40)
+        {
+            Camera.targetFollow = PlayerCiv.Units[0].Twin.transform;
+        }
+        else
+        {
+            Camera.targetFollow = PlayerCiv.Units[0].prefab.transform;
+        }
+        StartCoroutine(ResetCam());
+    }
     public IEnumerator ResetCam(){
         yield return new WaitForSeconds(4f);
         Camera.targetFollow = null;
@@ -200,6 +212,7 @@ public class GameController : MonoBehaviour
         }
         else
         {
+            Debug.Log((CurrentCiv.Units[0].Position.transform.position.x) +" "+(MapControllerScript.RightLimit-40));
             if (CurrentCiv.Units[0].Position.transform.position.x > MapControllerScript.RightLimit-40)
             {
                 Camera.targetFollow = CurrentCiv.Units[0].Twin.transform;

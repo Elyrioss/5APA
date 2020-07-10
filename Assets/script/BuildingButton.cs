@@ -20,13 +20,6 @@ public class BuildingButton : MonoBehaviour
     {
         gameObject.SetActive(true);
         
-        
-        if (build.index == "Port")
-        {
-            Debug.Log(c.NameCity);
-            Debug.Log((c.Contains(build) && !build.Redoable));
-        }
-        
         bool checker = false;
         foreach (Waypoint w in c.controlArea)
         {
@@ -49,13 +42,16 @@ public class BuildingButton : MonoBehaviour
             }
                 
         }
-        if (build.Tempcost > 0)
+
+        Construction C = c.ContainsUnfinished(build.index);
+        if (C!=null)
         {
             Count.color = Notfinished;
-            Count.text= "" + Mathf.Ceil(build.Tempcost / c.production);
+            Count.text= "" + Mathf.Ceil(C.Tempcost / c.production);
         }
         else
         {
+            Count.color = Color.black;
             Count.text= "" + Mathf.Ceil(build.cost / c.production);
         }
         
@@ -88,10 +84,10 @@ public class BuildingButton : MonoBehaviour
         if (c.construction != null)
         {
             c.construction.Tempcost = c.currentCost;
-            
+            c.Unfinished.Add(c.construction);
         }
         
-        Construction b = c.Contains(build.index);
+        Construction b = c.ContainsUnfinished(build.index);
         if (b != null)
         {
             b.cost = b.Tempcost;
@@ -101,7 +97,8 @@ public class BuildingButton : MonoBehaviour
         {
             GameController.instance.SelectedCity.StartConstruction(build.Copy());
         }
-       
+        
+        
         Menue.SetCurrentBuild("" + Mathf.Ceil(c.currentCost / c.production),Resources.Load<Sprite>(c.construction.index),c.construction.index);
         foreach (BuildingButton B in Menue.Buttons)
         {
@@ -114,11 +111,16 @@ public class BuildingButton : MonoBehaviour
         
         City c = GameController.instance.SelectedCity;
         
-        Construction b = c.Contains(build.index);
-        if (b != null && b.cost>0)
+        if (c.construction != null)
         {
-            b.cost = b.Tempcost;
-            
+            c.construction.Tempcost = c.currentCost;
+            c.Unfinished.Add(c.construction);
+        }
+        
+        Construction b = c.ContainsUnfinished(build.index);
+        if (b != null)
+        {
+            b.cost = b.Tempcost;            
             GameController.instance.SelectedCity.StartConstruction(b);
             Menue.SetCurrentBuild("" + Mathf.Ceil(c.currentCost / c.production),Resources.Load<Sprite>(c.construction.index),c.construction.index);
         }
@@ -131,11 +133,8 @@ public class BuildingButton : MonoBehaviour
             GameController.instance.ExtentionTemp = build.Copy();
             
         }
-        if (c.construction != null)
-        {
-            c.construction.Tempcost = c.currentCost;            
-        }
-
+             
+        
         foreach (BuildingButton B in Menue.Buttons)
         {
             B.UpdateNumbers(c);
