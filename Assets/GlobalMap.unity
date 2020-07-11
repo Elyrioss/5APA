@@ -5390,6 +5390,7 @@ MonoBehaviour:
     clickSound: {fileID: 0}
     buildSound: {fileID: 0}
     soldierSound: {fileID: 0}
+    ManageRef: {fileID: 0}
     population: 0
     position: {fileID: 0}
     civColor: {r: 0, g: 0, b: 0, a: 0}
@@ -5421,6 +5422,8 @@ MonoBehaviour:
     currentCost: 0
     FoodMultiplier: 0
     CanExtend: 0
+    HP: 0
+    MAXHP: 0
     ThisCityAction: 0
   SelectedUnit:
     cost: 0
@@ -5474,6 +5477,12 @@ MonoBehaviour:
   Money: {fileID: 1433355809}
   Winner: {fileID: 1735154204}
   WinScreen: {fileID: 513494270}
+  weaponMatList:
+  - {fileID: 2100000, guid: a5750a1f444de6a45813db3457760669, type: 2}
+  - {fileID: 2100000, guid: b0c98b956c9ad2b448b47d0df362ee9a, type: 2}
+  - {fileID: 2100000, guid: 4aad2798ea865934f922f06aa5c279e5, type: 2}
+  - {fileID: 2100000, guid: 5a3e439a800125a4488bac2eda5b1e92, type: 2}
+  waypointWeaponList: []
 --- !u!1 &1003722705
 GameObject:
   m_ObjectHideFlags: 0
