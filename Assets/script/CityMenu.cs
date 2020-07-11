@@ -127,7 +127,7 @@ public class CityMenu : MonoBehaviour
         {
             b.UpdateNumbers(current);
         }
-        if (current.construction == null)
+        if (current.construction.empty)
         {           
             SetCurrentBuild("0",DefaultConstruction,"None");
             return;
@@ -161,6 +161,8 @@ public class CityMenu : MonoBehaviour
         Food.text = "" + current.food;
         Production.text = "" + current.production;
         Gold.text = "" + current.gold;
+        Science.text = "" + current.science;
+        
         
         current.HideAvailable();
         GameController.instance.MapControllerScript.Extension = false;
@@ -168,7 +170,7 @@ public class CityMenu : MonoBehaviour
         PopulationSlide.value = current.StockFood/(30 * current.FoodMultiplier);
         NumPop.text = Mathf.Ceil(((30 * current.FoodMultiplier)-current.StockFood)/current.food)+"";
         
-        if (current.construction == null)
+        if (current.construction.empty)
         {           
             SetCurrentBuild("0",DefaultConstruction,"None");
         }

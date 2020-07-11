@@ -19,11 +19,12 @@ public class City
     public float food = 0;
     public float production = 0;
     public float gold = 0;
-
+    public float science = 0;
+    
     public float StockFood=0;
 
     public Civilisation civ;
-    public Construction construction = null;
+    public Construction construction;
     public List<Construction> Buildings=new List<Construction>();
     public List<Construction> Unfinished=new List<Construction>();
     public List<Construction> Extensions=new List<Construction>();
@@ -35,6 +36,7 @@ public class City
     public int HP;
     public int MAXHP;
 
+    public float foodConst;
     //Construction Var
     public bool ThisCityAction; // Empeche le joueur d'effectuer plus d'une action sur la ville par tour.
        
@@ -52,6 +54,7 @@ public class City
         controlArea.Add(position);
         position.UsedTile = true;
         position.Controled = true;
+        foodConst = 1.5f;
         //TWIN
         if (position.AsTwin || position.IsTwin)
         {
@@ -67,8 +70,8 @@ public class City
         MAXHP = 1;
 
         food = city.food;
-        production += city.production;
-        gold += city.gold;
+        production = city.production;
+        gold = city.gold;
         
         foreach (Waypoint w in position.Neighbors)
         {
@@ -109,7 +112,8 @@ public class City
         controlArea.Add(position);
         position.UsedTile = true;
         position.Controled = true;
-        construction = null;
+        construction = new Construction();
+        foodConst = 1.5f;
         //TWIN
         if (position.AsTwin || position.IsTwin)
         {
@@ -127,6 +131,7 @@ public class City
         food += position.Food;
         production += position.Production;
         gold += position.Gold;
+        science += position.Science;
         
         foreach (Waypoint w in position.Neighbors)
         {
@@ -144,6 +149,7 @@ public class City
             food += w.Food;
             production += w.Production;
             gold += w.Gold;
+            science += w.Science;
         }
         ClearFrontiers();
         ClearFrontiersClone();
@@ -350,14 +356,12 @@ public class City
         {
             population++;
             StockFood = 0;
-            FoodMultiplier = FoodMultiplier * 1.5f;
+            FoodMultiplier = FoodMultiplier * foodConst;
             if (population % 2 == 0)
             {
                 CanExtend ++;
             }
-        }
-
-        
+        }        
         civ.Gold += gold + population;
         //On regarde la file de construction de la ville.
         ConstructionProcess();
@@ -369,7 +373,7 @@ public class City
     public void ConstructionProcess()
     {
 
-        if (construction!=null)
+        if (!construction.empty)
         {
             currentCost = currentCost - production;
             if (currentCost <= 0)
@@ -382,7 +386,7 @@ public class City
                 {
                     Unfinished.Remove(c);
                 }
-                construction = null;
+                construction = new Construction();
             }
         }
         
@@ -485,13 +489,13 @@ public class SavedCity
     public float food = 0;
     public float production = 0;
     public float gold = 0;
-    
+    public float science = 0;
     public SavedCity(City c)
     {
         food = c.food;
         production = c.production;
         gold = c.gold;
-
+        science = c.science;
         X = c.position.X;
         Y = c.position.Y;
         population = c.population;

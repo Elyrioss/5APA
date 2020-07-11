@@ -144,7 +144,7 @@ MonoBehaviour:
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_subTextObjects:
   - {fileID: 0}
   - {fileID: 0}
@@ -582,14 +582,26 @@ MonoBehaviour:
     food: 0
     production: 0
     gold: 0
+    science: 0
     StockFood: 0
     civ:
       CivilisationColor: {r: 0, g: 0, b: 0, a: 0}
       MAT: {fileID: 0}
       Gold: 0
+      Science: 0
       Units: []
       Cities: []
       BoatDiscovered: 0
+      ScienceScreen: {fileID: 0}
+      AuthorizedBuildings: []
+      AuthorizedUnits: []
+      bonusDamage: 0
+      bonusHp: 0
+      bonusFood: 0
+      bonusProd: 0
+      bonusGold: 0
+      bonusScience: 0
+      bonusMouv: 0
     construction:
       cost: 0
       index: 
@@ -599,6 +611,7 @@ MonoBehaviour:
       Tempcost: 0
       Redoable: 0
       BuildType: 0
+      empty: 1
     Buildings: []
     Unfinished: []
     Extensions: []
@@ -607,6 +620,7 @@ MonoBehaviour:
     CanExtend: 0
     HP: 0
     MAXHP: 0
+    foodConst: 0
     ThisCityAction: 0
   CloneTwin: {fileID: 0}
   Mapcontroller: {fileID: 0}
@@ -620,9 +634,20 @@ MonoBehaviour:
     CivilisationColor: {r: 0, g: 0, b: 0, a: 0}
     MAT: {fileID: 0}
     Gold: 0
+    Science: 0
     Units: []
     Cities: []
     BoatDiscovered: 0
+    ScienceScreen: {fileID: 0}
+    AuthorizedBuildings: []
+    AuthorizedUnits: []
+    bonusDamage: 0
+    bonusHp: 0
+    bonusFood: 0
+    bonusProd: 0
+    bonusGold: 0
+    bonusScience: 0
+    bonusMouv: 0
   source: {fileID: 1449005169}
 --- !u!82 &1449005169
 AudioSource:
@@ -1004,7 +1029,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  - {fileID: 1352524949957816336, guid: 7c722076dcf4a8c468b26b756751d564, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1053,8 +1078,9 @@ MonoBehaviour:
       m_Calls: []
   m_text: Ratata
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 7c722076dcf4a8c468b26b756751d564, type: 2}
+  m_sharedMaterial: {fileID: 1352524949957816336, guid: 7c722076dcf4a8c468b26b756751d564,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1079,7 +1105,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 7.75
+  m_fontSize: 4.6
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1

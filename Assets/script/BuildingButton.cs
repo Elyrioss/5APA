@@ -34,7 +34,7 @@ public class BuildingButton : MonoBehaviour
         {            
             gameObject.SetActive(false);
         }       
-        else if (c.construction != null)
+        else if (!c.construction.empty)
         {
             if (c.construction.index == build.index)
             {
@@ -62,6 +62,11 @@ public class BuildingButton : MonoBehaviour
                 gameObject.SetActive(false);
             }    
         }
+
+        if (!c.civ.AuthorizedBuildings.Contains(build.index) && !c.civ.AuthorizedUnits.Contains(build.index))
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     public void SetupBuilding()
@@ -81,7 +86,7 @@ public class BuildingButton : MonoBehaviour
     {
         City c = GameController.instance.SelectedCity;
                      
-        if (c.construction != null)
+        if (!c.construction.empty)
         {
             c.construction.Tempcost = c.currentCost;
             c.Unfinished.Add(c.construction);
@@ -111,7 +116,7 @@ public class BuildingButton : MonoBehaviour
         
         City c = GameController.instance.SelectedCity;
         
-        if (c.construction != null)
+        if (!c.construction.empty)
         {
             c.construction.Tempcost = c.currentCost;
             c.Unfinished.Add(c.construction);

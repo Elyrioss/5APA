@@ -15,7 +15,7 @@ public class Construction
     public float Tempcost;
     public bool Redoable;
     public BuildingType BuildType;
-
+    public bool empty;
     public virtual Construction Copy()
     {
         return null;} 
@@ -25,7 +25,13 @@ public class Construction
         Wonder,
         Extension,
         Unit
-    } 
+    }
+
+    public Construction()
+    {
+        empty = true;
+        
+    }
     
     public virtual void ConstructionFinished(City c){}
 
@@ -119,6 +125,7 @@ public class Grenier : Construction
         BuildType = BuildingType.Ressource;
         cost=50;
         Tempcost = -1;
+        empty = false;
     }
     
     public override void ConstructionFinished(City c)
@@ -143,6 +150,7 @@ public class Usine : Construction
         BuildType = BuildingType.Ressource;
         cost=50;
         Tempcost = -1;
+        empty = false;
     }
     
     public override void ConstructionFinished(City c)
@@ -154,8 +162,7 @@ public class Usine : Construction
 
 public class Marcher : Construction
 {
-
-    
+   
     public override Construction Copy()
     {
         Marcher g = new Marcher();
@@ -169,6 +176,8 @@ public class Marcher : Construction
         BuildType = BuildingType.Ressource;
         cost=50;
         Tempcost = -1;
+        
+        empty = false;
     }
     
     public override void ConstructionFinished(City c)
@@ -196,6 +205,7 @@ public class Extension : Buildings
         cost = 100;
         Tempcost = -1;
         Redoable = true;
+        empty = false;
     }
 
     public override void ConstructionFinished(City c)
@@ -227,6 +237,7 @@ public class Port : Buildings
         BuildType = BuildingType.Extension;
         cost=150;    
         Tempcost = -1;
+        empty = false;
     }
     
     public override Construction Copy()
