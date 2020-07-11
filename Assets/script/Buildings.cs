@@ -218,44 +218,7 @@ public class Extension : Buildings
 
     public override void VisualSteps()
     {
-        if (prefab.GetComponent<MatTochange>())
-        {
-            MatTochange prefChange = prefab.GetComponent<MatTochange>();
-            Material[] array;
-
-            foreach (MeshRenderer meshRenderer in prefChange.MatsTochange)
-            {
-                array = meshRenderer.materials;
-                for (int i = 0; i < array.Length; i++)
-                {
-                    if (array[i].name != "woodDark" && array[i].name != "wood")
-                    {
-                        array[i]=GameController.instance.CurrentCiv.MAT;
-                    }
-                }
-
-                meshRenderer.materials = array;
-            }
-            
-            if (Twin)
-            {
-                prefChange = Twin.GetComponent<MatTochange>();
-                            
-                foreach (MeshRenderer meshRenderer in prefChange.MatsTochange)
-                {
-                    array = meshRenderer.materials;
-                    for (int i = 0; i < array.Length; i++)
-                    {
-                        if (array[i].name != "woodDark" && array[i].name != "wood")
-                        {
-                            array[i]=GameController.instance.CurrentCiv.MAT;
-                        }
-                    }
-
-                    meshRenderer.materials = array;
-                }
-            }
-        }
+        
     }
 }
 
@@ -288,6 +251,7 @@ public class Port : Buildings
     public override void ConstructionFinished(City c)
     {
         c.gold += 10;
+        c.civ.BoatDiscovered = true;
         ConstructionFinishedInstantiate(c);
     }
 
@@ -325,34 +289,10 @@ public class Port : Buildings
                 Twin.transform.Rotate(0,300,0);
 
         }
-
-        if (prefab.GetComponent<MatTochange>())
+        GameController.instance.ChangeMat(prefab,GameController.instance.CurrentCiv.MAT);
+        if (Twin)
         {
-            MatTochange prefChange = prefab.GetComponent<MatTochange>();
-            Material[] array;
-            
-            array = prefChange.MatsTochange[0].materials;
-            array[1]=GameController.instance.CurrentCiv.MAT;
-            prefChange.MatsTochange[0].materials = array;
-            
-            array = prefChange.MatsTochange[1].materials;
-            array[0]=GameController.instance.CurrentCiv.MAT;
-            array[2]=GameController.instance.CurrentCiv.MAT;
-            prefChange.MatsTochange[1].materials = array;
-            
-            if (Twin)
-            {
-                prefChange = Twin.GetComponent<MatTochange>();
-                            
-                array = prefChange.MatsTochange[0].materials;
-                array[1]=GameController.instance.CurrentCiv.MAT;
-                prefChange.MatsTochange[0].materials = array;
-            
-                array = prefChange.MatsTochange[1].materials;
-                array[0]=GameController.instance.CurrentCiv.MAT;
-                array[2]=GameController.instance.CurrentCiv.MAT;
-                prefChange.MatsTochange[1].materials = array;
-            }
+            GameController.instance.ChangeMat(Twin,GameController.instance.CurrentCiv.MAT);
         }
     }
 }

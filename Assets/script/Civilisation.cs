@@ -16,10 +16,13 @@ public class Civilisation
 
     public List<City> Cities=new List<City>();
 
+    public bool BoatDiscovered;
+    
     public Civilisation(Color civilisationColor, Material mat)
     {
         CivilisationColor = civilisationColor;
         MAT = mat;
+        BoatDiscovered = false;
     }
 
     public City CreateCity(Waypoint position)

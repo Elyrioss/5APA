@@ -14,6 +14,8 @@ public class ManageUnit : MonoBehaviour
     public Image Colors;
     public Civilisation Owner;
     public Slider Hp;
+    public GameObject UnitModel;
+    public GameObject BoatModel;
     
     public void SelectUnit()
     {

@@ -17,5 +17,15 @@ public class ManageCityClone : MonoBehaviour
         ManageRef.SelectCity();
     }
 
+    public TextMeshProUGUI Population;
+    public Slider HP;
 
+    private void Update()
+    {
+        if (ManageRef)
+        {
+            Population.text = ManageRef.Population.text;
+            HP.value = ManageRef.HP.value;
+        }
+    }
 }

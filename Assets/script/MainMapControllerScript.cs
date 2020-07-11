@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -286,6 +287,8 @@ public class MainMapControllerScript : MonoBehaviour
         {
             return;
         }
+
+        bool boat = GameController.instance.CurrentCiv.BoatDiscovered;
         
         Start.MinCostToStart = 0;
         PQueue.Add(Start);
@@ -296,7 +299,7 @@ public class MainMapControllerScript : MonoBehaviour
             
             foreach (Waypoint w in current.Neighbors.OrderBy(x => x.GetComponent<Waypoint>().mouvCost))
             {
-                if (w.visitedDijstra || w.HeightType == HeightType.River || w.HeightType == HeightType.DeepWater || w.HeightType == HeightType.ShallowWater || w.Occupied)
+                if (((w.HeightType == HeightType.River || w.HeightType == HeightType.DeepWater || w.HeightType == HeightType.ShallowWater) && !boat) || w.Occupied || w.visitedDijstra)
                 {
                     continue;
                 }
@@ -325,59 +328,6 @@ public class MainMapControllerScript : MonoBehaviour
         ClearRange(Visited);
     }
     
-    public void AStarCreate(Waypoint Start,Waypoint End)
-    {
-        if (Start == null || End == null)
-        {
-            return;
-        }
-        Start.MinCostToStart = 0;
-        PQueue.Add(Start);
-        while (PQueue.Any())
-        {
-            var current = PQueue.First();
-            PQueue.Remove(current);
-            
-            if (current == End)
-            {
-                break;
-            }
-            
-            current.Neighbors.OrderBy(x => x.GetComponent<Waypoint>().mouvCost);
-            foreach (Waypoint w in current.Neighbors)
-            {
-                if(w==null)
-                    continue;
-                
-                if (w.visitedDijstra)
-                {
-                    continue;
-                }
-                var nextCost = current.MinCostToStart + w.mouvCost;
-                if (nextCost < w.MinCostToStart)
-                {
-                    w.MinCostToStart = nextCost;
-                    w.NearestToStart = current;
-                    if (!PQueue.Contains(w))
-                    {
-                        PQueue.Add(w);
-                    }
-                }
-                else
-                {
-                    Debug.Log(current.name+" "+nextCost+" "+w.MinCostToStart);
-                }
-            }
-            current.visitedDijstra = true;
-            PQueue = PQueue.OrderBy(x => x.MinCostToStart).ToList();
-        }
-        
-        End.SetIndexTrail(1);
-        CreatePath(Path, End);
-        Path.Reverse();
-        Path.Add(End);     
-
-    }
     
     private void CreatePath(List<Waypoint> TmpPath, Waypoint W)
     {
@@ -413,11 +363,38 @@ public class MainMapControllerScript : MonoBehaviour
             unit.Position = NewPos;
             unit.prefab.transform.position = new Vector3(NewPos.transform.position.x,
                 NewPos.transform.position.y + NewPos.elevation, NewPos.transform.position.z);
+            unit.prefab.transform.SetParent(NewPos.transform);
+            
+            ManageUnit pref = unit.prefab.GetComponent<ManageUnit>();
+            
+            
+            if (NewPos.HeightType == HeightType.River || NewPos.HeightType == HeightType.DeepWater || NewPos.HeightType == HeightType.ShallowWater)
+            {
+                pref.BoatModel.SetActive(true);
+                pref.UnitModel.SetActive(false);
+            }
+            else
+            {
+                pref.UnitModel.SetActive(true);
+                pref.BoatModel.SetActive(false);
+            }
             if (NewPos.Twin)
             {
                 unit.Twin.transform.position = new Vector3(NewPos.Twin.transform.position.x,
                     NewPos.Twin.transform.position.y + NewPos.Twin.elevation, NewPos.Twin.transform.position.z);
                 unit.Twin.SetActive(true);
+                unit.Twin.transform.SetParent(NewPos.Twin.transform);
+                pref = unit.Twin.GetComponent<ManageUnit>();
+                if (NewPos.HeightType == HeightType.River || NewPos.HeightType == HeightType.DeepWater || NewPos.HeightType == HeightType.ShallowWater)
+                {
+                    pref.BoatModel.SetActive(true);
+                    pref.UnitModel.SetActive(false);
+                }
+                else
+                {
+                    pref.UnitModel.SetActive(true);
+                    pref.BoatModel.SetActive(false);
+                }
             }
             else
             {
@@ -638,24 +615,7 @@ public class MainMapControllerScript : MonoBehaviour
         newCity.soldierSound = this.soldierSound;
         newCity.clickSound = this.clickSound;
         
-        MeshRenderer[] Change = CityObj.GetComponentsInChildren<MeshRenderer>();
-        Material[] array;
-
-        foreach (MeshRenderer meshRenderer in Change)
-        {
-            array = meshRenderer.materials;
-            for (int i = 0; i < array.Length; i++)
-            {
-                Debug.Log(array[i].name);
-                if (array[i].name == "roofRed (Instance)" || array[i].name == "roofRedLight (Instance)" || array[i].name == "roof (Instance)" || array[i].name == "roofLight (Instance)")
-                {
-                    array[i]=GameController.instance.CurrentCiv.MAT;
-                }
-            }
-
-            meshRenderer.materials = array;
-        }
-            
+        GameController.ChangeMat(CityObj.gameObject,GameController.CurrentCiv.MAT);          
         
         //TWIN
         if (position.AsTwin || position.IsTwin)
@@ -666,21 +626,7 @@ public class MainMapControllerScript : MonoBehaviour
             CityObjC.NameCity.text = newCity.NameCity;
             CityObjC.Colors.color = newCity.civColor;
             
-            Change = CityObjC.GetComponentsInChildren<MeshRenderer>();
-                           
-            foreach (MeshRenderer meshRenderer in Change)
-            {
-                array = meshRenderer.materials;
-                for (int i = 0; i < array.Length; i++)
-                {
-                    if (array[i].name == "roofRed (Instance)" || array[i].name == "roofRedLight (Instance)" || array[i].name == "roof (Instance)" || array[i].name == "roofLight (Instance)")
-                    {
-                        array[i]=GameController.instance.CurrentCiv.MAT;
-                    }
-                }
-
-                meshRenderer.materials = array;
-            }
+            GameController.ChangeMat(CityObjC.gameObject,GameController.CurrentCiv.MAT);
 
         }
         //

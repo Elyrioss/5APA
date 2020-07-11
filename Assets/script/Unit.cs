@@ -21,9 +21,7 @@ public class Unit : Construction
         prefab.transform.localPosition = new Vector3(0, Position.elevation, 0);   
         prefab.GetComponent<ManageUnit>().Unit = this;            
         Position.Occupied = true;
-        
-        
-        
+                      
         if (Position.AsTwin || Position.IsTwin)
         {
             Twin = Object.Instantiate(Resources.Load("Prefabs/"+index) as GameObject,Position.Twin.transform);        
@@ -39,11 +37,16 @@ public class Unit : Construction
             Twin.SetActive(false);
         }
 
+        
         Twin.GetComponent<ManageUnit>().Owner = civ;
-        Twin.GetComponent<ManageUnit>().Colors.color = civ.CivilisationColor;
+        Twin.GetComponent<ManageUnit>().Colors.color = civ.CivilisationColor;       
         
         prefab.GetComponent<ManageUnit>().Owner = civ;
         prefab.GetComponent<ManageUnit>().Colors.color = civ.CivilisationColor;
+        
+        GameController.instance.ChangeMat(prefab,civ.MAT);    
+        GameController.instance.ChangeMat(Twin,civ.MAT);    
+        
         return this;
     }
     
@@ -196,6 +199,8 @@ public class Colon : Unit
         Colon Colon = new Colon();
         Colon.Instantiation(w,c);
         c.Units.Add(Colon);
+        
+
     }
     
     public override void UnitPower(Civilisation currentCivilisation)

@@ -32,6 +32,9 @@ public class GameController : MonoBehaviour
         "DAMEDANE"
     };
     
+    
+    public List<string> MaterialsTochange = new List<string>();
+    
     public static GameController instance;
     public AnimationCurve foodUpgradeCurve;
     public AnimationCurve foodCostCurve;
@@ -67,12 +70,13 @@ public class GameController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        instance = this;
+
         PlayerCiv = new Civilisation(Color.red,Civ1);
         PlayerCiv2 = new Civilisation(Color.blue,Civ2);
         setStarts();
         
         CurrentCiv = PlayerCiv;
-        instance = this;
         state = TurnState.START;
         MapControllerScript = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<MainMapControllerScript>();
         TurnColor.color = CurrentCiv.CivilisationColor;
@@ -238,4 +242,45 @@ public class GameController : MonoBehaviour
         Money.text =""+ CurrentCiv.Gold;
     }
 
+    public void ChangeMat(GameObject G,Material color)
+    {
+        MeshRenderer[] Change = G.GetComponentsInChildren<MeshRenderer>();
+        
+        Material[] array;
+
+        foreach (MeshRenderer meshRenderer in Change)
+        {
+            array = meshRenderer.materials;
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (MaterialsTochange.Contains(array[i].name))
+                {
+                    array[i]=color;
+                }
+            }
+
+            meshRenderer.materials = array;
+        }
+    }
+
+    public void ChangeMat(GameObject G,Material Previous,Material New)
+    {
+        MeshRenderer[] Change = G.GetComponentsInChildren<MeshRenderer>();
+        
+        Material[] array;
+
+        foreach (MeshRenderer meshRenderer in Change)
+        {
+            array = meshRenderer.materials;
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (array[i].name==Previous.name)
+                {
+                    array[i]= New;
+                }
+            }
+            meshRenderer.materials = array;
+        }
+    }
+    
 }

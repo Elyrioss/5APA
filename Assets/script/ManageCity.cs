@@ -13,11 +13,10 @@ public class ManageCity : MonoBehaviour
 
     public Image Colors;
     public TextMeshPro NameCity;
-    private TextMeshProUGUI Population;
-    private TextMeshProUGUI Nourriture;
-    private TextMeshProUGUI Production;
-    private TextMeshProUGUI Or;
-
+    
+    public TextMeshProUGUI Population;
+    public Slider HP;
+    
     public Civilisation owner;
 
     void Start()
@@ -25,10 +24,7 @@ public class ManageCity : MonoBehaviour
         Controller = GameController.instance;
         CityMenu = Controller.cityMenu;
         Mapcontroller = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<MainMapControllerScript>();
-        Population = CityMenu.Population;
-        Nourriture = CityMenu.Food;
-        Production = CityMenu.Production;
-        Or = CityMenu.Gold;        
+       
     }
 
 
@@ -45,7 +41,15 @@ public class ManageCity : MonoBehaviour
         CityMenu.ShowCity();          
     }
 
-    
+    private void Update()
+    {
+        if (ThisCity!=null)
+        {
+            Population.text = ThisCity.population+"";
+            //HP.value = ThisCity.HP / ThisCity.MAXHP;
+        }
+    }
+
     /*   
     public bool CreateFoodBat()
     {
