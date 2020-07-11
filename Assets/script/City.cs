@@ -7,9 +7,6 @@ using Random = UnityEngine.Random;
 public class City
 {
     public string NameCity;
-    public AudioSource clickSound;
-    public AudioSource buildSound;
-    public AudioSource soldierSound;
 
     public ManageCity ManageRef;
 
@@ -396,7 +393,47 @@ public class City
     {
         currentCost = c.cost;
         construction = c;
-
+        switch (c.index)
+        {
+            case "Grenier":
+                ManageRef.source.clip = Resources.Load<AudioClip>("Sounds/Granary");
+                ManageRef.source.Play();
+                break;
+            case "Usine":
+                ManageRef.source.clip = Resources.Load<AudioClip>("Sounds/Factory");
+                ManageRef.source.Play();
+                break;
+            case "Marcher":
+                ManageRef.source.clip = Resources.Load<AudioClip>("Sounds/Market");
+                ManageRef.source.Play();
+                break;
+            case "Port":
+                ManageRef.source.clip = Resources.Load<AudioClip>("Sounds/Port");
+                ManageRef.source.Play();
+                break;
+            case "Extension":
+                ManageRef.source.clip = Resources.Load<AudioClip>("Sounds/Extension");
+                ManageRef.source.Play();
+                break;
+            case "Warrior":
+                ManageRef.source.clip = Resources.Load<AudioClip>("Sounds/Warrior");
+                ManageRef.source.Play();
+                break;
+            case "Archer":
+                ManageRef.source.clip = Resources.Load<AudioClip>("Sounds/Archer");
+                ManageRef.source.Play();
+                break;
+            case "Rider":
+                ManageRef.source.clip = Resources.Load<AudioClip>("Sounds/Rider");
+                ManageRef.source.Play();
+                break;
+            case "Colon":
+                ManageRef.source.clip = Resources.Load<AudioClip>("Sounds/Colon");
+                ManageRef.source.Play();
+                break;
+            default:
+                break;
+        }
     }
 
     public bool Contains(Construction build)

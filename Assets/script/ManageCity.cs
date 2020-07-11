@@ -40,6 +40,8 @@ public class ManageCity : MonoBehaviour
         }
                  
         Controller.SelectedCity = ThisCity;
+        Controller.gameControllerAudioSource.clip = Resources.Load<AudioClip>("Sounds/Click");
+        Controller.gameControllerAudioSource.Play();
         CityMenu.CivColor.color = ThisCity.civColor;
         CityMenu.ShowCity();          
     }

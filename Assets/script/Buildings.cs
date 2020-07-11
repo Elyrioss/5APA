@@ -99,7 +99,6 @@ public class Buildings : Construction
 
         c.ClearFrontiers();
         c.ClearFrontiersClone();
-        c.buildSound.PlayOneShot(c.buildSound.clip);
         VisualSteps();
     }
 
@@ -110,7 +109,7 @@ public class Grenier : Construction
     public override Construction Copy()
     {      
         Grenier g = new Grenier();
-        g.Tempcost = Tempcost;      
+        g.Tempcost = Tempcost;
         return g;
     }
 
@@ -126,7 +125,6 @@ public class Grenier : Construction
     {
         c.food += 10;
         c.Buildings.Add(this);
-        c.buildSound.PlayOneShot(c.buildSound.clip);
     }
 }
 
@@ -151,7 +149,6 @@ public class Usine : Construction
     {
         c.production += 10;
         c.Buildings.Add(this);
-        c.buildSound.PlayOneShot(c.buildSound.clip);
     }
 }
 
@@ -178,8 +175,6 @@ public class Marcher : Construction
     {
         c.gold += 10;
         c.Buildings.Add(this);
-        c.buildSound.PlayOneShot(c.buildSound.clip);
-                 
     }
 }
 
@@ -208,6 +203,7 @@ public class Extension : Buildings
         c.CanExtend--;
         ConstructionFinishedInstantiate(c);
     }
+
 
     public override bool CheckForConditions(Waypoint w)
     {

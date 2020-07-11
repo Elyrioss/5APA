@@ -38,7 +38,7 @@ public class GameController : MonoBehaviour
     public static GameController instance;
     public AnimationCurve foodUpgradeCurve;
     public AnimationCurve foodCostCurve;
-
+    public AudioSource gameControllerAudioSource;
     public Image TurnColor;
     
     public TurnState state;
@@ -52,7 +52,6 @@ public class GameController : MonoBehaviour
     public City SelectedCity;
     public Unit SelectedUnit;
     public Construction ExtentionTemp=null;
-    public AudioSource clickSound;
     
     public Civilisation PlayerCiv;
     public Civilisation PlayerCiv2;
@@ -157,7 +156,8 @@ public class GameController : MonoBehaviour
     //UI
     public void NextTurn()
     {
-        clickSound.PlayOneShot(clickSound.clip);
+        gameControllerAudioSource.clip = Resources.Load<AudioClip>("Sounds/Click");
+        gameControllerAudioSource.Play();
         state = TurnState.ENDTURN;
         //Les ennemies ? La recolte ?
 
