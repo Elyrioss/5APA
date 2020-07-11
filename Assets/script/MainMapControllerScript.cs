@@ -158,6 +158,15 @@ public class MainMapControllerScript : MonoBehaviour
                                     break;
                                 }
                             }
+
+                            foreach (City enemyCity in enemyCiv.Cities)
+                            {
+                                if (enemyCity.position == wp)
+                                {
+                                    DoAttack(GC.SelectedUnit, enemyCity);
+                                    break;
+                                }
+                            }
                         }
 
                         wp.DisableHighlight();
@@ -435,17 +444,33 @@ public class MainMapControllerScript : MonoBehaviour
         }
         foreach (Waypoint wp in WList)
         {
+            Civilisation enemyCiv = GC.GetOtherCivilisation();
+
+            //Units
             if (wp.Occupied)
             {
-                Civilisation enemyCiv = GC.GetOtherCivilisation();
-                
                 foreach (Unit enemyUnit in enemyCiv.Units)
                 {
                     if (enemyUnit.Position == wp)
                     {
-                        //enemyUnitList.Add(enemyUnit);
                         enemyUnit.Position.EnableHighlight();
                         highlightedWayPoint.Add(enemyUnit.Position);
+
+                        attackAvailable = true;
+                        Move = false;
+                    }
+                }
+            }
+
+            //Cities
+            if (wp.Controled)
+            {
+                foreach (City enemyCity in enemyCiv.Cities)
+                {
+                    if (enemyCity.position == wp)
+                    {
+                        enemyCity.position.EnableHighlight();
+                        highlightedWayPoint.Add(enemyCity.position);
 
                         attackAvailable = true;
                         Move = false;
@@ -478,7 +503,31 @@ public class MainMapControllerScript : MonoBehaviour
         CheckHP(attackingUnit, defendingUnit);
         
     }
-    
+
+    public void DoAttack(Unit attackingUnit, City defendingCity)
+    {
+        GameController GC = GameController.instance;
+        Civilisation enemyCiv = GC.GetOtherCivilisation();
+
+        defendingCity.HP -= attackingUnit.Damage;
+        if (attackingUnit.Position.Neighbors.Contains(defendingCity.position))
+        {
+            attackingUnit.HP -= defendingCity.population;
+        }
+        if (defendingCity.position.Twin)
+        {
+            if (attackingUnit.Position.Neighbors.Contains(defendingCity.position.Twin))
+            {
+                attackingUnit.HP -= defendingCity.population;
+            }
+        }
+
+        attackingUnit.AsPlayed = true;
+
+        CheckHP(attackingUnit, defendingCity);
+
+    }
+
     public void CheckHP(Unit attackingUnit, Unit defendingUnit)
     {
         GameController GC = GameController.instance;
@@ -493,6 +542,36 @@ public class MainMapControllerScript : MonoBehaviour
                 DestroyImmediate(defendingUnit.Twin);
             }
             DestroyImmediate(defendingUnit.prefab);
+        }
+
+        if (attackingUnit.HP <= 0)
+        {
+            GC.CurrentCiv.Units.Remove(attackingUnit);
+
+            if (attackingUnit.Twin != null)
+            {
+                DestroyImmediate(attackingUnit.Twin);
+            }
+            DestroyImmediate(attackingUnit.prefab);
+        }
+    }
+
+    public void CheckHP(Unit attackingUnit, City defendingCity)
+    {
+        GameController GC = GameController.instance;
+        Civilisation enemyCiv = GC.GetOtherCivilisation();
+
+        if (defendingCity.HP <= 0)
+        {
+            enemyCiv.Cities.Remove(defendingCity);
+            
+            defendingCity.ManageRef.owner = GC.GetCurrentCivilisation();
+
+            GC.CurrentCiv.Cities.Add(defendingCity);
+
+            defendingCity.HP = defendingCity.MAXHP;
+
+            defendingCity.SwitchColorCiv(GC.CurrentCiv.CivilisationColor);
         }
 
         if (attackingUnit.HP <= 0)
@@ -605,6 +684,7 @@ public class MainMapControllerScript : MonoBehaviour
         ManageCity CityObj = Instantiate(cityPref, position.transform);
         CityObj.transform.localPosition = new Vector3(0,position.elevation, 0);
         City newCity = GameController.CurrentCiv.CreateCity(position);
+        newCity.ManageRef = CityObj;
         CityObj.Colors.color = newCity.civColor; 
         CityObj.ThisCity = newCity;
         CityObj.NameCity.text = newCity.NameCity;
@@ -620,16 +700,15 @@ public class MainMapControllerScript : MonoBehaviour
         //TWIN
         if (position.AsTwin || position.IsTwin)
         {
+
             ManageCityClone CityObjC = Instantiate(cityClonePref, position.Twin.transform);
             CityObjC.transform.localPosition = new Vector3(0, position.elevation, 0);
             CityObjC.ManageRef = CityObj;
             CityObjC.NameCity.text = newCity.NameCity;
-            CityObjC.Colors.color = newCity.civColor;
-            
+            CityObjC.Colors.color = newCity.civColor;         
             GameController.ChangeMat(CityObjC.gameObject,GameController.CurrentCiv.MAT);
-
+            CityObj.CloneTwin = CityObjC;
         }
-        //
         if (position.LOD)
         {
             position.LOD.SetActive(false);
