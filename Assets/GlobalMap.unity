@@ -8659,7 +8659,7 @@ AudioSource:
   m_Volume: 1
   m_Pitch: 1
   Loop: 1
-  Mute: 0
+  Mute: 1
   Spatialize: 0
   SpatializePostEffects: 0
   Priority: 128
@@ -19668,6 +19668,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1013581681}
     m_Modifications:
+    - target: {fileID: 786334538, guid: 6e8cd760ecf89f847adadee2c5a44a61, type: 3}
+      propertyPath: Mute
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 484268021356613747, guid: 6e8cd760ecf89f847adadee2c5a44a61,
         type: 3}
       propertyPath: m_AnchorMin.x
@@ -19836,6 +19840,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1013581681}
     m_Modifications:
+    - target: {fileID: 1449005169, guid: a9a6bbc1857915f4da2af2abdaad825e, type: 3}
+      propertyPath: Mute
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1830289787801755991, guid: a9a6bbc1857915f4da2af2abdaad825e,
         type: 3}
       propertyPath: m_Name
@@ -19940,6 +19948,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1013581681}
     m_Modifications:
+    - target: {fileID: 1577614258, guid: 00703c25559596a439d623c3a167f0fd, type: 3}
+      propertyPath: Mute
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 855424696257806943, guid: 00703c25559596a439d623c3a167f0fd,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -20034,6 +20046,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1013581681}
     m_Modifications:
+    - target: {fileID: 224106575, guid: feeebb78f3af97143b4d0d99e54746d7, type: 3}
+      propertyPath: Mute
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 722875302051534269, guid: feeebb78f3af97143b4d0d99e54746d7,
         type: 3}
       propertyPath: m_AnchorMin.x
@@ -20128,6 +20144,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1013581681}
     m_Modifications:
+    - target: {fileID: 196521882, guid: fcfbb9e056891224c951d47b3a363926, type: 3}
+      propertyPath: Mute
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4948280048436369089, guid: fcfbb9e056891224c951d47b3a363926,
         type: 3}
       propertyPath: m_Name
