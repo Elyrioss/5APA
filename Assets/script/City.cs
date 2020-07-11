@@ -158,21 +158,25 @@ public class City
     {
         civColor = newColorCiv;
         position.CivColor = newColorCiv;
+        
+        ManageRef.Colors.color = civColor;
+        foreach (Waypoint w in controlArea)
+        {
+            w.CivColor = civColor;
+            w.EnableWaypoint();
+        }    
 
-        Debug.LogError("SWITCH COLOR");
-
-        position.DisableWaypoint();
-
-        position.EnableWaypoint();
-
-        //TWIN
         if (position.AsTwin || position.IsTwin)
         {
-            position.Twin.CivColor = civColor;
-            position.Twin.EnableWaypoint();
+            ManageRef.CloneTwin.Colors.color = civColor;
+            foreach (Waypoint w in controlAreaClone)
+            {
+                w.CivColor = civColor;
+                position.Twin.EnableWaypoint();
+            }
         }
-        //
 
+        
         ClearFrontiers();
         ClearFrontiersClone();
     }

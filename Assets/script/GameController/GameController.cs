@@ -156,6 +156,13 @@ public class GameController : MonoBehaviour
         clickSound.PlayOneShot(clickSound.clip);
         state = TurnState.ENDTURN;
         //Les ennemies ? La recolte ?
+
+        if (CurrentCiv.Cities.Count == 0)
+        {
+            Winner.color = GetOtherCivilisation().CivilisationColor;
+            WinScreen.SetActive(true);
+            return;
+        }
         
         foreach (City c in CurrentCiv.Cities)
         {
@@ -286,7 +293,7 @@ public class GameController : MonoBehaviour
             array = meshRenderer.materials;
             for (int i = 0; i < array.Length; i++)
             {
-                if (array[i].name==Previous.name)
+                if (array[i].name==Previous.name+" (Instance)")
                 {
                     array[i]= New;
                 }

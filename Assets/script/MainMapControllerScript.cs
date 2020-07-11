@@ -173,8 +173,6 @@ public class MainMapControllerScript : MonoBehaviour
                     }
                 }
             }
-
-            
         }
         if (Input.GetMouseButtonDown(1))
         {
@@ -376,7 +374,6 @@ public class MainMapControllerScript : MonoBehaviour
             
             ManageUnit pref = unit.prefab.GetComponent<ManageUnit>();
             
-            
             if (NewPos.HeightType == HeightType.River || NewPos.HeightType == HeightType.DeepWater || NewPos.HeightType == HeightType.ShallowWater)
             {
                 pref.BoatModel.SetActive(true);
@@ -569,9 +566,11 @@ public class MainMapControllerScript : MonoBehaviour
 
             GC.CurrentCiv.Cities.Add(defendingCity);
 
-            defendingCity.HP = defendingCity.MAXHP;
-
+            defendingCity.HP = defendingCity.MAXHP;           
             defendingCity.SwitchColorCiv(GC.CurrentCiv.CivilisationColor);
+            
+            GameController.ChangeMat(defendingCity.ManageRef.gameObject,defendingCity.civ.MAT,GC.GetCurrentCivilisation().MAT);
+            
         }
 
         if (attackingUnit.HP <= 0)
@@ -681,6 +680,7 @@ public class MainMapControllerScript : MonoBehaviour
     {
         if(position.HeightType == HeightType.River || position.HeightType == HeightType.DeepWater ||position.HeightType == HeightType.ShallowWater)
             return;
+        
         ManageCity CityObj = Instantiate(cityPref, position.transform);
         CityObj.transform.localPosition = new Vector3(0,position.elevation, 0);
         City newCity = GameController.CurrentCiv.CreateCity(position);

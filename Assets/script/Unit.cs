@@ -159,7 +159,8 @@ public class Rider : Unit
     public override void UnitPower(Civilisation currentCivilisation)
     {
         GameController GC = GameController.instance;
-
+        //prefab.GetComponent<ManageUnit>().Source
+        
         GC.MapControllerScript.Attacking(this);
     }
 }

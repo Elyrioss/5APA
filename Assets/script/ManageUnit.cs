@@ -16,6 +16,7 @@ public class ManageUnit : MonoBehaviour
     public Slider Hp;
     public GameObject UnitModel;
     public GameObject BoatModel;
+    public AudioSource Source;
     
     public void SelectUnit()
     {

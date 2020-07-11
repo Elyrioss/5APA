@@ -179,6 +179,7 @@ public class Marcher : Construction
         c.gold += 10;
         c.Buildings.Add(this);
         c.buildSound.PlayOneShot(c.buildSound.clip);
+                 
     }
 }
 
