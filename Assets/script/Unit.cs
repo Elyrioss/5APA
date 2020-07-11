@@ -45,8 +45,11 @@ public class Unit : Construction
         prefab.GetComponent<ManageUnit>().Colors.color = civ.CivilisationColor;
         
         GameController.instance.ChangeMat(prefab,civ.MAT);    
-        GameController.instance.ChangeMat(Twin,civ.MAT);    
-        
+        GameController.instance.ChangeMat(Twin,civ.MAT);
+        Damage += civ.bonusDamage;
+        MAXHP += civ.bonusHp;
+        HP += civ.bonusHp;
+        mouvementPoints += civ.bonusMouv;
         return this;
     }
     
@@ -72,6 +75,7 @@ public class Warrior : Unit
         MAXHP = 20;
         Damage = 4;
         Range = 1;
+        empty = false;
     }
 
     public override void ConstructionFinished(City c)
@@ -109,6 +113,7 @@ public class Archer : Unit
         MAXHP = 12;
         Damage = 3;
         Range = 2;
+        empty = false;
     }
     
     public override void ConstructionFinished(City c)
@@ -146,6 +151,7 @@ public class Rider : Unit
         MAXHP = 15;
         Damage = 4;
         Range = 1;
+        empty = false;
     }
     
     public override void ConstructionFinished(City c)
@@ -185,6 +191,7 @@ public class Colon : Unit
         MAXHP = 5;
         Damage = 0;
         Range = 1;
+        empty = false;
     }
     
     public override void ConstructionFinished(City c)

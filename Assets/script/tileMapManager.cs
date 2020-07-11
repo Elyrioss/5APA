@@ -624,6 +624,7 @@ public class tileMapManager : MonoBehaviour
             w.Production = selection.Production;
             w.Gold = selection.Gold; 
             w.mouvCost = selection.MovCost;
+            w.Science = selection.Science;
             w.mat = mat;
             currentWayPoint.transform.GetChild(0).GetComponent<MeshRenderer>().material = mat;
             w.TileFilter = currentWayPoint.transform.GetChild(0).GetComponent<MeshFilter>();
@@ -635,6 +636,7 @@ public class tileMapManager : MonoBehaviour
                 w.Twin.Gold = w.Gold; 
                 w.Twin.mouvCost = w.mouvCost;
                 w.Twin.mat = mat;
+                w.Twin.Science = w.Science;
                 currentTwin.transform.GetChild(0).GetComponent<MeshRenderer>().material = mat;
                 w.Twin.TileFilter = currentTwin.transform.GetChild(0).GetComponent<MeshFilter>();
             }
@@ -674,6 +676,7 @@ public class tileMapManager : MonoBehaviour
                 w.Production += p.productionBonus;
                 w.Gold += p.goldBonus;
                 w.mouvCost += p.MovCost;
+                w.Science += p.scienceBonus;
                 currentProp.transform.localPosition = new Vector3(0,0,0);
                 w.prop = currentProp;
                 w.Prop = p.name;
@@ -691,6 +694,7 @@ public class tileMapManager : MonoBehaviour
                     w.Twin.Food += p.foodBonus;
                     w.Twin.Production += p.productionBonus;
                     w.Twin.Gold += p.goldBonus;
+                    w.Twin.Science += p.scienceBonus;
                     w.Twin.mouvCost += p.MovCost;
                     currentProp.transform.localPosition = new Vector3(0,0,0);
                     w.Twin.prop = currentProp;                  
@@ -1124,6 +1128,7 @@ public class _3DtileType
     public float Food;
     public float Production;
     public float Gold;
+    public float Science;
     public int MovCost = 1;
     
     private static Random rng = new Random();
@@ -1180,6 +1185,7 @@ public class Prop
     public float foodBonus = 0;
     public float productionBonus = 0;
     public float goldBonus = 0;
+    public float scienceBonus;
     
     public int MovCost = 1;
 } 

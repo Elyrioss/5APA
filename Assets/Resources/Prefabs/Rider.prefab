@@ -556,6 +556,7 @@ MonoBehaviour:
     Tempcost: 0
     Redoable: 0
     BuildType: 0
+    empty: 1
     AsPlayed: 0
     mouvementPoints: 0
     HP: 0
@@ -567,9 +568,20 @@ MonoBehaviour:
     CivilisationColor: {r: 0, g: 0, b: 0, a: 0}
     MAT: {fileID: 0}
     Gold: 0
+    Science: 0
     Units: []
     Cities: []
     BoatDiscovered: 0
+    ScienceScreen: {fileID: 0}
+    AuthorizedBuildings: []
+    AuthorizedUnits: []
+    bonusDamage: 0
+    bonusHp: 0
+    bonusFood: 0
+    bonusProd: 0
+    bonusGold: 0
+    bonusScience: 0
+    bonusMouv: 0
   Hp: {fileID: 6362197216750508488}
   UnitModel: {fileID: 7815790523311282276}
   BoatModel: {fileID: 827271697137170496}

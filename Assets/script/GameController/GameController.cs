@@ -34,7 +34,8 @@ public class GameController : MonoBehaviour
     
     
     public List<string> MaterialsTochange = new List<string>();
-    
+    public ScienceScreen ScienceScreen;
+    public Canvas canvas;
     public static GameController instance;
     public AnimationCurve foodUpgradeCurve;
     public AnimationCurve foodCostCurve;
@@ -78,6 +79,17 @@ public class GameController : MonoBehaviour
 
         PlayerCiv = new Civilisation(Color.red,Civ1);
         PlayerCiv2 = new Civilisation(Color.blue,Civ2);
+        
+        ScienceScreen sc1 = Instantiate(ScienceScreen,canvas.transform);
+        sc1.owner = PlayerCiv;
+        sc1.StartScreen();
+        PlayerCiv.ScienceScreen = sc1;
+        
+        ScienceScreen sc2 = Instantiate(ScienceScreen,canvas.transform);
+        sc2.owner = PlayerCiv2;
+        sc2.StartScreen();
+        PlayerCiv2.ScienceScreen = sc2;
+        
         setStarts();
         
         CurrentCiv = PlayerCiv;
@@ -87,6 +99,17 @@ public class GameController : MonoBehaviour
         Camera = UnityEngine.Camera.main.GetComponent<RTS_Camera>();     
     }
 
+    public void ShowScience(bool a)
+    {
+        if(CurrentCiv.Cities.Count==0)
+            return;
+
+        Camera.usePanning = !a;
+        Camera.useScreenEdgeInput = !a;
+        CurrentCiv.ScienceScreen.gameObject.SetActive(a);
+    }
+    
+    
     public void StartPos()
     {
         if (PlayerCiv.Units[0].Position.transform.position.x > MapControllerScript.RightLimit-40)
@@ -159,8 +182,7 @@ public class GameController : MonoBehaviour
     {
         clickSound.PlayOneShot(clickSound.clip);
         state = TurnState.ENDTURN;
-        //Les ennemies ? La recolte ?
-
+       
         if (CurrentCiv.Cities.Count == 0)
         {
             Winner.color = GetOtherCivilisation().CivilisationColor;
@@ -168,9 +190,15 @@ public class GameController : MonoBehaviour
             return;
         }
         
+        if (CurrentCiv.ScienceScreen.currentScience == null)
+        {
+            ShowScience(true);
+            return;
+        }
+        
         foreach (City c in CurrentCiv.Cities)
         {
-            if (c.construction == null)
+            if (c.construction.empty)
             {
                 SelectedCity = c;
                 if (c.position.transform.position.x > MapControllerScript.RightLimit-40)
@@ -210,10 +238,16 @@ public class GameController : MonoBehaviour
         {
             u.AsPlayed = false;
         }
+
+        float science = 0;
         foreach (City c in CurrentCiv.Cities)
         {
             c.EndOfTurn();
+            science = c.science + 0.4f*c.population;
         }
+
+        CurrentCiv.Science = science;
+        CurrentCiv.ScienceScreen.EndTurn();
         
         if (CurrentCiv.Gold > 1500)
         {

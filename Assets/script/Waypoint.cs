@@ -75,7 +75,7 @@ public class Waypoint : MonoBehaviour
     public float Production;
     [HideInInspector]
     public float Gold;
-
+    public float Science;
     [HideInInspector]
     public GameObject LOD;
     [HideInInspector]
