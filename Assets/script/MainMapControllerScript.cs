@@ -460,7 +460,7 @@ public class MainMapControllerScript : MonoBehaviour
             }
 
             //Cities
-            if (wp.Controled)
+            if (wp.UsedTile)
             {
                 foreach (City enemyCity in enemyCiv.Cities)
                 {
@@ -539,6 +539,12 @@ public class MainMapControllerScript : MonoBehaviour
                 DestroyImmediate(defendingUnit.Twin);
             }
             DestroyImmediate(defendingUnit.prefab);
+
+            if (!defendingUnit.Position.UsedTile)
+            {
+                GC.waypointWeaponList.Add(defendingUnit.Position);
+                defendingUnit.Position.EnableWeapon();
+            }
         }
 
         if (attackingUnit.HP <= 0)
@@ -550,6 +556,12 @@ public class MainMapControllerScript : MonoBehaviour
                 DestroyImmediate(attackingUnit.Twin);
             }
             DestroyImmediate(attackingUnit.prefab);
+
+            if (!defendingUnit.Position.UsedTile)
+            {
+                GC.waypointWeaponList.Add(attackingUnit.Position);
+                attackingUnit.Position.EnableWeapon();
+            }
         }
     }
 
@@ -582,6 +594,12 @@ public class MainMapControllerScript : MonoBehaviour
                 DestroyImmediate(attackingUnit.Twin);
             }
             DestroyImmediate(attackingUnit.prefab);
+
+            if (!attackingUnit.Position.UsedTile)
+            {
+                GC.waypointWeaponList.Add(attackingUnit.Position);
+                attackingUnit.Position.EnableWeapon();
+            }
         }
     }
 
@@ -649,7 +667,7 @@ public class MainMapControllerScript : MonoBehaviour
                waypoint.Twin.RangeContainer.SetActive(true);
         }
     }
-
+    
     public void ClearPath(){
         PQueue.Clear();
         Path.Clear();

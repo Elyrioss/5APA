@@ -66,6 +66,10 @@ public class GameController : MonoBehaviour
     public Image Winner;
     public GameObject WinScreen;
 
+    //Siggraph
+    public List<Material> weaponMatList = new List<Material>();
+    public List<Waypoint> waypointWeaponList = new List<Waypoint>();
+
     private RTS_Camera Camera;
     // Start is called before the first frame update
     void Start()
@@ -259,6 +263,32 @@ public class GameController : MonoBehaviour
         Coin.color = CurrentCiv.CivilisationColor;
         TurnColor.color = CurrentCiv.CivilisationColor;
         Money.text =""+ CurrentCiv.Gold;
+
+        UpdateWeaponMatList();
+    }
+
+    public void UpdateWeaponMatList()
+    {
+        List<Waypoint> tmpList = new List<Waypoint>();
+
+        foreach(Waypoint wp in waypointWeaponList)
+        {
+            if(wp.nbTurn >= weaponMatList.Count - 1)
+            {
+                tmpList.Add(wp);
+                wp.ResetNbTurnWeapon();
+                wp.DisableWeapon();
+            }
+        }
+        foreach(Waypoint wp in tmpList)
+        {
+            waypointWeaponList.Remove(wp);
+        }
+        foreach(Waypoint wp in waypointWeaponList)
+        {
+            wp.nbTurn++;
+            wp.UpdateMatWeapon();
+        }
     }
 
     public void ChangeMat(GameObject G,Material color)

@@ -103,8 +103,10 @@ public class Waypoint : MonoBehaviour
     public Waypoint NearestToStart;
     [HideInInspector]
     public float HeuristicDist;
-
     
+    public int nbTurn = -1;
+    public MeshRenderer weaponMesh;
+
     [Header("Highlight"), Space(5)]
     public SpriteRenderer highlight;
 
@@ -112,7 +114,28 @@ public class Waypoint : MonoBehaviour
     public SpriteRenderer[] trailsList; // left , leftbot , lefttop, right , rightbot, rightop
     public TextMeshProUGUI numberTxt;
     public SpriteRenderer circleNumber;
+    
+    public void EnableWeapon()
+    {
+        weaponMesh.gameObject.SetActive(true);
+        LOD.SetActive(false);
+    }
 
+    public void DisableWeapon()
+    {
+        weaponMesh.gameObject.SetActive(false);
+        LOD.SetActive(true);
+    }
+
+    public void ResetNbTurnWeapon()
+    {
+        nbTurn = -1;
+    }
+
+    public void UpdateMatWeapon()
+    {
+        weaponMesh.material = GameController.instance.weaponMatList[nbTurn];
+    }
 
     public void DisableWaypoint() // make Waypoint unreachable
     {

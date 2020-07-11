@@ -68,11 +68,12 @@ public class TextureModifier : MonoBehaviour
 
         //texTest.LoadImage((byte[])bytes);
         //texTest.filterMode = FilterMode.Point;
+
 #if UNITY_EDITOR
         texTest = EditorGUIUtility.Load("Assets/AgingAddon/Textures/NewTexture" + newNameText + ".png") as Texture2D;
-#endif
         texTest.Apply();
-        
+#endif
+
         newMat.mainTexture = texTest;
 
 #if UNITY_EDITOR
