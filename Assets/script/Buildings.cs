@@ -216,6 +216,47 @@ public class Extension : Buildings
         return true;
     }
 
+    public override void VisualSteps()
+    {
+        if (prefab.GetComponent<MatTochange>())
+        {
+            MatTochange prefChange = prefab.GetComponent<MatTochange>();
+            Material[] array;
+
+            foreach (MeshRenderer meshRenderer in prefChange.MatsTochange)
+            {
+                array = meshRenderer.materials;
+                for (int i = 0; i < array.Length; i++)
+                {
+                    if (array[i].name != "woodDark" && array[i].name != "wood")
+                    {
+                        array[i]=GameController.instance.CurrentCiv.MAT;
+                    }
+                }
+
+                meshRenderer.materials = array;
+            }
+            
+            if (Twin)
+            {
+                prefChange = Twin.GetComponent<MatTochange>();
+                            
+                foreach (MeshRenderer meshRenderer in prefChange.MatsTochange)
+                {
+                    array = meshRenderer.materials;
+                    for (int i = 0; i < array.Length; i++)
+                    {
+                        if (array[i].name != "woodDark" && array[i].name != "wood")
+                        {
+                            array[i]=GameController.instance.CurrentCiv.MAT;
+                        }
+                    }
+
+                    meshRenderer.materials = array;
+                }
+            }
+        }
+    }
 }
 
 public class Port : Buildings
@@ -298,6 +339,20 @@ public class Port : Buildings
             array[0]=GameController.instance.CurrentCiv.MAT;
             array[2]=GameController.instance.CurrentCiv.MAT;
             prefChange.MatsTochange[1].materials = array;
+            
+            if (Twin)
+            {
+                prefChange = Twin.GetComponent<MatTochange>();
+                            
+                array = prefChange.MatsTochange[0].materials;
+                array[1]=GameController.instance.CurrentCiv.MAT;
+                prefChange.MatsTochange[0].materials = array;
+            
+                array = prefChange.MatsTochange[1].materials;
+                array[0]=GameController.instance.CurrentCiv.MAT;
+                array[2]=GameController.instance.CurrentCiv.MAT;
+                prefChange.MatsTochange[1].materials = array;
+            }
         }
     }
 }

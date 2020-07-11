@@ -76,9 +76,7 @@ public class GameController : MonoBehaviour
         state = TurnState.START;
         MapControllerScript = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<MainMapControllerScript>();
         TurnColor.color = CurrentCiv.CivilisationColor;
-        Camera = UnityEngine.Camera.main.GetComponent<RTS_Camera>();
-        Debug.Log((PlayerCiv.Units[0].Position.transform.position.x) +" "+(MapControllerScript.RightLimit-40));
-        
+        Camera = UnityEngine.Camera.main.GetComponent<RTS_Camera>();     
     }
 
     public void StartPos()
@@ -94,7 +92,7 @@ public class GameController : MonoBehaviour
         StartCoroutine(ResetCam());
     }
     public IEnumerator ResetCam(){
-        yield return new WaitForSeconds(4f);
+        yield return new WaitForSeconds(2f);
         Camera.targetFollow = null;
     }
     

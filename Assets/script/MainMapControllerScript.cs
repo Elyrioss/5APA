@@ -383,7 +383,6 @@ public class MainMapControllerScript : MonoBehaviour
     {
         if (W.NearestToStart == null)
         {
-            Debug.Log("STAPH");
             return;
         }
         TmpPath.Add(W.NearestToStart);
@@ -435,9 +434,29 @@ public class MainMapControllerScript : MonoBehaviour
     {
         GameController GC = GameController.instance;
 
-        //List<Unit> enemyUnitList = new List<Unit>();
-
-        foreach (Waypoint wp in GC.SelectedUnit.Position.Neighbors)
+        List<Waypoint> WList = new List<Waypoint>();
+        WList.Add(attacker.Position);
+        List<Waypoint> TempWList = new List<Waypoint>();
+        
+        for (int i = 0; i < attacker.Range; i++)
+        {
+            foreach (Waypoint w in WList)
+            {
+                foreach (Waypoint W in w.Neighbors)
+                {
+                    if(WList.Contains(W))
+                        continue;      
+                    
+                    TempWList.Add(W);
+                }
+            }
+            foreach (Waypoint w2 in TempWList)
+            {
+                WList.Add(w2);
+            }
+            TempWList.Clear();
+        }
+        foreach (Waypoint wp in WList)
         {
             if (wp.Occupied)
             {
@@ -464,121 +483,23 @@ public class MainMapControllerScript : MonoBehaviour
         GameController GC = GameController.instance;
         Civilisation enemyCiv = GC.GetOtherCivilisation();
 
-        if (attackingUnit.index == "Warrior" && defendingUnit.index == "Archer")
+        defendingUnit.HP -= attackingUnit.Damage;
+        if (attackingUnit.Position.Neighbors.Contains(defendingUnit.Position))
         {
-            //Damage
-            defendingUnit.HP -= 2 / 2;
-            attackingUnit.HP -= 2 * 2;
-
-            attackingUnit.AsPlayed = true;
-
-            CheckHP(attackingUnit, defendingUnit);
-
-            Debug.Log("Warrior contre Archer");
-            
+            attackingUnit.HP -= defendingUnit.Damage;
         }
-        if (attackingUnit.index == "Warrior" && defendingUnit.index == "Warrior")
+        if (defendingUnit.Position.Twin)
         {
-            //Damage
-            attackingUnit.HP -= 2;
-            defendingUnit.HP -= 2;
-
-            attackingUnit.AsPlayed = true;
-
-            CheckHP(attackingUnit, defendingUnit);
-
-            Debug.Log("Warrior contre Warrior");
+            if (attackingUnit.Position.Neighbors.Contains(defendingUnit.Position.Twin))
+            {
+                attackingUnit.HP -= defendingUnit.Damage;
+            }
         }
-        if (attackingUnit.index == "Warrior" && defendingUnit.index == "Rider")
-        {
-            //Damage
-            defendingUnit.HP -= 2 * 2;
-            attackingUnit.HP -= 2 / 2;
-
-            attackingUnit.AsPlayed = true;
-
-            CheckHP(attackingUnit, defendingUnit);
-
-
-            Debug.Log("Warrior contre Rider");
-
-        }
-
-
-        if (attackingUnit.index == "Archer" && defendingUnit.index == "Archer")
-        {
-            //Damage
-            defendingUnit.HP -= 2;
-            attackingUnit.HP -= 2;
-
-            attackingUnit.AsPlayed = true;
-
-            CheckHP(attackingUnit, defendingUnit);
-
-            Debug.Log("Archer contre Archer");
-        }
-        if (attackingUnit.index == "Archer" && defendingUnit.index == "Warrior")
-        {
-            //Damage
-            defendingUnit.HP -= 2 * 2;
-            attackingUnit.HP -= 2 / 2;
-
-            attackingUnit.AsPlayed = true;
-
-            CheckHP(attackingUnit, defendingUnit);
-
-            Debug.Log("Archer contre Warrior");
-        }
-        if (attackingUnit.index == "Archer" && defendingUnit.index == "Rider")
-        {
-            //Damage
-            defendingUnit.HP -= 2 / 2;
-            attackingUnit.HP -= 2 * 2;
-
-            attackingUnit.AsPlayed = true;
-
-            CheckHP(attackingUnit, defendingUnit);
-
-            Debug.Log("Archer contre Rider");
-        }
-
         
-        if (attackingUnit.index == "Rider" && defendingUnit.index == "Archer")
-        {
-            //Damage
-            defendingUnit.HP -= 2 * 2;
-            attackingUnit.HP -= 2 / 2;
+        attackingUnit.AsPlayed = true;
 
-            attackingUnit.AsPlayed = true;
-
-            CheckHP(attackingUnit, defendingUnit);
-
-            Debug.Log("Rider contre Archer");
-        }
-        if (attackingUnit.index == "Rider" && defendingUnit.index == "Warrior")
-        {
-            //Damage
-            defendingUnit.HP -= 2 / 2;
-            attackingUnit.HP -= 2 * 2;
-
-            attackingUnit.AsPlayed = true;
-
-            CheckHP(attackingUnit, defendingUnit);
-
-            Debug.Log("Rider contre Warrior");
-        }
-        if (attackingUnit.index == "Rider" && defendingUnit.index == "Rider")
-        {
-            //Damage
-            defendingUnit.HP -= 2;
-            attackingUnit.HP -= 2;
-
-            attackingUnit.AsPlayed = true;
-
-            CheckHP(attackingUnit, defendingUnit);
-
-            Debug.Log("Rider contre Rider");
-        }
+        CheckHP(attackingUnit, defendingUnit);
+        
     }
     
     public void CheckHP(Unit attackingUnit, Unit defendingUnit)
@@ -716,6 +637,26 @@ public class MainMapControllerScript : MonoBehaviour
         newCity.buildSound = this.buildSound;
         newCity.soldierSound = this.soldierSound;
         newCity.clickSound = this.clickSound;
+        
+        MeshRenderer[] Change = CityObj.GetComponentsInChildren<MeshRenderer>();
+        Material[] array;
+
+        foreach (MeshRenderer meshRenderer in Change)
+        {
+            array = meshRenderer.materials;
+            for (int i = 0; i < array.Length; i++)
+            {
+                Debug.Log(array[i].name);
+                if (array[i].name == "roofRed (Instance)" || array[i].name == "roofRedLight (Instance)" || array[i].name == "roof (Instance)" || array[i].name == "roofLight (Instance)")
+                {
+                    array[i]=GameController.instance.CurrentCiv.MAT;
+                }
+            }
+
+            meshRenderer.materials = array;
+        }
+            
+        
         //TWIN
         if (position.AsTwin || position.IsTwin)
         {
@@ -724,6 +665,22 @@ public class MainMapControllerScript : MonoBehaviour
             CityObjC.ManageRef = CityObj;
             CityObjC.NameCity.text = newCity.NameCity;
             CityObjC.Colors.color = newCity.civColor;
+            
+            Change = CityObjC.GetComponentsInChildren<MeshRenderer>();
+                           
+            foreach (MeshRenderer meshRenderer in Change)
+            {
+                array = meshRenderer.materials;
+                for (int i = 0; i < array.Length; i++)
+                {
+                    if (array[i].name == "roofRed (Instance)" || array[i].name == "roofRedLight (Instance)" || array[i].name == "roof (Instance)" || array[i].name == "roofLight (Instance)")
+                    {
+                        array[i]=GameController.instance.CurrentCiv.MAT;
+                    }
+                }
+
+                meshRenderer.materials = array;
+            }
 
         }
         //

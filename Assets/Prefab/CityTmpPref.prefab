@@ -350,6 +350,13 @@ MonoBehaviour:
     food: 0
     production: 0
     gold: 0
+    StockFood: 0
+    civ:
+      CivilisationColor: {r: 0, g: 0, b: 0, a: 0}
+      MAT: {fileID: 0}
+      Gold: 0
+      Units: []
+      Cities: []
     construction:
       cost: 0
       index: 
@@ -360,13 +367,23 @@ MonoBehaviour:
       Redoable: 0
       BuildType: 0
     Buildings: []
+    Unfinished: []
+    Extensions: []
     currentCost: 0
+    FoodMultiplier: 0
+    CanExtend: 0
     ThisCityAction: 0
   Mapcontroller: {fileID: 0}
   Controller: {fileID: 0}
   CityMenu: {fileID: 0}
   Colors: {fileID: 5812795274801152346}
   NameCity: {fileID: 2347076266793713771}
+  owner:
+    CivilisationColor: {r: 0, g: 0, b: 0, a: 0}
+    MAT: {fileID: 0}
+    Gold: 0
+    Units: []
+    Cities: []
 --- !u!1 &2977826693606835187
 GameObject:
   m_ObjectHideFlags: 0
@@ -654,17 +671,17 @@ PrefabInstance:
     - target: {fileID: 1916542648283986490, guid: 5cefcb600ed58fd419f41e141d2a868d,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.226
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1916542648283986490, guid: 5cefcb600ed58fd419f41e141d2a868d,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.11
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1916542648283986490, guid: 5cefcb600ed58fd419f41e141d2a868d,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.644
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1916542648283986490, guid: 5cefcb600ed58fd419f41e141d2a868d,
         type: 3}
@@ -705,21 +722,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1916542648283986490, guid: 5cefcb600ed58fd419f41e141d2a868d,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 1916542648283986490, guid: 5cefcb600ed58fd419f41e141d2a868d,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 1916542648283986490, guid: 5cefcb600ed58fd419f41e141d2a868d,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 4964093548856524537, guid: 5cefcb600ed58fd419f41e141d2a868d,
         type: 3}

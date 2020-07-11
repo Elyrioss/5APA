@@ -189,7 +189,7 @@ public class CityMenu : MonoBehaviour
         
         NameUnit.text = unit.index;
         life.value = (float)unit.HP / unit.MAXHP;
-        lifeNum.text = ((float) unit.HP / unit.MAXHP) * 100 + "%";
+        lifeNum.text = (int)(((float) unit.HP / unit.MAXHP) * 100) + "%";
         UnitCivColor.color = GameController.instance.CurrentCiv.CivilisationColor; 
     }
     

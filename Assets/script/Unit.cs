@@ -12,6 +12,8 @@ public class Unit : Construction
     public int mouvementPoints;
     public int HP;
     public int MAXHP;
+    public int Damage;
+    public int Range;
     public Unit Instantiation(Waypoint w,Civilisation civ)
     {
         Position = w;
@@ -61,10 +63,12 @@ public class Warrior : Unit
         index = "Warrior";
         cost=20;
         mouvementPoints = 8;
-        AsPlayed = true;
+        AsPlayed = false;
         BuildType = BuildingType.Unit;
         HP = 20;
         MAXHP = 20;
+        Damage = 4;
+        Range = 1;
     }
 
     public override void ConstructionFinished(City c)
@@ -96,10 +100,12 @@ public class Archer : Unit
         index = "Archer";
         cost=15;
         mouvementPoints = 8;
-        AsPlayed = true;
+        AsPlayed = false;
         BuildType = BuildingType.Unit;
         HP = 12;
         MAXHP = 12;
+        Damage = 3;
+        Range = 2;
     }
     
     public override void ConstructionFinished(City c)
@@ -131,10 +137,12 @@ public class Rider : Unit
         index = "Rider";
         cost=25;
         mouvementPoints = 15;
-        AsPlayed = true;
+        AsPlayed = false;
         BuildType = BuildingType.Unit;
         HP = 15;
         MAXHP = 15;
+        Damage = 4;
+        Range = 1;
     }
     
     public override void ConstructionFinished(City c)
@@ -167,10 +175,12 @@ public class Colon : Unit
         index = "Colon";
         cost=100;
         mouvementPoints = 8;
-        AsPlayed = true;
+        AsPlayed = false;
         BuildType = BuildingType.Unit;
         HP = 5;
         MAXHP = 5;
+        Damage = 0;
+        Range = 1;
     }
     
     public override void ConstructionFinished(City c)
