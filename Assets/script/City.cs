@@ -6,11 +6,12 @@ using Random = UnityEngine.Random;
 [Serializable]
 public class City
 {
-
     public string NameCity;
     public AudioSource clickSound;
     public AudioSource buildSound;
     public AudioSource soldierSound;
+
+    public ManageCity ManageRef;
 
     public int population;
     public Waypoint position;
@@ -33,7 +34,10 @@ public class City
     public float currentCost=0;
     public float FoodMultiplier = 1;
     public int CanExtend;
-    
+
+    public int HP;
+    public int MAXHP;
+
     //Construction Var
     public bool ThisCityAction; // Empeche le joueur d'effectuer plus d'une action sur la ville par tour.
        
@@ -61,6 +65,9 @@ public class City
             position.Twin.Controled = true;
         }
         //
+
+        HP = 1;
+        MAXHP = 1;
 
         food = city.food;
         production += city.production;
@@ -117,6 +124,9 @@ public class City
         }
         //
 
+        HP = 1;
+        MAXHP = 1;
+
         food += position.Food;
         production += position.Production;
         gold += position.Gold;
@@ -142,6 +152,29 @@ public class City
         ClearFrontiersClone();
         population = 1;
         
+    }
+
+    public void SwitchColorCiv(Color newColorCiv)
+    {
+        civColor = newColorCiv;
+        position.CivColor = newColorCiv;
+
+        Debug.LogError("SWITCH COLOR");
+
+        position.DisableWaypoint();
+
+        position.EnableWaypoint();
+
+        //TWIN
+        if (position.AsTwin || position.IsTwin)
+        {
+            position.Twin.CivColor = civColor;
+            position.Twin.EnableWaypoint();
+        }
+        //
+
+        ClearFrontiers();
+        ClearFrontiersClone();
     }
 
     public void ShowAvailable(Construction c)

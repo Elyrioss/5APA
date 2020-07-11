@@ -7,6 +7,7 @@ public class ManageCity : MonoBehaviour
     // Start is called before the first frame update
 
     public City ThisCity; //Index of List _cities in MainMapController
+    public ManageCityClone CloneTwin;
     public MainMapControllerScript Mapcontroller;
     public GameController Controller;
     public CityMenu CityMenu;

@@ -122,6 +122,18 @@ public class GameController : MonoBehaviour
         PlayerCiv2.Units[0].AsPlayed = false;
     }
 
+    public Civilisation GetCurrentCivilisation()
+    {
+        if (PlayerCiv == CurrentCiv)
+        {
+            return PlayerCiv;
+        }
+        else
+        {
+            return PlayerCiv2;
+        }
+    }
+
     public Civilisation GetOtherCivilisation()
     {
         if (PlayerCiv == CurrentCiv)
