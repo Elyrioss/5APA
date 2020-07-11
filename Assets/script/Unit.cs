@@ -83,15 +83,16 @@ public class Warrior : Unit
         Warrior w = new Warrior();
         w.Instantiation(c.position,c.civ);
         c.civ.Units.Add(w);
-        c.soldierSound.PlayOneShot(c.soldierSound.clip);
         
     }
     
     public override void UnitPower(Civilisation currentCivilisation)
     {
         GameController GC = GameController.instance;
-
+        GC.gameControllerAudioSource.clip = Resources.Load<AudioClip>("Sounds/Yeos");
+        GC.gameControllerAudioSource.Play();
         GC.MapControllerScript.Attacking(this);
+
     }
 }
 
@@ -121,14 +122,16 @@ public class Archer : Unit
         Archer w = new Archer();
         w.Instantiation(c.position,c.civ);
         c.civ.Units.Add(w);
-        c.soldierSound.PlayOneShot(c.soldierSound.clip);
     }
     
     public override void UnitPower(Civilisation currentCivilisation)
     {
         GameController GC = GameController.instance;
-
+        GC.gameControllerAudioSource.clip = Resources.Load<AudioClip>("Sounds/Yeos");
+        GC.gameControllerAudioSource.Play();
         GC.MapControllerScript.Attacking(this);
+
+
     }
 }
 
@@ -159,15 +162,17 @@ public class Rider : Unit
         Rider w = new Rider();
         w.Instantiation(c.position,c.civ);
         c.civ.Units.Add(w);
-        c.soldierSound.PlayOneShot(c.soldierSound.clip);
     }
 
     public override void UnitPower(Civilisation currentCivilisation)
     {
+
         GameController GC = GameController.instance;
         //prefab.GetComponent<ManageUnit>().Source
-        
+        GC.gameControllerAudioSource.clip = Resources.Load<AudioClip>("Sounds/Yeos");
+        GC.gameControllerAudioSource.Play();
         GC.MapControllerScript.Attacking(this);
+
     }
 }
 
@@ -199,7 +204,6 @@ public class Colon : Unit
         Colon w = new Colon();
         w.Instantiation(c.position,c.civ);
         c.civ.Units.Add(w);
-        c.soldierSound.PlayOneShot(c.soldierSound.clip);
     }
     
     public void ConstructionFinished(Waypoint w,Civilisation c)
@@ -217,7 +221,8 @@ public class Colon : Unit
             return;
         
         GameController GC = GameController.instance;
-        
+        GC.gameControllerAudioSource.clip = Resources.Load<AudioClip>("Sounds/Construction");
+        GC.gameControllerAudioSource.Play();
         GC.MapControllerScript.CreateCity(Position);
 
         Position.Occupied = false;

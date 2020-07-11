@@ -71,7 +71,7 @@ public class MainMapControllerScript : MonoBehaviour
 
         if (Input.GetMouseButton(0))
         {
-            if(IsPointerOverUI())
+            if (IsPointerOverUI())
                 return;
             
             Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
@@ -373,7 +373,7 @@ public class MainMapControllerScript : MonoBehaviour
             unit.prefab.transform.SetParent(NewPos.transform);
             
             ManageUnit pref = unit.prefab.GetComponent<ManageUnit>();
-            
+
             if (NewPos.HeightType == HeightType.River || NewPos.HeightType == HeightType.DeepWater || NewPos.HeightType == HeightType.ShallowWater)
             {
                 pref.BoatModel.SetActive(true);
@@ -407,7 +407,8 @@ public class MainMapControllerScript : MonoBehaviour
                 unit.Twin.SetActive(false);
             }
 
-            
+            GameController.gameControllerAudioSource.clip = Resources.Load<AudioClip>("Sounds/MarchSound");
+            GameController.gameControllerAudioSource.Play();
             Move = false;
             unit.AsPlayed = true;
         }
@@ -480,6 +481,16 @@ public class MainMapControllerScript : MonoBehaviour
     public void DoAttack(Unit attackingUnit, Unit defendingUnit)
     {
         GameController GC = GameController.instance;
+        if (attackingUnit.index.Equals("Archer"))
+        {
+            GC.gameControllerAudioSource.clip = Resources.Load<AudioClip>("Sounds/Archer");
+            GC.gameControllerAudioSource.Play();
+        }
+        else
+        {
+            GC.gameControllerAudioSource.clip = Resources.Load<AudioClip>("Sounds/AttackCloseQuarter");
+            GC.gameControllerAudioSource.Play();
+        }
         Civilisation enemyCiv = GC.GetOtherCivilisation();
 
         defendingUnit.HP -= attackingUnit.Damage;
@@ -505,7 +516,16 @@ public class MainMapControllerScript : MonoBehaviour
     {
         GameController GC = GameController.instance;
         Civilisation enemyCiv = GC.GetOtherCivilisation();
-
+        if (attackingUnit.index.Equals("Archer"))
+        {
+            GC.gameControllerAudioSource.clip = Resources.Load<AudioClip>("Sounds/Archer");
+            GC.gameControllerAudioSource.Play();
+        }
+        else
+        {
+            GC.gameControllerAudioSource.clip = Resources.Load<AudioClip>("Sounds/AttackCloseQuarter");
+            GC.gameControllerAudioSource.Play();
+        }
         defendingCity.HP -= attackingUnit.Damage;
         if (attackingUnit.Position.Neighbors.Contains(defendingCity.position))
         {
@@ -707,11 +727,6 @@ public class MainMapControllerScript : MonoBehaviour
         CityObj.ThisCity = newCity;
         CityObj.NameCity.text = newCity.NameCity;
         CityObj.owner = GameController.CurrentCiv;
-        //Add sound elements
-                    
-        newCity.buildSound = this.buildSound;
-        newCity.soldierSound = this.soldierSound;
-        newCity.clickSound = this.clickSound;
         
         GameController.ChangeMat(CityObj.gameObject,GameController.CurrentCiv.MAT);          
         

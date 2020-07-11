@@ -26,7 +26,8 @@ public class ManageUnit : MonoBehaviour
         
         GameController.instance.SelectedUnit = Unit;
         GC.cityMenu.ShowUnit(Unit);
-        
+        GC.gameControllerAudioSource.clip = Resources.Load<AudioClip>("Sounds/Ready");
+        GC.gameControllerAudioSource.Play();
         if (!Unit.AsPlayed)
         {
             GC.MapControllerScript.ClearPath();
