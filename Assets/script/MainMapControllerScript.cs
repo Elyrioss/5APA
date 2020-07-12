@@ -553,7 +553,7 @@ public class MainMapControllerScript : MonoBehaviour
         if (defendingUnit.HP <= 0)
         {
             enemyCiv.Units.Remove(defendingUnit);
-
+            defendingUnit.Position.Occupied = false;
             if (defendingUnit.Twin != null)
             {
                 DestroyImmediate(defendingUnit.Twin);
@@ -570,7 +570,7 @@ public class MainMapControllerScript : MonoBehaviour
         if (attackingUnit.HP <= 0)
         {
             GC.CurrentCiv.Units.Remove(attackingUnit);
-
+            attackingUnit.Position.Occupied = false;
             if (attackingUnit.Twin != null)
             {
                 DestroyImmediate(attackingUnit.Twin);
@@ -608,7 +608,7 @@ public class MainMapControllerScript : MonoBehaviour
         if (attackingUnit.HP <= 0)
         {
             GC.CurrentCiv.Units.Remove(attackingUnit);
-
+            attackingUnit.Position.Occupied = false;
             if (attackingUnit.Twin != null)
             {
                 DestroyImmediate(attackingUnit.Twin);

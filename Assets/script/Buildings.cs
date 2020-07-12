@@ -225,7 +225,11 @@ public class Extension : Buildings
 
     public override void VisualSteps()
     {
-        
+        GameController.instance.ChangeMat(prefab,GameController.instance.CurrentCiv.MAT);
+        if (Twin)
+        {
+            GameController.instance.ChangeMat(Twin,GameController.instance.CurrentCiv.MAT);
+        }
     }
 }
 
@@ -297,6 +301,47 @@ public class Port : Buildings
                 Twin.transform.Rotate(0,300,0);
 
         }
+        GameController.instance.ChangeMat(prefab,GameController.instance.CurrentCiv.MAT);
+        if (Twin)
+        {
+            GameController.instance.ChangeMat(Twin,GameController.instance.CurrentCiv.MAT);
+        }
+    }
+}
+public class MineFer : Buildings
+{
+    
+    public override Construction Copy()
+    {
+        MineFer g = new MineFer();
+        g.Tempcost = Tempcost;
+        g.Position = Position;  
+        return g;
+    }
+    public MineFer()
+    {
+        index = "Mine(Fer)";
+        BuildType = BuildingType.Extension;
+        cost = 50;
+        Tempcost = -1;
+        Redoable = false;
+        empty = false;
+    }
+
+    public override void ConstructionFinished(City c)
+    {
+        ConstructionFinishedInstantiate(c);
+    }
+
+    public override bool CheckForConditions(Waypoint w)
+    {
+        if (w.Ressource==StrategicRessources.RessourceType.Iron)
+            return true;
+        return false;
+    }
+
+    public override void VisualSteps()
+    {
         GameController.instance.ChangeMat(prefab,GameController.instance.CurrentCiv.MAT);
         if (Twin)
         {

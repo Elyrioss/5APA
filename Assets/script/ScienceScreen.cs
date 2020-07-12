@@ -113,7 +113,7 @@ public class StockageAvance : Science
         Description = "Vous avez apris a ne plus laisse votre nouriture pourrire au soleil.\n\n(+5 de production de nourriture par villes)";
         icon = "Stockage";
         Type=Color.green;
-        cost = 30;
+        cost = 50;
     }
 
     public override void Action(Civilisation c)
@@ -133,7 +133,7 @@ public class Entrainement : Science
         Description = "Si tu veux la paix prepare la guerre.\n\n(+1 dmg +1PV pour toutes les unites)";
         icon = "Warrior";
         Type=Color.red;
-        cost = 30;
+        cost = 50;
     }
 
     public override void Action(Civilisation c)
@@ -156,7 +156,7 @@ public class Monnaie : Science
         Description = "Les échanges vont plus vite.\n\n(+5 de production d'or par villes)";
         icon = "Monnaie";
         Type=Color.yellow;
-        cost = 30;
+        cost = 50;
     }
 
     public override void Action(Civilisation c)
@@ -176,7 +176,7 @@ public class Astronomie : Science
         Description = "Le ciel regorge de secret.\n\n(+5 de production scientifique par villes)";
         icon = "Astronomie";
         Type=Color.blue;
-        cost = 30;
+        cost = 50;
     }
 
     public override void Action(Civilisation c)
@@ -196,7 +196,7 @@ public class MareNostrum : Science
         Description = "Les oceans vous appelle.\n\n(Debloque les ports)";
         icon = "Port";
         Type = Color.yellow;
-        cost = 50;
+        cost = 80;
     }
 
     public override void Action(Civilisation c)
@@ -214,7 +214,7 @@ public class Waaagh : Science
         Description = "Waaaaaaaaagh.\n\n(+5 dmg -5PV pour toutes les unites)";
         icon = "Waaagh";
         Type=Color.red;
-        cost = 50;
+        cost = 80;
     }
 
     public override void Action(Civilisation c)
@@ -245,7 +245,7 @@ public class Bouclier : Science
         Description = "Protege de 25% des fleches.\n\n(+5 PV -5dmg pour toutes les unites)";
         icon = "Bouclier";
         Type=Color.red;
-        cost = 50;
+        cost = 80;
     }
 
     public override void Action(Civilisation c)
@@ -273,7 +273,7 @@ public class Equilibre : Science
         Description = "Une bonne attaque commence par une bonne defense, ou l'inverse?\n\n(+2 PV +2dmg pour toutes les unites)";
         icon = "Equilibre";
         Type=Color.red;
-        cost = 50;
+        cost = 80;
     }
 
     public override void Action(Civilisation c)
