@@ -20,6 +20,9 @@ public class City
     public float production = 0;
     public float gold = 0;
     public float science = 0;
+
+    public int goldOre = 0;
+    public int ironOre = 0;
     
     public float StockFood=0;
 
@@ -106,6 +109,8 @@ public class City
         FoodMultiplier = 1;
         civColor = color;
         CanExtend = 0;
+        goldOre = 0;
+        ironOre = 0;
         position = pos;
         position.CivColor = civColor;
         position.EnableWaypoint();

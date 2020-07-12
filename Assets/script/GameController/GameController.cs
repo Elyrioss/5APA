@@ -31,7 +31,12 @@ public class GameController : MonoBehaviour
         "SHOKDART",
         "DAMEDANE"
     };
-    
+
+    public Image ScienceGem;
+    public Image WarGem;
+    public Image FoodGem;
+    public Image GoldGem;
+    public TextMeshProUGUI ScienceCiv;
     
     public List<string> MaterialsTochange = new List<string>();
     public ScienceScreen ScienceScreen;
@@ -63,6 +68,12 @@ public class GameController : MonoBehaviour
     public Image Coin;
     public TextMeshProUGUI Money;
 
+    public GameObject GoldOre;
+    public TextMeshProUGUI GoldOreCount;
+    
+    public GameObject IronOre;
+    public TextMeshProUGUI IronOreCount;
+    
     public Image Winner;
     public GameObject WinScreen;
 
@@ -103,9 +114,11 @@ public class GameController : MonoBehaviour
         if(CurrentCiv.Cities.Count==0)
             return;
 
+        
         Camera.usePanning = !a;
         Camera.useScreenEdgeInput = !a;
         CurrentCiv.ScienceScreen.gameObject.SetActive(a);
+        CurrentCiv.ScienceScreen.load();
     }
     
     
@@ -258,11 +271,21 @@ public class GameController : MonoBehaviour
         foreach (City c in CurrentCiv.Cities)
         {
             c.EndOfTurn();
-            science = c.science + 0.4f*c.population;
+            science += c.science + 0.4f*c.population;
+            CurrentCiv.goldOre += c.goldOre;
+            CurrentCiv.ironOre += c.ironOre;
         }
 
         CurrentCiv.Science = science;
+        
         CurrentCiv.ScienceScreen.EndTurn();
+
+        if (CurrentCiv.WarWin && CurrentCiv.FoodWin && CurrentCiv.GoldWin && CurrentCiv.ScienceWin)
+        {
+            Winner.color = CurrentCiv.CivilisationColor;
+            WinScreen.SetActive(true);
+            return;
+        }
         
         if (CurrentCiv.Gold > 1500)
         {
@@ -273,6 +296,7 @@ public class GameController : MonoBehaviour
         NumberOfTurn++;
         TurnTxt.text = "Turn : " + NumberOfTurn;
         state = TurnState.START;
+        
         if (CurrentCiv == PlayerCiv)
         {
             CurrentCiv = PlayerCiv2;
@@ -313,9 +337,53 @@ public class GameController : MonoBehaviour
         TurnColor.color = CurrentCiv.CivilisationColor;
         Money.text =""+ CurrentCiv.Gold;
 
+        if (CurrentCiv.goldOre > 0)
+        {
+            GoldOre.SetActive(true);
+            GoldOreCount.text = CurrentCiv.goldOre + "";
+        }
+        else
+        {
+            GoldOre.SetActive(false);
+        }
+        
+        if (CurrentCiv.ironOre > 0)
+        {
+            IronOre.SetActive(true);
+            IronOreCount.text = CurrentCiv.ironOre + "";
+        }
+        else
+        {
+            IronOre.SetActive(false);
+        }
+        
         UpdateWeaponMatList();
     }
 
+    public void UseIron()
+    {
+        if (CurrentCiv.ironOre >= 50)
+        {
+            CurrentCiv.ironOre -= 50;
+            foreach (City c in CurrentCiv.Cities)
+            {
+                c.production += 10;
+            }
+        }
+    }
+    
+    public void UseGold()
+    {
+        if (CurrentCiv.goldOre >= 50)
+        {
+            CurrentCiv.goldOre -= 50;
+            foreach (City c in CurrentCiv.Cities)
+            {
+                c.gold += 10;
+            }
+        }
+    }
+    
     public void UpdateWeaponMatList()
     {
         List<Waypoint> tmpList = new List<Waypoint>();

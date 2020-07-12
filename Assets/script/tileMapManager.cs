@@ -666,7 +666,7 @@ public class tileMapManager : MonoBehaviour
             
             if (p != null)
             {
-                
+                w.Ressource = StrategicRessources.RessourceType.None;
                 GameObject currentProp = Instantiate(p.prefab,currentWayPoint.transform);
                 if (p.LOD)
                 {
@@ -700,7 +700,8 @@ public class tileMapManager : MonoBehaviour
                     w.Twin.Science += p.scienceBonus;
                     w.Twin.mouvCost += p.MovCost;
                     currentProp.transform.localPosition = new Vector3(0,0,0);
-                    w.Twin.prop = currentProp;                  
+                    w.Twin.prop = currentProp;        
+                    w.Twin.Ressource = StrategicRessources.RessourceType.None;
                     
                 }
             }
@@ -723,67 +724,76 @@ public class tileMapManager : MonoBehaviour
                 if (SR != null)
                 {
                     if ((w.HeightType == HeightType.DeepWater || w.HeightType == HeightType.ShallowWater || w.HeightType == HeightType.River) && SR.Water)
-                {
-                    if (SR.prob > prob && SR.Height == w.HeightType && w.elevation > SR.height)
                     {
-                        
-                        GameObject currentRessource = Instantiate(SR.prefab, currentWayPoint.transform);
-                        w.Ressource = SR.Type;
-                        w.Food += SR.foodBonus;
-                        w.Production += SR.productionBonus;
-                        w.Gold += SR.goldBonus;
-                        w.mouvCost += SR.MovCost;
-                        w.Science += SR.scienceBonus;
-                        w.LOD = currentRessource;
-                        w.prop = currentRessource;
-                        
-                        currentRessource.transform.localPosition = new Vector3(0, 0, 0);
-                        if (w.Twin)
+                        if (SR.prob > prob && SR.Height == w.HeightType && w.elevation > SR.height)
                         {
-                            currentRessource = Instantiate(SR.prefab, currentTwin.transform);
-                            w.Twin.Ressource = SR.Type;
-                            w.Twin.Food += SR.foodBonus;
-                            w.Twin.Production += SR.productionBonus;
-                            w.Twin.Gold += SR.goldBonus;
-                            w.Twin.mouvCost += SR.MovCost;
-                            w.Twin.Science += SR.scienceBonus;
+                            
+                            GameObject currentRessource = Instantiate(SR.prefab, currentWayPoint.transform);
+                            w.Ressource = SR.Type;
+                            w.Food += SR.foodBonus;
+                            w.Production += SR.productionBonus;
+                            w.Gold += SR.goldBonus;
+                            w.mouvCost += SR.MovCost;
+                            w.Science += SR.scienceBonus;
+                            w.LOD = currentRessource;
+                            w.prop = currentRessource;
+                            
                             currentRessource.transform.localPosition = new Vector3(0, 0, 0);
-                            w.Twin.LOD = currentRessource;
-                            w.Twin.prop = currentRessource;
+                            if (w.Twin)
+                            {
+                                currentRessource = Instantiate(SR.prefab, currentTwin.transform);
+                                w.Twin.Ressource = SR.Type;
+                                w.Twin.Food += SR.foodBonus;
+                                w.Twin.Production += SR.productionBonus;
+                                w.Twin.Gold += SR.goldBonus;
+                                w.Twin.mouvCost += SR.MovCost;
+                                w.Twin.Science += SR.scienceBonus;
+                                currentRessource.transform.localPosition = new Vector3(0, 0, 0);
+                                w.Twin.LOD = currentRessource;
+                                w.Twin.prop = currentRessource;
+                            }
                         }
                     }
-                }
-                else if((w.HeightType != HeightType.DeepWater && w.HeightType != HeightType.ShallowWater && w.HeightType != HeightType.River) && !SR.Water)
-                {
-                    if (SR.prob > prob)
+                    else if((w.HeightType != HeightType.DeepWater && w.HeightType != HeightType.ShallowWater && w.HeightType != HeightType.River) && !SR.Water)
                     {
-                        
-                        GameObject currentRessource = Instantiate(SR.prefab, currentWayPoint.transform);
-                        w.Ressource = SR.Type;
-                        w.Food += SR.foodBonus;
-                        w.Production += SR.productionBonus;
-                        w.Gold += SR.goldBonus;
-                        w.mouvCost += SR.MovCost;
-                        w.Science += SR.scienceBonus;
-                        currentRessource.transform.localPosition = new Vector3(0, 0, 0);
-                        w.LOD = currentRessource;
-                        w.prop = currentRessource;
-                        if (w.Twin)
+                        if (SR.prob > prob)
                         {
-                            currentRessource = Instantiate(SR.prefab, currentTwin.transform);
-                            w.Twin.Food += SR.foodBonus;
-                            w.Twin.Production += SR.productionBonus;
-                            w.Twin.Gold += SR.goldBonus;
-                            w.Twin.mouvCost += SR.MovCost;
-                            w.Twin.Science += SR.scienceBonus;
-                            w.Twin.Ressource = SR.Type;
+                            
+                            GameObject currentRessource = Instantiate(SR.prefab, currentWayPoint.transform);
+                            w.Ressource = SR.Type;
+                            w.Food += SR.foodBonus;
+                            w.Production += SR.productionBonus;
+                            w.Gold += SR.goldBonus;
+                            w.mouvCost += SR.MovCost;
+                            w.Science += SR.scienceBonus;
                             currentRessource.transform.localPosition = new Vector3(0, 0, 0);
-                            w.Twin.LOD = currentRessource;
-                            w.Twin.prop = currentRessource;
+                            w.LOD = currentRessource;
+                            w.prop = currentRessource;
+                            if (w.Twin)
+                            {
+                                currentRessource = Instantiate(SR.prefab, currentTwin.transform);
+                                w.Twin.Food += SR.foodBonus;
+                                w.Twin.Production += SR.productionBonus;
+                                w.Twin.Gold += SR.goldBonus;
+                                w.Twin.mouvCost += SR.MovCost;
+                                w.Twin.Science += SR.scienceBonus;
+                                w.Twin.Ressource = SR.Type;
+                                currentRessource.transform.localPosition = new Vector3(0, 0, 0);
+                                w.Twin.LOD = currentRessource;
+                                w.Twin.prop = currentRessource;
+                            }
                         }
                     }
+                    
                 }
-                }    
+                else
+                {
+                    w.Ressource = StrategicRessources.RessourceType.None;
+                    if (w.Twin)
+                    {
+                        w.Twin.Ressource = StrategicRessources.RessourceType.None;
+                    }
+                }
                 
             }
             

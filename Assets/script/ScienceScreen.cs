@@ -18,6 +18,12 @@ public class ScienceScreen : MonoBehaviour
     public Image Icon;
     private Sprite imageBase;
     public Sprite Checked;
+    
+    public Image ScienceGem;
+    public Image WarGem;
+    public Image FoodGem;
+    public Image GoldGem;
+    public TextMeshProUGUI ScienceCiv;
     public void StartScreen()
     {
         imageBase = Icon.sprite;
@@ -37,6 +43,18 @@ public class ScienceScreen : MonoBehaviour
         currentScience = null;
     }
 
+    public void load()
+    {
+        ScienceCiv.text = owner.Science+"";
+        if (owner.ScienceWin)
+            ScienceGem.color = new Color(0,0,255,255);
+        if (owner.FoodWin)
+            FoodGem.color = new Color(0,255,0,255);
+        if (owner.WarWin)
+            WarGem.color = new Color(255,0,0,255);
+        if (owner.GoldWin)
+            GoldGem.color = new Color(0,255,255,255);
+    }
     public Science GetScience(string nameScience)
     {
         switch (nameScience)
@@ -59,6 +77,22 @@ public class ScienceScreen : MonoBehaviour
                 return new Equilibre();
             case "Cavalerie":
                 return new Cavalerie();
+            case "Mine de fer":
+                return new IronMine();
+            case "Mine d'or":
+                return new GoldMine();
+            case "Plateforme Maritime":
+                return new Plateforme();
+            case "Recolte de corail":
+                return new Corail();
+            case "Sagesse":
+                return new Sagesse();
+            case "Arme Imperial":
+                return new ArmeImperial();
+            case "Culture en Terrasse":
+                return new CultureTerrasse();
+            case "Tresorerie":
+                return new Tresorerie();
         }
 
         return null;
@@ -190,6 +224,8 @@ public class Astronomie : Science
         }
     }
 }
+
+//ECO1
 public class MareNostrum : Science
 {
     public MareNostrum()
@@ -198,12 +234,44 @@ public class MareNostrum : Science
         Description = "Les oceans vous appelle.\n\n(Debloque les ports)";
         icon = "Port";
         Type = Color.yellow;
-        cost = 80;
+        cost = 100;
     }
 
     public override void Action(Civilisation c)
     {
         c.AuthorizedBuildings.Add("Port");
+    }
+}
+public class GoldMine : Science
+{
+    public GoldMine()
+    {
+        nameScience = "Mine d'or";
+        Description = "Make it rain.\n\n(Debloque les mines d'or)";
+        icon = "Mine(Or)";
+        Type = Color.yellow;
+        cost = 80;
+    }
+
+    public override void Action(Civilisation c)
+    {
+        c.AuthorizedBuildings.Add("Mine(Or)");
+    }
+}
+public class IronMine : Science
+{
+    public IronMine()
+    {
+        nameScience = "Mine de fer";
+        Description = "Vous decouvrez les pioche en cobble quoi.\n\n(Debloque les mines de fer)";
+        icon = "Mine(Fer)";
+        Type = new Color(255,166,0);
+        cost = 80;
+    }
+
+    public override void Action(Civilisation c)
+    {
+        c.AuthorizedBuildings.Add("Mine(Fer)");
     }
 }
 
@@ -291,6 +359,7 @@ public class Equilibre : Science
     }
 }
 
+// WAR2
 public class Cavalerie : Science
 {
     public Cavalerie()
@@ -305,5 +374,130 @@ public class Cavalerie : Science
     public override void Action(Civilisation c)
     {
         c.AuthorizedUnits.Add("Riders0");
+    }
+}
+
+// FOOD
+
+public class Plateforme : Science
+{
+    public Plateforme()
+    {
+        nameScience = "Plateforme Maritime";
+        Description = "Qui vit dans ananas dans la mer?.\n\n(Debloque les plateforme maritime)";
+        icon = "Plateforme Maritime";
+        Type = Color.green;
+        cost = 90;
+    }
+
+    public override void Action(Civilisation c)
+    {
+        c.AuthorizedBuildings.Add("Plateforme Maritime");
+    }
+}
+
+public class Corail : Science
+{
+    public Corail()
+    {
+        nameScience = "Recolte de corail";
+        Description = "Passe le bonjour a nemo.\n\n(Debloque les plateforme de Corail)";
+        icon = "Plateforme Corail";
+        Type = Color.green;
+        cost = 120;
+    }
+
+    public override void Action(Civilisation c)
+    {
+        c.AuthorizedBuildings.Add("Plateforme Corail");
+    }
+}
+
+
+// WIN
+public class CultureTerrasse : Science
+{
+    public CultureTerrasse()
+    {
+        nameScience = "Culture en Terrasse";
+        Description = "Un pas vers la victoire.\n\n(Vous octroie un point de victoire scientifique)";
+        icon = "Culture";
+        Type = Color.green;
+        cost = 1;
+    }
+
+    public override void Action(Civilisation c)
+    {      
+        c.FoodWin = true;
+        foreach (City City in c.Cities)
+        {
+            City.food += 20;
+        }
+    }
+}
+public class ArmeImperial : Science
+{
+    public ArmeImperial()
+    {
+        nameScience = "Arme Imperial";
+        Description = "You must not follow but you will witness.\n\n(Vous octroie un point de victoire scientifique)";
+        icon = "Arme";
+        Type = Color.red;
+        cost = 1;
+    }
+
+    public override void Action(Civilisation c)
+    {
+        c.WarWin = true;
+        c.bonusDamage += 8;
+
+        foreach (Unit u in c.Units)
+        {
+            u.Damage += 8;
+            u.MAXHP += 8;
+            u.HP += 8;
+        }
+    }
+}
+
+public class Tresorerie : Science
+{
+    public Tresorerie()
+    {
+        nameScience = "Tresorerie";
+        Description = "Cash-For-Days.\n\n(Vous octroie un point de victoire scientifique)";
+        icon = "Tresorerie";
+        Type = Color.yellow;
+        cost = 1;
+    }
+
+    public override void Action(Civilisation c)
+    {
+        c.GoldWin = true;
+        c.Gold = (int)c.Gold * 1.3f;
+
+    }
+}
+
+public class Sagesse : Science
+{
+    public Sagesse()
+    {
+        nameScience = "Sagesse universel";
+        Description = "Ctulhu existe.\n\n(Vous octroie un point de victoire scientifique)";
+        icon = "Sagesse";
+        Type = Color.blue;
+        cost = 1;
+    }
+
+    public override void Action(Civilisation c)
+    {
+        c.ScienceWin = true;
+        c.bonusScience = 20;
+        foreach (City City in c.Cities)
+        {
+            City.science += 20;
+        }
+
     }
 }

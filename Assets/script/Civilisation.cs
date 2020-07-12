@@ -24,7 +24,14 @@ public class Civilisation
     
     public List<string> AuthorizedBuildings ;
     public List<string> AuthorizedUnits ;
-    
+
+    public int goldOre;
+    public int ironOre;
+
+    public bool FoodWin;
+    public bool GoldWin;
+    public bool WarWin;
+    public bool ScienceWin;
     
     public int bonusDamage;
     public int bonusHp;
@@ -40,7 +47,7 @@ public class Civilisation
         MAT = mat;
         BoatDiscovered = false;
         Science = 0;
-        AuthorizedBuildings = new List<string>(){"Grenier","Usine","Marcher","Extension"};
+        AuthorizedBuildings = new List<string>(){"Grenier","Usine","Marcher","Laboratoire","Extension"};
         AuthorizedUnits = new List<string>(){"Archer","Warrior","Colon"};
         bonusDamage=0;
         bonusFood=0;
@@ -49,6 +56,15 @@ public class Civilisation
         bonusScience=0;
         bonusHp = 0;
         bonusMouv = 0;
+        
+        FoodWin=false;
+        GoldWin=false;
+        WarWin=false;
+        ScienceWin=false;
+        
+        goldOre=0;
+        ironOre = 0;
+
     }
 
     public City CreateCity(Waypoint position)

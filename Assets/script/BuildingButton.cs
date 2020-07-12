@@ -55,7 +55,7 @@ public class BuildingButton : MonoBehaviour
             Count.text= "" + Mathf.Ceil(build.cost / c.production);
         }
         
-        if (build.index == "Extension")
+        if (build.index == "Extension" || build.index=="Plateforme Maritime")
         {
             if (c.CanExtend == 0)
             {

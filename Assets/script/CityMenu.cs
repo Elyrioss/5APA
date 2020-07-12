@@ -58,15 +58,21 @@ public class CityMenu : MonoBehaviour
             case 1:
                 return new Usine();
             case 2:
-                return new Marcher();
+                return new Laboratoire();
             case 3:
-                return new Extension();
+                return new Marcher();
             case 4:
-                return new Port();
+                return new Extension();
             case 5:
-                return new MineFer();
+                return new Port();
             case 6:
+                return new MineFer();
+            case 7:
                 return new MineOr();
+            case 8: 
+                return new PlateformMaritime();
+            case 9: 
+                return new PlateformCorail();
         }
         return null;        
     }

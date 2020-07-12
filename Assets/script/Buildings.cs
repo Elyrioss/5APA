@@ -161,18 +161,45 @@ public class Usine : Construction
 }
 
 public class Marcher : Construction
+ {
+    
+     public override Construction Copy()
+     {
+         Marcher g = new Marcher();
+         g.Tempcost = Tempcost;      
+         return g;
+     }
+     
+     public Marcher()
+     {
+         index = "Marcher";
+         BuildType = BuildingType.Ressource;
+         cost=50;
+         Tempcost = -1;
+         
+         empty = false;
+     }
+     
+     public override void ConstructionFinished(City c)
+     {
+         c.gold += 10;
+         c.Buildings.Add(this);
+     }
+ }
+
+public class Laboratoire : Construction
 {
    
     public override Construction Copy()
     {
-        Marcher g = new Marcher();
+        Laboratoire g = new Laboratoire();
         g.Tempcost = Tempcost;      
         return g;
     }
     
-    public Marcher()
+    public Laboratoire()
     {
-        index = "Marcher";
+        index = "Laboratoire";
         BuildType = BuildingType.Ressource;
         cost=50;
         Tempcost = -1;
@@ -182,7 +209,7 @@ public class Marcher : Construction
     
     public override void ConstructionFinished(City c)
     {
-        c.gold += 10;
+        c.science += 10;
         c.Buildings.Add(this);
     }
 }
@@ -330,6 +357,8 @@ public class MineFer : Buildings
 
     public override void ConstructionFinished(City c)
     {
+        c.production += 5;
+        c.ironOre += 5;
         ConstructionFinishedInstantiate(c);
     }
 
@@ -371,6 +400,8 @@ public class MineOr : Buildings
 
     public override void ConstructionFinished(City c)
     {
+        c.gold += 5;
+        c.goldOre += 5;
         ConstructionFinishedInstantiate(c);
     }
 
@@ -383,6 +414,96 @@ public class MineOr : Buildings
 
     public override void VisualSteps()
     {
+        GameController.instance.ChangeMat(prefab,GameController.instance.CurrentCiv.MAT);
+        if (Twin)
+        {
+            GameController.instance.ChangeMat(Twin,GameController.instance.CurrentCiv.MAT);
+        }
+    }
+}
+
+public class PlateformMaritime : Buildings
+{
+    public PlateformMaritime()
+    {
+        index = "Plateforme Maritime";
+        BuildType = BuildingType.Extension;
+        cost=80;    
+        Tempcost = -1;
+        Redoable = true;
+        empty = false;
+    }
+    
+    public override Construction Copy()
+    {
+        PlateformMaritime g = new PlateformMaritime();
+        g.Tempcost = Tempcost;
+        g.Position = Position;
+        
+        return g;
+    }
+
+    public override bool CheckForConditions(Waypoint w)
+    {
+        if (w.HeightType == HeightType.River || w.HeightType == HeightType.ShallowWater)
+            return true;
+        return false;
+    }
+
+    public override void ConstructionFinished(City c)
+    {
+        c.food += 15;
+        c.CanExtend--;
+        ConstructionFinishedInstantiate(c);
+    }
+
+    public override void VisualSteps()
+    {       
+        GameController.instance.ChangeMat(prefab,GameController.instance.CurrentCiv.MAT);
+        if (Twin)
+        {
+            GameController.instance.ChangeMat(Twin,GameController.instance.CurrentCiv.MAT);
+        }
+    }
+}
+
+public class PlateformCorail : Buildings
+{
+    public PlateformCorail()
+    {
+        index = "Plateforme Corail";
+        BuildType = BuildingType.Extension;
+        cost=100;    
+        Tempcost = -1;
+        Redoable = true;
+        empty = false;
+    }
+    
+    public override Construction Copy()
+    {
+        PlateformCorail g = new PlateformCorail();
+        g.Tempcost = Tempcost;
+        g.Position = Position;
+        
+        return g;
+    }
+
+    public override bool CheckForConditions(Waypoint w)
+    {
+        if (w.Ressource == StrategicRessources.RessourceType.Coral && !w.UsedTile)
+            return true;
+        return false;
+    }
+
+    public override void ConstructionFinished(City c)
+    {
+        c.food += 15;
+        c.production += 10;
+        ConstructionFinishedInstantiate(c);
+    }
+
+    public override void VisualSteps()
+    {       
         GameController.instance.ChangeMat(prefab,GameController.instance.CurrentCiv.MAT);
         if (Twin)
         {
