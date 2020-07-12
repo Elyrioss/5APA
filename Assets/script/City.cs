@@ -301,44 +301,69 @@ public class City
         {
             if (waypoint.left)
             {
-                if (controlAreaClone.Contains(waypoint.left.GetComponent<Waypoint>()))
+                if (controlArea.Contains(waypoint.left))
                 {
                     waypoint.spriteRenderer[0].gameObject.SetActive(false);
+                    if (waypoint.Twin)
+                    {
+                        waypoint.Twin.spriteRenderer[0].gameObject.SetActive(false);
+                    }
                 }
+                
             }
             if (waypoint.right)
             {
-                if (controlAreaClone.Contains(waypoint.right.GetComponent<Waypoint>()))
+                if (controlArea.Contains(waypoint.right))
                 {
                     waypoint.spriteRenderer[3].gameObject.SetActive(false);
+                    if (waypoint.Twin)
+                    {
+                        waypoint.Twin.spriteRenderer[3].gameObject.SetActive(false);
+                    }
                 }
             }
             if (waypoint.leftTop)
             {
-                if (controlAreaClone.Contains(waypoint.leftTop.GetComponent<Waypoint>()))
+                if (controlArea.Contains(waypoint.leftTop))
                 {
                     waypoint.spriteRenderer[2].gameObject.SetActive(false);
+                    if (waypoint.Twin)
+                    {
+                        waypoint.Twin.spriteRenderer[2].gameObject.SetActive(false);
+                    }
                 }
             }
             if (waypoint.rightTop)
             {
-                if (controlAreaClone.Contains(waypoint.rightTop.GetComponent<Waypoint>()))
+                if (controlArea.Contains(waypoint.rightTop))
                 {
                     waypoint.spriteRenderer[5].gameObject.SetActive(false);
+                    if (waypoint.Twin)
+                    {
+                        waypoint.Twin.spriteRenderer[5].gameObject.SetActive(false);
+                    }
                 }
             }
             if (waypoint.leftBot)
             {
-                if (controlAreaClone.Contains(waypoint.leftBot.GetComponent<Waypoint>()))
+                if (controlArea.Contains(waypoint.leftBot))
                 {
                     waypoint.spriteRenderer[1].gameObject.SetActive(false);
+                    if (waypoint.Twin)
+                    {
+                        waypoint.Twin.spriteRenderer[1].gameObject.SetActive(false);
+                    }
                 }
             }
             if (waypoint.rightBot)
             {
-                if (controlAreaClone.Contains(waypoint.rightBot.GetComponent<Waypoint>()))
+                if (controlArea.Contains(waypoint.rightBot))
                 {
                     waypoint.spriteRenderer[4].gameObject.SetActive(false);
+                    if (waypoint.Twin)
+                    {
+                        waypoint.Twin.spriteRenderer[4].gameObject.SetActive(false);
+                    }
                 }
             }
 
