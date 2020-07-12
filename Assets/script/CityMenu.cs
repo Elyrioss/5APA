@@ -63,6 +63,10 @@ public class CityMenu : MonoBehaviour
                 return new Extension();
             case 4:
                 return new Port();
+            case 5:
+                return new MineFer();
+            case 6:
+                return new MineOr();
         }
         return null;        
     }

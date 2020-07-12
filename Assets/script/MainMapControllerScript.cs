@@ -478,8 +478,10 @@ public class MainMapControllerScript : MonoBehaviour
         }
     }
 
+    
     public void DoAttack(Unit attackingUnit, Unit defendingUnit)
     {
+        
         GameController GC = GameController.instance;
         if (attackingUnit.index.Equals("Archer"))
         {
@@ -491,7 +493,6 @@ public class MainMapControllerScript : MonoBehaviour
             GC.gameControllerAudioSource.clip = Resources.Load<AudioClip>("Sounds/AttackCloseQuarter");
             GC.gameControllerAudioSource.Play();
         }
-        Civilisation enemyCiv = GC.GetOtherCivilisation();
 
         defendingUnit.HP -= attackingUnit.Damage;
         if (attackingUnit.Position.Neighbors.Contains(defendingUnit.Position))
@@ -509,6 +510,7 @@ public class MainMapControllerScript : MonoBehaviour
         attackingUnit.AsPlayed = true;
 
         CheckHP(attackingUnit, defendingUnit);
+        attackAvailable = false;
         
     }
 
@@ -540,8 +542,9 @@ public class MainMapControllerScript : MonoBehaviour
         }
 
         attackingUnit.AsPlayed = true;
-
+    
         CheckHP(attackingUnit, defendingCity);
+        attackAvailable = false;
 
     }
 

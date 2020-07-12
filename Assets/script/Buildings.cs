@@ -324,7 +324,7 @@ public class MineFer : Buildings
         BuildType = BuildingType.Extension;
         cost = 50;
         Tempcost = -1;
-        Redoable = false;
+        Redoable = true;
         empty = false;
     }
 
@@ -335,7 +335,48 @@ public class MineFer : Buildings
 
     public override bool CheckForConditions(Waypoint w)
     {
-        if (w.Ressource==StrategicRessources.RessourceType.Iron)
+        if (w.Ressource==StrategicRessources.RessourceType.Iron && !w.UsedTile)
+            return true;
+        return false;
+    }
+
+    public override void VisualSteps()
+    {
+        GameController.instance.ChangeMat(prefab,GameController.instance.CurrentCiv.MAT);
+        if (Twin)
+        {
+            GameController.instance.ChangeMat(Twin,GameController.instance.CurrentCiv.MAT);
+        }
+    }
+}
+public class MineOr : Buildings
+{
+    
+    public override Construction Copy()
+    {
+        MineOr g = new MineOr();
+        g.Tempcost = Tempcost;
+        g.Position = Position;  
+        return g;
+    }
+    public MineOr()
+    {
+        index = "Mine(Or)";
+        BuildType = BuildingType.Extension;
+        cost = 50;
+        Tempcost = -1;
+        Redoable = true;
+        empty = false;
+    }
+
+    public override void ConstructionFinished(City c)
+    {
+        ConstructionFinishedInstantiate(c);
+    }
+
+    public override bool CheckForConditions(Waypoint w)
+    {
+        if (w.Ressource==StrategicRessources.RessourceType.Gold && !w.UsedTile)
             return true;
         return false;
     }

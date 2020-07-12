@@ -57,6 +57,8 @@ public class ScienceScreen : MonoBehaviour
                 return new Bouclier();
             case "Equilibre":
                 return new Equilibre();
+            case "Cavalerie":
+                return new Cavalerie();
         }
 
         return null;
@@ -139,7 +141,7 @@ public class Entrainement : Science
     public override void Action(Civilisation c)
     {
         c.bonusDamage += 1;
-
+        c.bonusHp += 1;
         foreach (Unit u in c.Units)
         {
             u.Damage += 1;
@@ -286,5 +288,22 @@ public class Equilibre : Science
             u.MAXHP += 2;
             u.HP += 2;
         }
+    }
+}
+
+public class Cavalerie : Science
+{
+    public Cavalerie()
+    {
+        nameScience = "Cavalerie";
+        Description = "Horse go zoom zoom bad guy go dead dead?\n\n(Debloque les cavaliers)";
+        icon = "Cavalerie";
+        Type=Color.red;
+        cost = 90;
+    }
+
+    public override void Action(Civilisation c)
+    {
+        c.AuthorizedUnits.Add("Riders0");
     }
 }

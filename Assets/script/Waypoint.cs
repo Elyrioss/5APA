@@ -117,7 +117,11 @@ public class Waypoint : MonoBehaviour
     public void EnableWeapon()
     {
         weaponMesh.gameObject.SetActive(true);
-        LOD.SetActive(false);
+        if (LOD)
+        {
+            LOD.SetActive(false);
+        }
+        
     }
 
     public void DisableWeapon()

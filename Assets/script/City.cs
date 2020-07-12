@@ -66,8 +66,8 @@ public class City
         }
         //
 
-        HP = 1;
-        MAXHP = 1;
+        HP = 25;
+        MAXHP = 25;
 
         food = city.food;
         production = city.production;
@@ -125,8 +125,8 @@ public class City
         }
         //
 
-        HP = 1;
-        MAXHP = 1;
+        HP = 25;
+        MAXHP = 25;
 
         food += position.Food;
         production += position.Production;

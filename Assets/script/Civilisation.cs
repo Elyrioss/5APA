@@ -41,7 +41,7 @@ public class Civilisation
         BoatDiscovered = false;
         Science = 0;
         AuthorizedBuildings = new List<string>(){"Grenier","Usine","Marcher","Extension"};
-        AuthorizedUnits = new List<string>(){"Archer","Warrior","Rider","Colon"};
+        AuthorizedUnits = new List<string>(){"Archer","Warrior","Colon"};
         bonusDamage=0;
         bonusFood=0;
         bonusProd=0;

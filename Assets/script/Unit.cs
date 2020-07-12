@@ -47,8 +47,17 @@ public class Unit : Construction
         GameController.instance.ChangeMat(prefab,civ.MAT);    
         GameController.instance.ChangeMat(Twin,civ.MAT);
         Damage += civ.bonusDamage;
+        if (Damage <= 0)
+        {
+            Damage = 1;
+        }
         MAXHP += civ.bonusHp;
         HP += civ.bonusHp;
+        if (MAXHP <= 0)
+        {
+            MAXHP = 1;
+            MAXHP = 1;
+        }
         mouvementPoints += civ.bonusMouv;
         return this;
     }
