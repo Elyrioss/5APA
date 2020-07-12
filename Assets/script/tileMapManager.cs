@@ -37,6 +37,7 @@ public class tileMapManager : MonoBehaviour
     public bool Dijtra;
     
     public List<_3DtileType> _3DTiles;
+    public List<StrategicRessources> ressources;
     public Grid grid; //Contenant pour les contenant des tuile (voir le fonctionnement des tilemap unity)
     //public List<Tilemap> _maps = new List<Tilemap>();//Liste des Chunk instancié 
     public Waypoint waypointPrefab;//Prefab pour les waypoint qui stocke les donnés 
@@ -281,6 +282,8 @@ public class tileMapManager : MonoBehaviour
                     Quaternion.Euler(0, 0, 0));                                                                                
                 w.odd = false;                                                
             }
+
+            w.Ressource = sw.type;
             w.MinCostToStart=Int32.MaxValue;     
             w.X = sw.X;
             w.Y = sw.Y;
@@ -534,7 +537,7 @@ public class tileMapManager : MonoBehaviour
             Material mat = Materials[0];
             GameObject currentWayPoint;
             GameObject currentTwin;
-            if (w.HeightType == HeightType.DeepWater || w.HeightType == HeightType.ShallowWater ||w.HeightType == HeightType.River)//Si l'altitude est inférieur a 0, la case est un océan
+            if (w.HeightType == HeightType.DeepWater || w.HeightType == HeightType.ShallowWater ||w.HeightType == HeightType.River)
             {
                 w.BiomeType = BiomeType.Water;
                 if (w.AsTwin)
@@ -701,6 +704,89 @@ public class tileMapManager : MonoBehaviour
                     
                 }
             }
+            else
+            {
+                StrategicRessources SR;
+                float prob = 0;
+                if (loaded)
+                {
+                    SR = getSR(w.Ressource);
+                    prob = 0;
+                }
+                else
+                {
+                    prob = UnityEngine.Random.Range(0f, 1f);
+                    int select = UnityEngine.Random.Range(0, ressources.Count);
+                    SR = ressources[select];
+                }
+
+                if (SR != null)
+                {
+                    if ((w.HeightType == HeightType.DeepWater || w.HeightType == HeightType.ShallowWater || w.HeightType == HeightType.River) && SR.Water)
+                {
+                    if (SR.prob > prob && SR.Height == w.HeightType && w.elevation > SR.height)
+                    {
+                        
+                        GameObject currentRessource = Instantiate(SR.prefab, currentWayPoint.transform);
+                        w.Ressource = SR.Type;
+                        w.Food += SR.foodBonus;
+                        w.Production += SR.productionBonus;
+                        w.Gold += SR.goldBonus;
+                        w.mouvCost += SR.MovCost;
+                        w.Science += SR.scienceBonus;
+                        w.LOD = currentRessource;
+                        w.prop = currentRessource;
+                        
+                        currentRessource.transform.localPosition = new Vector3(0, 0, 0);
+                        if (w.Twin)
+                        {
+                            currentRessource = Instantiate(SR.prefab, currentTwin.transform);
+                            w.Twin.Ressource = SR.Type;
+                            w.Twin.Food += SR.foodBonus;
+                            w.Twin.Production += SR.productionBonus;
+                            w.Twin.Gold += SR.goldBonus;
+                            w.Twin.mouvCost += SR.MovCost;
+                            w.Twin.Science += SR.scienceBonus;
+                            currentRessource.transform.localPosition = new Vector3(0, 0, 0);
+                            w.Twin.LOD = currentRessource;
+                            w.Twin.prop = currentRessource;
+                        }
+                    }
+                }
+                else if((w.HeightType != HeightType.DeepWater && w.HeightType != HeightType.ShallowWater && w.HeightType != HeightType.River) && !SR.Water)
+                {
+                    if (SR.prob > prob)
+                    {
+                        
+                        GameObject currentRessource = Instantiate(SR.prefab, currentWayPoint.transform);
+                        w.Ressource = SR.Type;
+                        w.Food += SR.foodBonus;
+                        w.Production += SR.productionBonus;
+                        w.Gold += SR.goldBonus;
+                        w.mouvCost += SR.MovCost;
+                        w.Science += SR.scienceBonus;
+                        currentRessource.transform.localPosition = new Vector3(0, 0, 0);
+                        w.LOD = currentRessource;
+                        w.prop = currentRessource;
+                        if (w.Twin)
+                        {
+                            currentRessource = Instantiate(SR.prefab, currentTwin.transform);
+                            w.Twin.Food += SR.foodBonus;
+                            w.Twin.Production += SR.productionBonus;
+                            w.Twin.Gold += SR.goldBonus;
+                            w.Twin.mouvCost += SR.MovCost;
+                            w.Twin.Science += SR.scienceBonus;
+                            w.Twin.Ressource = SR.Type;
+                            currentRessource.transform.localPosition = new Vector3(0, 0, 0);
+                            w.Twin.LOD = currentRessource;
+                            w.Twin.prop = currentRessource;
+                        }
+                    }
+                }
+                }    
+                
+            }
+            
             w.spriteContainer.transform.Translate(new Vector3(0,w.elevation+0.05f,0));
             w.DisableWaypoint();
             
@@ -1082,7 +1168,19 @@ public class tileMapManager : MonoBehaviour
     }
 
     #region Helper
-    
+
+    public StrategicRessources getSR(StrategicRessources.RessourceType type)
+    {
+        foreach (StrategicRessources SR in ressources)
+        {
+            if (SR.Type == type)
+            {
+                return SR;
+            }
+        }
+
+        return null;
+    }
     
     private static Random rng = new Random();
     public static void Shuffle<T>(IList<T> list)
@@ -1203,6 +1301,7 @@ public class SavedWaypoint
     public int X;
     public int Y;
     public int chunkIndex;
+    public StrategicRessources.RessourceType type;
     public SavedWaypoint(Waypoint w)
     {
         
@@ -1217,6 +1316,7 @@ public class SavedWaypoint
         X = w.X;
         Y = w.Y;
         chunkIndex = w.Chunk.index;
+        type = w.Ressource;
 
     }        
 }
@@ -1239,3 +1339,30 @@ public class Biome
         Waypoints=new List<Waypoint>();
     } 
 }
+
+[Serializable]
+public class StrategicRessources
+{
+    public string name;
+    public enum RessourceType
+    {
+        None,
+        Iron,
+        Gold,
+        Coral
+    }
+
+    public RessourceType Type;
+    public GameObject prefab;
+    public float prob;
+    public float foodBonus = 0;
+    public float productionBonus = 0;
+    public float goldBonus = 0;
+    public float scienceBonus; 
+    public int MovCost = 1;
+    public bool Water;
+    public HeightType Height;
+    public float height;
+
+}
+

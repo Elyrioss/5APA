@@ -110,7 +110,7 @@ public class StockageAvance : Science
     public StockageAvance()
     {
         nameScience = "Stockage Avance";
-        Description = "Vous avez apris a ne plus laisse votre nouriture pourrire au soleil.\n\n(+5 de production de nourriture par ville)";
+        Description = "Vous avez apris a ne plus laisse votre nouriture pourrire au soleil.\n\n(+5 de production de nourriture par villes)";
         icon = "Stockage";
         Type=Color.green;
         cost = 30;
@@ -130,7 +130,7 @@ public class Entrainement : Science
     public Entrainement()
     {
         nameScience = "Entrainement";
-        Description = "Si tu veux la paix prepare la guerre.\n\n(+1 dmg +1PV pour toutes les unite)";
+        Description = "Si tu veux la paix prepare la guerre.\n\n(+1 dmg +1PV pour toutes les unites)";
         icon = "Warrior";
         Type=Color.red;
         cost = 30;
@@ -153,7 +153,7 @@ public class Monnaie : Science
     public Monnaie()
     {
         nameScience = "Monnaie";
-        Description = "Les échanges vont plus vite.\n\n(+5 de production d'or par ville)";
+        Description = "Les échanges vont plus vite.\n\n(+5 de production d'or par villes)";
         icon = "Monnaie";
         Type=Color.yellow;
         cost = 30;
@@ -173,7 +173,7 @@ public class Astronomie : Science
     public Astronomie()
     {
         nameScience = "Astronomie";
-        Description = "Le ciel regorge de secret.\n\n(+5 de production scientifique par ville)";
+        Description = "Le ciel regorge de secret.\n\n(+5 de production scientifique par villes)";
         icon = "Astronomie";
         Type=Color.blue;
         cost = 30;
@@ -193,7 +193,7 @@ public class MareNostrum : Science
     public MareNostrum()
     {
         nameScience = "Mare Nostrum";
-        Description = "Les ocean vous appel.\n\n(Debloque les ports)";
+        Description = "Les oceans vous appelle.\n\n(Debloque les ports)";
         icon = "Port";
         Type = Color.yellow;
         cost = 50;
@@ -211,7 +211,7 @@ public class Waaagh : Science
     public Waaagh()
     {
         nameScience = "Waaagh";
-        Description = "Waaaaaaaaagh.\n\n(+5 dmg -5PV pour toutes les unite)";
+        Description = "Waaaaaaaaagh.\n\n(+5 dmg -5PV pour toutes les unites)";
         icon = "Waaagh";
         Type=Color.red;
         cost = 50;
@@ -242,7 +242,7 @@ public class Bouclier : Science
     public Bouclier()
     {
         nameScience = "Bouclier";
-        Description = "Protege de 25% des fleches.\n\n(+5 PV -5dmg pour toutes les unite)";
+        Description = "Protege de 25% des fleches.\n\n(+5 PV -5dmg pour toutes les unites)";
         icon = "Bouclier";
         Type=Color.red;
         cost = 50;
@@ -270,7 +270,7 @@ public class Equilibre : Science
     public Equilibre()
     {
         nameScience = "Equilibre";
-        Description = "Une bonne attaque commence par une bonne defense, ou l'inverse?\n\n(+2 PV +2dmg pour toutes les unite)";
+        Description = "Une bonne attaque commence par une bonne defense, ou l'inverse?\n\n(+2 PV +2dmg pour toutes les unites)";
         icon = "Equilibre";
         Type=Color.red;
         cost = 50;

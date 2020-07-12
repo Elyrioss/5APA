@@ -58,11 +58,9 @@ public class Waypoint : MonoBehaviour
     [HideInInspector]
     public float noiseValue;
     
-    [HideInInspector]
     public float elevation=0;
     [HideInInspector]
     public BiomeType BiomeType;
-    [HideInInspector]
     public HeightType HeightType;
     [HideInInspector]
     public HeatType HeatType;
@@ -93,6 +91,7 @@ public class Waypoint : MonoBehaviour
     [SerializeField] public Color Deactivated = Color.clear;
 
 
+    public StrategicRessources.RessourceType Ressource;
     public bool UsedTile=false;//For buildings
     public bool Occupied;//For Units
     public bool Controled;//For cities

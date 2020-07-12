@@ -69,8 +69,8 @@ public class GameController : MonoBehaviour
     //Siggraph
     public List<Material> weaponMatList = new List<Material>();
     public List<Waypoint> waypointWeaponList = new List<Waypoint>();
-
     private RTS_Camera Camera;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -182,18 +182,33 @@ public class GameController : MonoBehaviour
         gameControllerAudioSource.clip = Resources.Load<AudioClip>("Sounds/Click");
         gameControllerAudioSource.Play();
         state = TurnState.ENDTURN;
-       
+        
         if (CurrentCiv.Cities.Count == 0)
         {
-            Winner.color = GetOtherCivilisation().CivilisationColor;
-            WinScreen.SetActive(true);
-            return;
+            bool a=true;
+            foreach (Unit u in CurrentCiv.Units)
+            {
+                if (u.index == "Colon")
+                {
+                    a = false;
+                }
+            }
+
+            if (a)
+            {
+                Winner.color = GetOtherCivilisation().CivilisationColor;
+                WinScreen.SetActive(true);
+                return;
+            }           
         }
         
         if (CurrentCiv.ScienceScreen.currentScience == null)
-        {
-            ShowScience(true);
-            return;
+        {          
+            if (CurrentCiv.Cities.Count > 0)
+            {
+                ShowScience(true);
+                return;
+            }     
         }
         
         foreach (City c in CurrentCiv.Cities)
